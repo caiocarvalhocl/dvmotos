@@ -1,4 +1,91 @@
-// Global Styles
+// =============================================
+// DV MOTOS - ESTILOS GLOBAIS
+// =============================================
+
+// Importar variáveis (copie o conteúdo de _variables.scss aqui ou use @import se configurar o SCSS)
+
+// Cores Primárias (Verde)
+$primary-50:  #f0fdf4;
+$primary-100: #dcfce7;
+$primary-200: #bbf7d0;
+$primary-300: #86efac;
+$primary-400: #4ade80;
+$primary-500: #22c55e;
+$primary-600: #16a34a;
+$primary-700: #15803d;
+$primary-800: #166534;
+$primary-900: #14532d;
+$primary-950: #052e16;
+
+// Cores Secundárias (Amarelo/Dourado)
+$secondary-50:  #fefce8;
+$secondary-100: #fef9c3;
+$secondary-200: #fef08a;
+$secondary-300: #fde047;
+$secondary-400: #facc15;
+$secondary-500: #eab308;
+$secondary-600: #ca8a04;
+$secondary-700: #a16207;
+$secondary-800: #854d0e;
+$secondary-900: #713f12;
+
+// Cores Neutras
+$neutral-50:  #fafafa;
+$neutral-100: #f4f4f5;
+$neutral-200: #e4e4e7;
+$neutral-300: #d4d4d8;
+$neutral-400: #a1a1aa;
+$neutral-500: #71717a;
+$neutral-600: #52525b;
+$neutral-700: #3f3f46;
+$neutral-800: #27272a;
+$neutral-900: #18181b;
+
+// Feedback
+$success: #22c55e;
+$warning: #f59e0b;
+$danger:  #ef4444;
+$info:    #3b82f6;
+
+// =============================================
+// CSS VARIABLES (para uso em componentes)
+// =============================================
+:root {
+  // Primárias
+  --primary-color: #{$primary-600};
+  --primary-dark: #{$primary-700};
+  --primary-light: #{$primary-500};
+  --primary-50: #{$primary-50};
+  --primary-100: #{$primary-100};
+  --primary-900: #{$primary-900};
+  
+  // Secundárias (Amarelo)
+  --secondary-color: #{$secondary-400};
+  --secondary-dark: #{$secondary-500};
+  --secondary-light: #{$secondary-300};
+  --secondary-100: #{$secondary-100};
+  
+  // Superfície
+  --surface-ground: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-border: #{$neutral-200};
+  --surface-hover: #{$neutral-100};
+  
+  // Texto
+  --text-color: #{$neutral-900};
+  --text-secondary: #{$neutral-600};
+  --text-muted: #{$neutral-400};
+  
+  // Feedback
+  --success-color: #{$success};
+  --warning-color: #{$warning};
+  --danger-color: #{$danger};
+  --info-color: #{$info};
+}
+
+// =============================================
+// RESET E BASE
+// =============================================
 * {
   margin: 0;
   padding: 0;
@@ -9,25 +96,13 @@ html, body {
   height: 100%;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: var(--surface-ground);
+  color: var(--text-color);
 }
 
-// Custom Theme Variables
-:root {
-  --primary-color: #3b82f6;
-  --primary-dark: #2563eb;
-  --secondary-color: #64748b;
-  --success-color: #22c55e;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-  --surface-ground: #f8fafc;
-  --surface-card: #ffffff;
-  --text-color: #1e293b;
-  --text-secondary: #64748b;
-}
-
-// Layout
+// =============================================
+// LAYOUT
+// =============================================
 .layout-wrapper {
   min-height: 100vh;
   display: flex;
@@ -39,7 +114,9 @@ html, body {
   padding: 1.5rem;
 }
 
-// Card Styles
+// =============================================
+// CARDS
+// =============================================
 .card {
   background: var(--surface-card);
   border-radius: 12px;
@@ -47,7 +124,9 @@ html, body {
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
-// Page Header
+// =============================================
+// PAGE HEADER
+// =============================================
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -61,7 +140,9 @@ html, body {
   }
 }
 
-// Form Styles
+// =============================================
+// FORMS
+// =============================================
 .form-group {
   margin-bottom: 1rem;
   
@@ -73,16 +154,68 @@ html, body {
   }
 }
 
-// PrimeNG Customizations
+// =============================================
+// PRIMENG CUSTOMIZATIONS
+// =============================================
+
+// Botões
 .p-button {
   border-radius: 8px;
   font-weight: 500;
+  
+  &.p-button-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    
+    &:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+  }
+  
+  &.p-button-secondary {
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #{$neutral-900};
+    
+    &:hover {
+      background: var(--secondary-dark);
+      border-color: var(--secondary-dark);
+    }
+  }
+  
+  &.p-button-success {
+    background: var(--success-color);
+    border-color: var(--success-color);
+  }
+  
+  &.p-button-danger {
+    background: var(--danger-color);
+    border-color: var(--danger-color);
+  }
 }
 
+// Inputs
 .p-inputtext {
   border-radius: 8px;
+  
+  &:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px #{$primary-100};
+  }
 }
 
+// Dropdown
+.p-dropdown {
+  border-radius: 8px;
+  
+  &:not(.p-disabled).p-focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px #{$primary-100};
+  }
+}
+
+// DataTable
 .p-datatable {
   .p-datatable-header {
     background: transparent;
@@ -91,18 +224,36 @@ html, body {
   }
   
   .p-datatable-thead > tr > th {
-    background: #f1f5f9;
+    background: #{$primary-50};
+    color: #{$primary-900};
     font-weight: 600;
+    border-color: #{$primary-100};
+  }
+  
+  .p-datatable-tbody > tr {
+    &:hover {
+      background: #{$primary-50};
+    }
+    
+    &.p-highlight {
+      background: #{$primary-100};
+      color: #{$primary-900};
+    }
   }
 }
 
+// Dialog
 .p-dialog {
+  border-radius: 12px;
+  
   .p-dialog-header {
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--surface-border);
+    border-radius: 12px 12px 0 0;
   }
   
   .p-dialog-footer {
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--surface-border);
+    border-radius: 0 0 12px 12px;
   }
 }
 
@@ -110,14 +261,56 @@ html, body {
 .p-toast {
   .p-toast-message {
     border-radius: 8px;
+    
+    &.p-toast-message-success {
+      background: #{$primary-50};
+      border-left: 4px solid var(--primary-color);
+      color: #{$primary-900};
+      
+      .p-toast-message-icon,
+      .p-toast-icon-close {
+        color: var(--primary-color);
+      }
+    }
   }
 }
 
-// Utility Classes
+// Tag
+.p-tag {
+  border-radius: 6px;
+  
+  &.p-tag-success {
+    background: #{$primary-100};
+    color: #{$primary-700};
+  }
+  
+  &.p-tag-warning {
+    background: #{$secondary-100};
+    color: #{$secondary-700};
+  }
+}
+
+// Menu / Menubar
+.p-menubar {
+  background: #{$primary-900};
+  border: none;
+  border-radius: 0;
+}
+
+// =============================================
+// UTILITÁRIOS
+// =============================================
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .font-bold { font-weight: 600; }
-.text-muted { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--primary-color); }
+.text-secondary { color: var(--secondary-color); }
+
+.bg-primary { background-color: var(--primary-color); }
+.bg-primary-light { background-color: var(--primary-50); }
+.bg-secondary { background-color: var(--secondary-color); }
+.bg-secondary-light { background-color: var(--secondary-100); }
 
 .mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }
@@ -129,7 +322,9 @@ html, body {
 .mb-3 { margin-bottom: 1rem; }
 .mb-4 { margin-bottom: 1.5rem; }
 
-// Status Badges
+// =============================================
+// STATUS BADGES
+// =============================================
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -139,8 +334,8 @@ html, body {
   font-weight: 500;
   
   &.status-active {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: #{$primary-100};
+    color: #{$primary-700};
   }
   
   &.status-inactive {
@@ -149,7 +344,22 @@ html, body {
   }
   
   &.status-pending {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: #{$secondary-100};
+    color: #{$secondary-700};
   }
+}
+
+// =============================================
+// LOGO BADGE (para usar a identidade visual)
+// =============================================
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #{$primary-600} 0%, #{$primary-700} 100%);
+  border: 3px solid #{$secondary-400};
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
 }

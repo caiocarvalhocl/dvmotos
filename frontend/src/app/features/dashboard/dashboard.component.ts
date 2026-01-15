@@ -12,60 +12,115 @@ import { AuthService } from "../../core/services/auth.service";
   template: `
     <div class="dashboard">
       <div class="welcome-section">
-        <h1 *ngdIf="authService.currentUser() as user">
-          Bem-vindo, {{ user.nome.split(" ")[0] }}! 👋
-        </h1>
-        <p>Aqui está o resumo do seu sistema.</p>
+        <div class="welcome-content">
+          <h1 *ngIf="authService.currentUser() as user">
+            Bem-vindo, {{ user.nome.split(" ")[0] }}! 👋
+          </h1>
+          <p>Aqui está o resumo do seu sistema.</p>
+        </div>
+        <div class="welcome-badge">
+          <i class="pi pi-car"></i>
+          <span>DV Motos</span>
+        </div>
       </div>
 
       <div class="quick-actions">
         <h2>Acesso Rápido</h2>
         <div class="actions-grid">
-          <a routerLink="/clientes/novo" class="action-card">
-            <div class="action-icon" style="background: #dbeafe;">
-              <i class="pi pi-user-plus" style="color: #3b82f6;"></i>
+          <a routerLink="/clientes/novo" class="action-card action-primary">
+            <div class="action-icon">
+              <i class="pi pi-user-plus"></i>
             </div>
             <div class="action-content">
               <h3>Novo Cliente</h3>
               <p>Cadastrar cliente</p>
             </div>
+            <i class="pi pi-arrow-right action-arrow"></i>
           </a>
 
-          <a routerLink="/veiculos/novo" class="action-card">
-            <div class="action-icon" style="background: #dcfce7;">
-              <i class="pi pi-car" style="color: #22c55e;"></i>
+          <a routerLink="/veiculos/novo" class="action-card action-secondary">
+            <div class="action-icon">
+              <i class="pi pi-car"></i>
             </div>
             <div class="action-content">
               <h3>Novo Veículo</h3>
               <p>Cadastrar moto</p>
             </div>
+            <i class="pi pi-arrow-right action-arrow"></i>
           </a>
 
           <a routerLink="/clientes" class="action-card">
-            <div class="action-icon" style="background: #fef3c7;">
-              <i class="pi pi-users" style="color: #f59e0b;"></i>
+            <div class="action-icon icon-neutral">
+              <i class="pi pi-users"></i>
             </div>
             <div class="action-content">
               <h3>Clientes</h3>
               <p>Ver todos os clientes</p>
             </div>
+            <i class="pi pi-arrow-right action-arrow"></i>
           </a>
 
           <a routerLink="/veiculos" class="action-card">
-            <div class="action-icon" style="background: #f3e8ff;">
-              <i class="pi pi-list" style="color: #a855f7;"></i>
+            <div class="action-icon icon-neutral">
+              <i class="pi pi-list"></i>
             </div>
             <div class="action-content">
               <h3>Veículos</h3>
               <p>Ver todos os veículos</p>
             </div>
+            <i class="pi pi-arrow-right action-arrow"></i>
           </a>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <h2>Estatísticas</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-primary">
+              <i class="pi pi-users"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value">--</span>
+              <span class="stat-label">Clientes</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-secondary">
+              <i class="pi pi-car"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value">--</span>
+              <span class="stat-label">Veículos</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-info">
+              <i class="pi pi-file-edit"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value">--</span>
+              <span class="stat-label">OS Abertas</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-warning">
+              <i class="pi pi-box"></i>
+            </div>
+            <div class="stat-content">
+              <span class="stat-value">--</span>
+              <span class="stat-label">Itens Estoque</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="info-section">
         <div class="info-card">
-          <i class="pi pi-info-circle"></i>
+          <i class="pi pi-wrench"></i>
           <div>
             <h4>MVP em Desenvolvimento</h4>
             <p>
@@ -79,28 +134,69 @@ import { AuthService } from "../../core/services/auth.service";
   `,
   styles: [
     `
+      // Cores DV Motos
+      $primary-50: #f0fdf4;
+      $primary-100: #dcfce7;
+      $primary-200: #bbf7d0;
+      $primary-600: #16a34a;
+      $primary-700: #15803d;
+      $primary-800: #166534;
+      $primary-900: #14532d;
+
+      $secondary-100: #fef9c3;
+      $secondary-400: #facc15;
+      $secondary-500: #eab308;
+      $secondary-600: #ca8a04;
+
       .dashboard {
         max-width: 1200px;
         margin: 0 auto;
       }
 
       .welcome-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, $primary-600 0%, $primary-700 100%);
+        border-radius: 16px;
+        color: white;
 
         h1 {
-          font-size: 1.75rem;
+          font-size: 1.5rem;
           font-weight: 700;
-          color: #1e293b;
-          margin: 0 0 0.5rem;
+          margin: 0 0 0.25rem;
         }
 
         p {
-          color: #64748b;
           margin: 0;
+          opacity: 0.9;
         }
       }
 
-      .quick-actions {
+      .welcome-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid $secondary-400;
+        border-radius: 12px;
+
+        i {
+          font-size: 1.25rem;
+          color: $secondary-400;
+        }
+
+        span {
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+      }
+
+      .quick-actions,
+      .stats-section {
         margin-bottom: 2rem;
 
         h2 {
@@ -113,7 +209,7 @@ import { AuthService } from "../../core/services/auth.service";
 
       .actions-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 1rem;
       }
 
@@ -127,10 +223,41 @@ import { AuthService } from "../../core/services/auth.service";
         text-decoration: none;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         transition: all 0.2s;
+        border: 2px solid transparent;
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+          box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.15);
+          border-color: $primary-200;
+
+          .action-arrow {
+            transform: translateX(4px);
+            opacity: 1;
+          }
+        }
+
+        &.action-primary {
+          background: linear-gradient(
+            135deg,
+            $primary-50 0%,
+            $primary-100 100%
+          );
+          border-color: $primary-200;
+
+          .action-icon {
+            background: $primary-600;
+            color: white;
+          }
+        }
+
+        &.action-secondary {
+          background: linear-gradient(135deg, $secondary-100 0%, #fef3c7 100%);
+          border-color: $secondary-400;
+
+          .action-icon {
+            background: $secondary-500;
+            color: $primary-900;
+          }
         }
       }
 
@@ -141,13 +268,23 @@ import { AuthService } from "../../core/services/auth.service";
         display: flex;
         align-items: center;
         justify-content: center;
+        background: #f1f5f9;
+        color: #64748b;
+        flex-shrink: 0;
 
         i {
           font-size: 1.25rem;
         }
+
+        &.icon-neutral {
+          background: #f1f5f9;
+          color: #64748b;
+        }
       }
 
       .action-content {
+        flex: 1;
+
         h3 {
           font-size: 1rem;
           font-weight: 600;
@@ -162,35 +299,114 @@ import { AuthService } from "../../core/services/auth.service";
         }
       }
 
+      .action-arrow {
+        color: #94a3b8;
+        transition: all 0.2s;
+        opacity: 0.5;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+      }
+
+      .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+          font-size: 1.5rem;
+        }
+
+        &.stat-icon-primary {
+          background: $primary-100;
+          color: $primary-600;
+        }
+
+        &.stat-icon-secondary {
+          background: $secondary-100;
+          color: $secondary-600;
+        }
+
+        &.stat-icon-info {
+          background: #dbeafe;
+          color: #2563eb;
+        }
+
+        &.stat-icon-warning {
+          background: #fef3c7;
+          color: #d97706;
+        }
+      }
+
+      .stat-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+
       .info-section {
         .info-card {
           display: flex;
           align-items: flex-start;
           gap: 1rem;
           padding: 1.25rem;
-          background: #eff6ff;
+          background: $primary-50;
           border-radius: 12px;
-          border-left: 4px solid #3b82f6;
+          border-left: 4px solid $primary-600;
 
-          i {
-            font-size: 1.25rem;
-            color: #3b82f6;
+          > i {
+            font-size: 1.5rem;
+            color: $primary-600;
             margin-top: 2px;
           }
 
           h4 {
             font-size: 1rem;
             font-weight: 600;
-            color: #1e40af;
+            color: $primary-800;
             margin: 0 0 0.5rem;
           }
 
           p {
             font-size: 0.875rem;
-            color: #1e40af;
+            color: $primary-700;
             margin: 0;
             line-height: 1.5;
           }
+        }
+      }
+
+      @media (max-width: 640px) {
+        .welcome-section {
+          flex-direction: column;
+          text-align: center;
+          gap: 1rem;
         }
       }
     `,

@@ -1,0 +1,82 @@
+// =============================================
+// DV MOTOS - PALETA DE CORES
+// Baseado na identidade visual da logo
+// =============================================
+
+// Cores Primárias (Verde)
+$primary-50:  #f0fdf4;
+$primary-100: #dcfce7;
+$primary-200: #bbf7d0;
+$primary-300: #86efac;
+$primary-400: #4ade80;
+$primary-500: #22c55e;
+$primary-600: #16a34a;  // Verde principal (mais próximo da logo)
+$primary-700: #15803d;
+$primary-800: #166534;
+$primary-900: #14532d;
+$primary-950: #052e16;
+
+// Cores Secundárias (Amarelo/Dourado)
+$secondary-50:  #fefce8;
+$secondary-100: #fef9c3;
+$secondary-200: #fef08a;
+$secondary-300: #fde047;
+$secondary-400: #facc15;  // Amarelo da logo
+$secondary-500: #eab308;
+$secondary-600: #ca8a04;
+$secondary-700: #a16207;
+$secondary-800: #854d0e;
+$secondary-900: #713f12;
+$secondary-950: #422006;
+
+// Cores Neutras
+$neutral-50:  #fafafa;
+$neutral-100: #f4f4f5;
+$neutral-200: #e4e4e7;
+$neutral-300: #d4d4d8;
+$neutral-400: #a1a1aa;
+$neutral-500: #71717a;
+$neutral-600: #52525b;
+$neutral-700: #3f3f46;
+$neutral-800: #27272a;
+$neutral-900: #18181b;
+$neutral-950: #09090b;
+
+// Cores de Feedback
+$success: #22c55e;
+$warning: #f59e0b;
+$danger:  #ef4444;
+$info:    #3b82f6;
+
+// =============================================
+// APLICAÇÃO DAS CORES
+// =============================================
+
+// Cores do Tema
+$color-primary:       $primary-600;
+$color-primary-dark:  $primary-700;
+$color-primary-light: $primary-500;
+
+$color-secondary:       $secondary-400;
+$color-secondary-dark:  $secondary-500;
+$color-secondary-light: $secondary-300;
+
+// Cores de Superfície
+$surface-ground:   #f8fafc;
+$surface-card:     #ffffff;
+$surface-border:   $neutral-200;
+$surface-hover:    $neutral-100;
+
+// Cores de Texto
+$text-primary:   $neutral-900;
+$text-secondary: $neutral-600;
+$text-muted:     $neutral-400;
+$text-inverse:   #ffffff;
+
+// Sidebar
+$sidebar-bg:          $primary-900;
+$sidebar-text:        $neutral-300;
+$sidebar-text-active: $secondary-400;
+$sidebar-hover:       rgba(255, 255, 255, 0.05);
+$sidebar-active-bg:   rgba($secondary-400, 0.15);
+$sidebar-active-border: $secondary-400;
