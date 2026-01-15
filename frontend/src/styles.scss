@@ -1,0 +1,155 @@
+// Global Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+// Custom Theme Variables
+:root {
+  --primary-color: #3b82f6;
+  --primary-dark: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --surface-ground: #f8fafc;
+  --surface-card: #ffffff;
+  --text-color: #1e293b;
+  --text-secondary: #64748b;
+}
+
+// Layout
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-main {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+// Card Styles
+.card {
+  background: var(--surface-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+// Page Header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+}
+
+// Form Styles
+.form-group {
+  margin-bottom: 1rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+// PrimeNG Customizations
+.p-button {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.p-inputtext {
+  border-radius: 8px;
+}
+
+.p-datatable {
+  .p-datatable-header {
+    background: transparent;
+    border: none;
+    padding: 0 0 1rem 0;
+  }
+  
+  .p-datatable-thead > tr > th {
+    background: #f1f5f9;
+    font-weight: 600;
+  }
+}
+
+.p-dialog {
+  .p-dialog-header {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .p-dialog-footer {
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+// Toast
+.p-toast {
+  .p-toast-message {
+    border-radius: 8px;
+  }
+}
+
+// Utility Classes
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 600; }
+.text-muted { color: var(--text-secondary); }
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+// Status Badges
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  
+  &.status-active {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  &.status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  
+  &.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}

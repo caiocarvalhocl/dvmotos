@@ -1,0 +1,107 @@
+# =====================
+# Backend (Java/Maven)
+# =====================
+backend/target/
+backend/*.jar
+backend/*.war
+backend/*.class
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+backend/logs/
+backend/*.log
+
+# =====================
+# Frontend (Angular)
+# =====================
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.npm/
+
+# =====================
+# IDEs
+# =====================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Neovim / Vim
+*.swp
+*.swo
+*.swn
+*~
+.nvim/
+.nvimrc
+.exrc
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+nbdist/
+
+# =====================
+# Sistema Operacional
+# =====================
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =====================
+# Ambiente / Secrets
+# =====================
+.env
+.env.local
+.env.*.local
+*.env
+
+# Não commitar secrets!
+**/application-local.yml
+**/application-prod.yml
+*secrets*
+
+# =====================
+# Docker
+# =====================
+docker-compose.override.yml
+
+# =====================
+# Testes / Coverage
+# =====================
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+backend/target/surefire-reports/
+
+# =====================
+# Build / Temp
+# =====================
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+
+# =====================
+# Outros
+# =====================
+*.zip
+*.tar.gz
+*.rar
