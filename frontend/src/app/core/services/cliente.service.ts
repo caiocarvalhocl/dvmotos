@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '@env/environment';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { environment } from "@env/environment";
 
 export interface Cliente {
   id?: number;
@@ -28,20 +28,24 @@ export interface Page<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ClienteService {
   private apiUrl = `${environment.apiUrl}/clientes`;
 
   constructor(private http: HttpClient) {}
 
-  findAll(page: number = 0, size: number = 20, search?: string): Observable<Page<Cliente>> {
+  findAll(
+    page: number = 0,
+    size: number = 20,
+    search?: string,
+  ): Observable<Page<Cliente>> {
     let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    
+      .set("page", page.toString())
+      .set("size", size.toString());
+
     if (search) {
-      params = params.set('search', search);
+      params = params.set("search", search);
     }
 
     return this.http.get<Page<Cliente>>(this.apiUrl, { params });

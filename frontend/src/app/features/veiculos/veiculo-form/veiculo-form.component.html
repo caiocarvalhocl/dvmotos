@@ -1,0 +1,206 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>{{ isEditing() ? "Editar Veículo" : "Novo Veículo" }}</h1>
+      <p class="text-muted">
+        {{
+          isEditing()
+            ? "Atualize os dados do veículo"
+            : "Preencha os dados da moto"
+        }}
+      </p>
+    </div>
+    <a
+      routerLink="/veiculos"
+      pButton
+      icon="pi pi-arrow-left"
+      label="Voltar"
+      class="p-button-outlined"
+    ></a>
+  </div>
+
+  <div class="card">
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="form-grid">
+        <!-- Proprietário -->
+        <div class="form-section full-width">
+          <h3><i class="pi pi-user"></i> Proprietário</h3>
+
+          <div class="form-group">
+            <label for="client">Cliente *</label>
+            <p-autoComplete
+              id="client"
+              [(ngModel)]="selectedCliente"
+              name="client"
+              [suggestions]="filteredClientes()"
+              (completeMethod)="searchClientes($event)"
+              field="nome"
+              [dropdown]="true"
+              placeholder="Buscar client..."
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              [forceSelection]="true"
+              required
+            >
+              <ng-template let-client pTemplate="item">
+                <div class="client-item">
+                  <span class="nome">{{ client.nome }}</span>
+                  <span class="info">{{
+                    client.telefone || client.cpfCnpj || ""
+                  }}</span>
+                </div>
+              </ng-template>
+            </p-autoComplete>
+          </div>
+        </div>
+
+        <!-- Dados do Veículo -->
+        <div class="form-section">
+          <h3><i class="pi pi-car"></i> Dados do Veículo</h3>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="placa">Placa *</label>
+              <input
+                pInputText
+                id="placa"
+                [(ngModel)]="veiculo.placa"
+                name="placa"
+                placeholder="ABC1D23"
+                class="w-full placa-input"
+                maxlength="7"
+                required
+                (input)="formatPlaca($event)"
+              />
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="marca">Marca *</label>
+              <p-dropdown
+                id="marca"
+                [(ngModel)]="veiculo.marca"
+                name="marca"
+                [options]="marcas"
+                [editable]="true"
+                placeholder="Selecione"
+                styleClass="w-full"
+                required
+              >
+              </p-dropdown>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="modelo">Modelo *</label>
+              <input
+                pInputText
+                id="modelo"
+                [(ngModel)]="veiculo.modelo"
+                name="modelo"
+                placeholder="Ex: CG 160 Titan"
+                class="w-full"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="ano">Ano</label>
+              <p-inputMask
+                id="ano"
+                [(ngModel)]="veiculo.ano"
+                name="ano"
+                mask="9999"
+                placeholder="2024"
+                styleClass="w-full"
+              >
+              </p-inputMask>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="cor">Cor</label>
+              <p-dropdown
+                id="cor"
+                [(ngModel)]="veiculo.cor"
+                name="cor"
+                [options]="cores"
+                [editable]="true"
+                placeholder="Selecione"
+                styleClass="w-full"
+              >
+              </p-dropdown>
+            </div>
+
+            <div class="form-group flex-1">
+              <label for="kmAtual">KM Atual</label>
+              <p-inputNumber
+                id="kmAtual"
+                [(ngModel)]="veiculo.kmAtual"
+                name="kmAtual"
+                [useGrouping]="true"
+                suffix=" km"
+                placeholder="0 km"
+                styleClass="w-full"
+                inputStyleClass="w-full"
+              >
+              </p-inputNumber>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="chassi">Chassi</label>
+              <input
+                pInputText
+                id="chassi"
+                [(ngModel)]="veiculo.chassi"
+                name="chassi"
+                placeholder="9BWZZZ377VT004251"
+                class="w-full"
+                maxlength="17"
+                (input)="formatChassi($event)"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Observações -->
+        <div class="form-section full-width">
+          <h3><i class="pi pi-comment"></i> Observações</h3>
+
+          <div class="form-group">
+            <textarea
+              pInputTextarea
+              id="observacoes"
+              [(ngModel)]="veiculo.observacoes"
+              name="observacoes"
+              [rows]="3"
+              placeholder="Observações sobre o veículo..."
+              class="w-full"
+            >
+            </textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a
+          routerLink="/veiculos"
+          pButton
+          label="Cancelar"
+          class="p-button-outlined p-button-secondary"
+        ></a>
+        <button
+          pButton
+          type="submit"
+          [label]="isEditing() ? 'Salvar Alterações' : 'Cadastrar Veículo'"
+          icon="pi pi-check"
+          [loading]="saving()"
+          [disabled]="!form.valid || !selectedCliente"
+        ></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<p-toast></p-toast>

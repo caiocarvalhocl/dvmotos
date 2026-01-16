@@ -1,0 +1,121 @@
+<div class="dashboard">
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1 *ngIf="authService.currentUser() as user">
+        Bem-vindo, {{ user.nome.split(" ")[0] }}! 👋
+      </h1>
+      <p>Aqui está o resumo do seu sistema.</p>
+    </div>
+    <div class="welcome-badge">
+      <i class="pi pi-car"></i>
+      <span>DV Motos</span>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h2>Acesso Rápido</h2>
+    <div class="actions-grid">
+      <a routerLink="/clientes/novo" class="action-card action-primary">
+        <div class="action-icon">
+          <i class="pi pi-user-plus"></i>
+        </div>
+        <div class="action-content">
+          <h3>Novo Cliente</h3>
+          <p>Cadastrar client</p>
+        </div>
+        <i class="pi pi-arrow-right action-arrow"></i>
+      </a>
+
+      <a routerLink="/veiculos/novo" class="action-card action-secondary">
+        <div class="action-icon">
+          <i class="pi pi-car"></i>
+        </div>
+        <div class="action-content">
+          <h3>Novo Veículo</h3>
+          <p>Cadastrar moto</p>
+        </div>
+        <i class="pi pi-arrow-right action-arrow"></i>
+      </a>
+
+      <a routerLink="/clientes" class="action-card">
+        <div class="action-icon icon-neutral">
+          <i class="pi pi-users"></i>
+        </div>
+        <div class="action-content">
+          <h3>Clientes</h3>
+          <p>Ver todos os clientes</p>
+        </div>
+        <i class="pi pi-arrow-right action-arrow"></i>
+      </a>
+
+      <a routerLink="/veiculos" class="action-card">
+        <div class="action-icon icon-neutral">
+          <i class="pi pi-list"></i>
+        </div>
+        <div class="action-content">
+          <h3>Veículos</h3>
+          <p>Ver todos os veículos</p>
+        </div>
+        <i class="pi pi-arrow-right action-arrow"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="stats-section">
+    <h2>Estatísticas</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-primary">
+          <i class="pi pi-users"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">--</span>
+          <span class="stat-label">Clientes</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-secondary">
+          <i class="pi pi-car"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">--</span>
+          <span class="stat-label">Veículos</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-info">
+          <i class="pi pi-file-edit"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">--</span>
+          <span class="stat-label">OS Abertas</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-warning">
+          <i class="pi pi-box"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">--</span>
+          <span class="stat-label">Itens Estoque</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <i class="pi pi-wrench"></i>
+      <div>
+        <h4>MVP em Desenvolvimento</h4>
+        <p>
+          Estamos trabalhando para trazer mais funcionalidades em breve:
+          Estoque, Ordens de Serviço, Relatórios e muito mais!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
