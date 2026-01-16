@@ -43,6 +43,19 @@ export const routes: Routes = [
       {
         path: 'veiculos/:id',
         loadComponent: () => import('./features/veiculos/veiculo-form/veiculo-form.component').then(m => m.VeiculoFormComponent)
+      },
+      // Usuários (apenas admin)
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./features/usuarios/usuario-list/usuario-list.component').then(m => m.UsuarioListComponent)
+      },
+      {
+        path: 'usuarios/novo',
+        loadComponent: () => import('./features/usuarios/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent)
+      },
+      {
+        path: 'usuarios/:id',
+        loadComponent: () => import('./features/usuarios/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent)
       }
     ]
   },
