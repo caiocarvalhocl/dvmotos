@@ -18,6 +18,7 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
 
+    @Transactional(readOnly = true)
     public Page<ClienteResponse> findAll(String search, Pageable pageable) {
         Page<Cliente> clientes;
         if (search != null && !search.trim().isEmpty()) {
@@ -25,6 +26,7 @@ public class ClienteService {
         } else {
             clientes = clienteRepository.findByAtivoTrue(pageable);
         }
+
         return clientes.map(ClienteResponse::fromEntity);
     }
 
@@ -85,7 +87,7 @@ public class ClienteService {
     public void delete(Long id) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente", id));
-        
+
         // Soft delete
         cliente.setAtivo(false);
         clienteRepository.save(cliente);

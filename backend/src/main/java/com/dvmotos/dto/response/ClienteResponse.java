@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClienteResponse {
-    
+
     private Long id;
     private String nome;
     private String cpfCnpj;
@@ -27,7 +27,7 @@ public class ClienteResponse {
     private Boolean ativo;
     private LocalDateTime createdAt;
     private Integer totalVeiculos;
-    
+
     public static ClienteResponse fromEntity(Cliente cliente) {
         return ClienteResponse.builder()
                 .id(cliente.getId())

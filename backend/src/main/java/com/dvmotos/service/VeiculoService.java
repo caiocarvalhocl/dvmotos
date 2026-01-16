@@ -24,6 +24,7 @@ public class VeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final ClienteRepository clienteRepository;
 
+    @Transactional(readOnly = true)
     public Page<VeiculoResponse> findAll(String search, Pageable pageable) {
         Page<Veiculo> veiculos;
         if (search != null && !search.trim().isEmpty()) {
@@ -120,7 +121,7 @@ public class VeiculoService {
     public void delete(Long id) {
         Veiculo veiculo = veiculoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Veículo", id));
-        
+
         // Soft delete
         veiculo.setAtivo(false);
         veiculoRepository.save(veiculo);
