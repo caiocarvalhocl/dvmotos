@@ -1,0 +1,74 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <div class="logo-badge">
+          <i class="pi pi-car"></i>
+        </div>
+      </div>
+      <h1>
+        <span class="text-dv">DV</span>
+        <span class="text-motos">MOTOS</span>
+      </h1>
+      <p>Sistema de Gestão</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      @if (error()) {
+        <p-message
+          severity="error"
+          [text]="error()!"
+          styleClass="mb-3 w-full"
+        ></p-message>
+      }
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-envelope"></i>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            [(ngModel)]="credentials.email"
+            name="email"
+            placeholder="seu@email.com"
+            class="w-full"
+            required
+          />
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <p-password
+          id="senha"
+          [(ngModel)]="credentials.senha"
+          name="senha"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="Sua senha"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          required
+        >
+        </p-password>
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Entrar"
+        icon="pi pi-sign-in"
+        class="w-full btn-login"
+        [loading]="loading()"
+      ></button>
+    </form>
+
+    <div class="login-footer">
+      <small>Acesso restrito aos funcionários</small>
+    </div>
+  </div>
+
+  <div class="login-bg-decoration"></div>
+</div>

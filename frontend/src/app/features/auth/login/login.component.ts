@@ -1,15 +1,15 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { ButtonModule } from 'primeng/button';
-import { MessageModule } from 'primeng/message';
-import { AuthService, LoginRequest } from '../../../core/services/auth.service';
+import { Component, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+import { InputTextModule } from "primeng/inputtext";
+import { PasswordModule } from "primeng/password";
+import { ButtonModule } from "primeng/button";
+import { MessageModule } from "primeng/message";
+import { AuthService, LoginRequest } from "../../../core/services/auth.service";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
   imports: [
     CommonModule,
@@ -17,272 +17,23 @@ import { AuthService, LoginRequest } from '../../../core/services/auth.service';
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    MessageModule
+    MessageModule,
   ],
-  template: `
-    <div class="login-container">
-      <div class="login-card">
-        <div class="login-header">
-          <div class="logo">
-            <div class="logo-badge">
-              <i class="pi pi-car"></i>
-            </div>
-          </div>
-          <h1>
-            <span class="text-dv">DV</span>
-            <span class="text-motos">MOTOS</span>
-          </h1>
-          <p>Sistema de Gestão</p>
-        </div>
-        
-        <form (ngSubmit)="onSubmit()" class="login-form">
-          @if (error()) {
-            <p-message severity="error" [text]="error()!" styleClass="mb-3 w-full"></p-message>
-          }
-          
-          <div class="form-group">
-            <label for="email">E-mail</label>
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-envelope"></i>
-              <input 
-                pInputText 
-                id="email" 
-                type="email" 
-                [(ngModel)]="credentials.email"
-                name="email"
-                placeholder="seu@email.com"
-                class="w-full"
-                required
-              />
-            </span>
-          </div>
-          
-          <div class="form-group">
-            <label for="senha">Senha</label>
-            <p-password 
-              id="senha" 
-              [(ngModel)]="credentials.senha"
-              name="senha"
-              [feedback]="false"
-              [toggleMask]="true"
-              placeholder="Sua senha"
-              styleClass="w-full"
-              inputStyleClass="w-full"
-              required>
-            </p-password>
-          </div>
-          
-          <button 
-            pButton 
-            type="submit" 
-            label="Entrar" 
-            icon="pi pi-sign-in"
-            class="w-full btn-login"
-            [loading]="loading()">
-          </button>
-        </form>
-        
-        <div class="login-footer">
-          <small>Acesso restrito aos funcionários</small>
-        </div>
-      </div>
-      
-      <div class="login-bg-decoration"></div>
-    </div>
-  `,
-  styles: [`
-    // Cores DV Motos
-    $primary-600: #16a34a;
-    $primary-700: #15803d;
-    $primary-800: #166534;
-    $primary-900: #14532d;
-    $primary-950: #052e16;
-    
-    $secondary-300: #fde047;
-    $secondary-400: #facc15;
-    $secondary-500: #eab308;
-    
-    .login-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, $primary-950 0%, $primary-900 50%, $primary-800 100%);
-      padding: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .login-bg-decoration {
-      position: absolute;
-      top: -50%;
-      right: -30%;
-      width: 80%;
-      height: 200%;
-      background: $secondary-400;
-      opacity: 0.03;
-      transform: rotate(-15deg);
-      pointer-events: none;
-    }
-    
-    .login-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-      position: relative;
-      z-index: 1;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, $primary-600 0%, $secondary-400 50%, $primary-600 100%);
-        border-radius: 20px 20px 0 0;
-      }
-    }
-    
-    .login-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      
-      .logo {
-        margin-bottom: 1rem;
-      }
-      
-      .logo-badge {
-        width: 72px;
-        height: 72px;
-        background: linear-gradient(135deg, $primary-600 0%, $primary-700 100%);
-        border: 4px solid $secondary-400;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-        box-shadow: 0 4px 14px rgba($primary-900, 0.3);
-        
-        i {
-          font-size: 2rem;
-          color: white;
-        }
-      }
-      
-      h1 {
-        font-size: 2rem;
-        margin: 0 0 0.25rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        
-        .text-dv {
-          color: $secondary-500;
-          font-weight: 800;
-        }
-        
-        .text-motos {
-          color: $primary-700;
-          font-weight: 700;
-        }
-      }
-      
-      p {
-        color: #64748b;
-        margin: 0;
-        font-size: 0.9rem;
-      }
-    }
-    
-    .login-form {
-      .form-group {
-        margin-bottom: 1.25rem;
-        
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-          color: #374151;
-          font-size: 0.875rem;
-        }
-      }
-      
-      .btn-login {
-        background: linear-gradient(135deg, $primary-600 0%, $primary-700 100%) !important;
-        border: none !important;
-        height: 48px;
-        font-size: 1rem;
-        font-weight: 600;
-        margin-top: 0.5rem;
-        
-        &:hover {
-          background: linear-gradient(135deg, $primary-700 0%, $primary-800 100%) !important;
-        }
-      }
-    }
-    
-    .login-footer {
-      margin-top: 1.5rem;
-      text-align: center;
-      
-      small {
-        color: #94a3b8;
-      }
-    }
-    
-    :host ::ng-deep {
-      .p-inputtext {
-        width: 100%;
-        padding-left: 2.5rem;
-        
-        &:focus {
-          border-color: $primary-600;
-          box-shadow: 0 0 0 2px rgba($primary-600, 0.2);
-        }
-      }
-      
-      .p-password {
-        width: 100%;
-        
-        input {
-          width: 100%;
-          
-          &:focus {
-            border-color: $primary-600;
-            box-shadow: 0 0 0 2px rgba($primary-600, 0.2);
-          }
-        }
-      }
-      
-      .p-button {
-        justify-content: center;
-      }
-      
-      .p-input-icon-left > i {
-        color: #94a3b8;
-      }
-    }
-  `]
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent {
   credentials: LoginRequest = {
-    email: '',
-    senha: ''
+    email: "",
+    senha: "",
   };
-  
+
   loading = signal(false);
   error = signal<string | null>(null);
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   onSubmit(): void {
@@ -291,12 +42,12 @@ export class LoginComponent {
 
     this.authService.login(this.credentials).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(["/dashboard"]);
       },
       error: (err) => {
         this.loading.set(false);
-        this.error.set(err.error?.message || 'E-mail ou senha incorretos');
-      }
+        this.error.set(err.error?.message || "E-mail ou senha incorretos");
+      },
     });
   }
 }
