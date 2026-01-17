@@ -25,7 +25,7 @@ import { AuthService, LoginRequest } from "../../../core/services/auth.service";
 export class LoginComponent {
   credentials: LoginRequest = {
     email: "",
-    senha: "",
+    password: "",
   };
 
   loading = signal(false);

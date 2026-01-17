@@ -2,7 +2,7 @@
   <div class="welcome-section">
     <div class="welcome-content">
       <h1 *ngIf="authService.currentUser() as user">
-        Bem-vindo, {{ user.nome.split(" ")[0] }}! 👋
+        Bem-vindo, {{ user.name.split(" ")[0] }}! 👋
       </h1>
       <p>Aqui está o resumo do seu sistema.</p>
     </div>
