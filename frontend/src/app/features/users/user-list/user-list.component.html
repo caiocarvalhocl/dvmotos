@@ -1,26 +1,93 @@
 <div class="page-container">
   <div class="page-header">
-    <div><h1>Usuários</h1><p class="text-muted">Gerencie os usuários do sistema</p></div>
-    <a routerLink="/users/new" pButton icon="pi pi-plus" label="Novo Usuário"></a>
+    <div>
+      <h1>Usuários</h1>
+      <p class="text-muted">Gerencie os usuários do sistema</p>
+    </div>
+    <a routerLink="/users/new" pButton icon="pi pi-plus" class="btn-new">
+      <span class="btn-text">Cadastrar Usuário</span>
+    </a>
   </div>
   <div class="card">
     <div class="table-header">
-      <span class="p-input-icon-left"><i class="pi pi-search"></i>
-        <input pInputText [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" placeholder="Buscar por nome ou email..." class="search-input"/>
+      <span class="p-input-icon-left"
+        ><i class="pi pi-search"></i>
+        <input
+          pInputText
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Buscar por nome ou email..."
+          class="search-input"
+        />
       </span>
     </div>
-    <p-table [value]="users()" [loading]="loading()" [paginator]="true" [rows]="20" [totalRecords]="totalRecords()" [lazy]="true" (onLazyLoad)="loadUsers($event)" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuários" styleClass="p-datatable-sm">
-      <ng-template pTemplate="header"><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th style="width: 120px">Ações</th></tr></ng-template>
+    <p-table
+      [value]="users()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="20"
+      [totalRecords]="totalRecords()"
+      [lazy]="true"
+      (onLazyLoad)="loadUsers($event)"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuários"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header"
+        ><tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Perfil</th>
+          <th>Status</th>
+          <th style="width: 120px">Ações</th>
+        </tr></ng-template
+      >
       <ng-template pTemplate="body" let-user>
         <tr>
-          <td><span class="font-bold">{{ user.name }}</span></td>
+          <td>
+            <span class="font-bold">{{ user.name }}</span>
+          </td>
           <td>{{ user.email }}</td>
-          <td><p-tag [value]="getRoleLabel(user.role)" [severity]="getRoleSeverity(user.role)"></p-tag></td>
-          <td><p-tag [value]="user.active ? 'Ativo' : 'Inativo'" [severity]="user.active ? 'success' : 'danger'"></p-tag></td>
-          <td><div class="action-buttons"><a [routerLink]="['/users', user.id]" pButton icon="pi pi-pencil" class="p-button-text p-button-sm"></a><button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="confirmDelete(user)"></button></div></td>
+          <td>
+            <p-tag
+              [value]="getRoleLabel(user.role)"
+              [severity]="getRoleSeverity(user.role)"
+            ></p-tag>
+          </td>
+          <td>
+            <p-tag
+              [value]="user.active ? 'Ativo' : 'Inativo'"
+              [severity]="user.active ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a
+                [routerLink]="['/users', user.id]"
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-text p-button-sm"
+              ></a
+              ><button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-text trash p-button-sm"
+                (click)="confirmDelete(user)"
+              ></button>
+            </div>
+          </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage"><tr><td colspan="5" class="text-center"><div class="empty-state"><i class="pi pi-users"></i><p>Nenhum usuário encontrado</p><a routerLink="/users/new" pButton label="Cadastrar primeiro usuário" icon="pi pi-plus" class="p-button-outlined"></a></div></td></tr></ng-template>
+      <ng-template pTemplate="emptymessage"
+        ><tr>
+          <td colspan="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-users"></i>
+              <p>Nenhum usuário encontrado</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
   </div>
 </div>

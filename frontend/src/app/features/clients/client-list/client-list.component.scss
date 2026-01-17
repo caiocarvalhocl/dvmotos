@@ -9,6 +9,15 @@
   align-items: flex-start;
   margin-bottom: 1.5rem;
 
+  .btn-new {
+    padding: 0.375rem;
+    text-decoration: none;
+
+    .btn-text {
+      margin-left: 0.5rem;
+    }
+  }
+
   h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -23,10 +32,23 @@
 
 .table-header {
   margin-bottom: 1rem;
+  .p-input-icon-left > i {
+    color: #94a3b8;
+    position: absolute;
+    top: 50%;
+    transform: translatey(-50%);
+    left: 0.75rem;
+    margin-top: 0;
+  }
 }
 
 .search-input {
   width: 350px;
+  padding: 0.45rem 0 0.45rem 2.5rem;
+}
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+  padding: 0.35rem 0;
 }
 
 .veiculos-badge {
@@ -45,6 +67,16 @@
 .action-buttons {
   display: flex;
   gap: 0.25rem;
+
+  max-width: max-content;
+
+  .p-button-text.trash {
+    color: #dc2626;
+  }
+}
+
+:host ::ng-deep .p-tag {
+  padding: 0.25rem;
 }
 
 .empty-state {
