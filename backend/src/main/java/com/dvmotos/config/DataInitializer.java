@@ -1,8 +1,8 @@
 package com.dvmotos.config;
 
 import com.dvmotos.entity.Role;
-import com.dvmotos.entity.Usuario;
-import com.dvmotos.repository.UsuarioRepository;
+import com.dvmotos.entity.User;
+import com.dvmotos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -13,27 +13,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-        private final UsuarioRepository usuarioRepository;
-        private final PasswordEncoder passwordEncoder;
-
-        @Override
-        public void run(String... args) {
-                String email = "admin@dvmotos.com.br";
-                String senha = "admin123";
-
-                Usuario admin = usuarioRepository.findByEmail(email)
-                                .orElse(Usuario.builder()
-                                                .nome("Administrador")
-                                                .email(email)
-                                                .role(Role.ADMIN)
-                                                .ativo(true)
-                                                .build());
-
-                // Sempre atualiza a senha para garantir que está correta
-                admin.setSenhaHash(passwordEncoder.encode(senha));
-                usuarioRepository.save(admin);
-
-                log.info("✅ Admin configurado: {} / {}", email, senha);
-        }
+    @Override
+    public void run(String... args) {
+        String email = "admin@dvmotos.com.br";
+        String password = "admin123";
+        User admin = userRepository.findByEmail(email)
+                .orElse(User.builder().name("Administrator").email(email).role(Role.ADMIN).active(true).build());
+        admin.setPasswordHash(passwordEncoder.encode(password));
+        userRepository.save(admin);
+        log.info("✅ Admin configured: {} / {}", email, password);
+    }
 }

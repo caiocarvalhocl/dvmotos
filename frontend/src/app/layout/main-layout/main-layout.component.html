@@ -1,0 +1,40 @@
+<div class="layout-wrapper">
+  <header class="layout-topbar">
+    <div class="topbar-start">
+      <a routerLink="/dashboard" class="logo">
+        <span class="logo-text">DV Motos</span>
+      </a>
+    </div>
+    <nav class="topbar-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
+        <i class="pi pi-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/clients" routerLinkActive="active" class="menu-item">
+        <i class="pi pi-users"></i>
+        <span>Clientes</span>
+      </a>
+      <a routerLink="/vehicles" routerLinkActive="active" class="menu-item">
+        <i class="pi pi-car"></i>
+        <span>Veículos</span>
+      </a>
+      @if (authService.isAdmin()) {
+        <a routerLink="/users" routerLinkActive="active" class="menu-item">
+          <i class="pi pi-user-edit"></i>
+          <span>Usuários</span>
+        </a>
+      }
+    </nav>
+    <div class="topbar-end">
+      <div class="user-info">
+        <span class="user-name">{{ authService.currentUser()?.name }}</span>
+        <p-avatar [label]="authService.currentUser()?.name?.charAt(0)" shape="circle"></p-avatar>
+        <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+        <button pButton icon="pi pi-chevron-down" class="p-button-text p-button-sm" (click)="menu.toggle($event)"></button>
+      </div>
+    </div>
+  </header>
+  <main class="layout-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,53 @@
+<div class="page-container">
+  <div class="page-header">
+    <div><h1>{{ isEditing() ? 'Editar Cliente' : 'Novo Cliente' }}</h1><p class="text-muted">{{ isEditing() ? 'Atualize os dados do cliente' : 'Preencha os dados do novo cliente' }}</p></div>
+    <a routerLink="/clients" pButton icon="pi pi-arrow-left" label="Voltar" class="p-button-outlined"></a>
+  </div>
+  <div class="card">
+    <form (ngSubmit)="onSubmit()" #clientForm="ngForm">
+      <div class="form-grid">
+        <div class="form-field col-12 md:col-6">
+          <label for="name">Nome *</label>
+          <input pInputText id="name" [(ngModel)]="client.name" name="name" required class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="documentNumber">CPF/CNPJ</label>
+          <p-inputMask id="documentNumber" [(ngModel)]="client.documentNumber" name="documentNumber" [mask]="documentMask" (onBlur)="updateDocumentMask()" styleClass="w-full"></p-inputMask>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="phone">Telefone</label>
+          <p-inputMask id="phone" [(ngModel)]="client.phone" name="phone" mask="(99) 99999-9999" styleClass="w-full"></p-inputMask>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="email">Email</label>
+          <input pInputText id="email" [(ngModel)]="client.email" name="email" type="email" class="w-full"/>
+        </div>
+        <div class="form-field col-12">
+          <label for="address">Endereço</label>
+          <input pInputText id="address" [(ngModel)]="client.address" name="address" class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-5">
+          <label for="city">Cidade</label>
+          <input pInputText id="city" [(ngModel)]="client.city" name="city" class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-3">
+          <label for="state">Estado</label>
+          <p-dropdown id="state" [(ngModel)]="client.state" name="state" [options]="states" placeholder="Selecione" styleClass="w-full"></p-dropdown>
+        </div>
+        <div class="form-field col-12 md:col-4">
+          <label for="zipCode">CEP</label>
+          <p-inputMask id="zipCode" [(ngModel)]="client.zipCode" name="zipCode" mask="99999-999" styleClass="w-full"></p-inputMask>
+        </div>
+        <div class="form-field col-12">
+          <label for="notes">Observações</label>
+          <textarea pInputTextarea id="notes" [(ngModel)]="client.notes" name="notes" rows="3" class="w-full"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-outlined" routerLink="/clients"></button>
+        <button pButton type="submit" label="Salvar" icon="pi pi-check" [loading]="saving()" [disabled]="!clientForm.valid"></button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast></p-toast>

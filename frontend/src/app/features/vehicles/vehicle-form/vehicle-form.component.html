@@ -1,0 +1,53 @@
+<div class="page-container">
+  <div class="page-header">
+    <div><h1>{{ isEditing() ? 'Editar Veículo' : 'Novo Veículo' }}</h1><p class="text-muted">{{ isEditing() ? 'Atualize os dados do veículo' : 'Preencha os dados do novo veículo' }}</p></div>
+    <a routerLink="/vehicles" pButton icon="pi pi-arrow-left" label="Voltar" class="p-button-outlined"></a>
+  </div>
+  <div class="card">
+    <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
+      <div class="form-grid">
+        <div class="form-field col-12">
+          <label for="client">Cliente *</label>
+          <p-autoComplete id="client" [(ngModel)]="selectedClient" name="client" [suggestions]="filteredClients" (completeMethod)="filterClients($event)" (onSelect)="onClientSelect($event)" field="name" [dropdown]="true" placeholder="Buscar cliente..." styleClass="w-full" required></p-autoComplete>
+        </div>
+        <div class="form-field col-12 md:col-4">
+          <label for="licensePlate">Placa *</label>
+          <input pInputText id="licensePlate" [(ngModel)]="vehicle.licensePlate" name="licensePlate" required class="w-full" style="text-transform: uppercase"/>
+        </div>
+        <div class="form-field col-12 md:col-4">
+          <label for="brand">Marca *</label>
+          <input pInputText id="brand" [(ngModel)]="vehicle.brand" name="brand" required class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-4">
+          <label for="model">Modelo *</label>
+          <input pInputText id="model" [(ngModel)]="vehicle.model" name="model" required class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-3">
+          <label for="year">Ano</label>
+          <input pInputText id="year" [(ngModel)]="vehicle.year" name="year" maxlength="4" class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-3">
+          <label for="color">Cor</label>
+          <input pInputText id="color" [(ngModel)]="vehicle.color" name="color" class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-3">
+          <label for="chassisNumber">Chassi</label>
+          <input pInputText id="chassisNumber" [(ngModel)]="vehicle.chassisNumber" name="chassisNumber" class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-3">
+          <label for="currentMileage">KM Atual</label>
+          <p-inputNumber id="currentMileage" [(ngModel)]="vehicle.currentMileage" name="currentMileage" [useGrouping]="true" styleClass="w-full"></p-inputNumber>
+        </div>
+        <div class="form-field col-12">
+          <label for="notes">Observações</label>
+          <textarea pInputTextarea id="notes" [(ngModel)]="vehicle.notes" name="notes" rows="3" class="w-full"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-outlined" routerLink="/vehicles"></button>
+        <button pButton type="submit" label="Salvar" icon="pi pi-check" [loading]="saving()" [disabled]="!vehicleForm.valid"></button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast></p-toast>

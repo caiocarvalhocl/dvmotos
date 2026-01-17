@@ -1,19 +1,12 @@
 package com.dvmotos.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class AuthResponse {
-    
     private String token;
     private String refreshToken;
-    private String tipo;
+    private String type;
     private Long expiresIn;
-    private UsuarioResponse usuario;
+    private UserResponse user;
 }

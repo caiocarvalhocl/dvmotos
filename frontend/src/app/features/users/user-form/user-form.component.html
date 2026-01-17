@@ -1,0 +1,33 @@
+<div class="page-container">
+  <div class="page-header">
+    <div><h1>{{ isEditing() ? 'Editar Usuário' : 'Novo Usuário' }}</h1><p class="text-muted">{{ isEditing() ? 'Atualize os dados do usuário' : 'Preencha os dados do novo usuário' }}</p></div>
+    <a routerLink="/users" pButton icon="pi pi-arrow-left" label="Voltar" class="p-button-outlined"></a>
+  </div>
+  <div class="card">
+    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+      <div class="form-grid">
+        <div class="form-field col-12 md:col-6">
+          <label for="name">Nome *</label>
+          <input pInputText id="name" [(ngModel)]="user.name" name="name" required class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="email">Email *</label>
+          <input pInputText id="email" [(ngModel)]="user.email" name="email" type="email" required class="w-full"/>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="password">Senha {{ isEditing() ? '(deixe em branco para manter)' : '*' }}</label>
+          <p-password id="password" [(ngModel)]="user.password" name="password" [required]="!isEditing()" [toggleMask]="true" [feedback]="false" styleClass="w-full"></p-password>
+        </div>
+        <div class="form-field col-12 md:col-6">
+          <label for="role">Perfil *</label>
+          <p-dropdown id="role" [(ngModel)]="user.role" name="role" [options]="roles" required styleClass="w-full"></p-dropdown>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-outlined" routerLink="/users"></button>
+        <button pButton type="submit" label="Salvar" icon="pi pi-check" [loading]="saving()" [disabled]="!userForm.valid"></button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast></p-toast>

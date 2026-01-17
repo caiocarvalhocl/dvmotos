@@ -1,102 +1,58 @@
-import { Routes } from "@angular/router";
-import { authGuard } from "./core/guards/auth.guard";
+import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
-    path: "login",
-    loadComponent: () =>
-      import("./features/auth/login/login.component").then(
-        (m) => m.LoginComponent,
-      ),
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
-    path: "",
-    loadComponent: () =>
-      import("./layout/main-layout/main-layout.component").then(
-        (m) => m.MainLayoutComponent,
-      ),
+    path: '',
+    loadComponent: () => import('./layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     canActivate: [authGuard],
     children: [
       {
-        path: "",
-        redirectTo: "dashboard",
-        pathMatch: "full",
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
-        path: "dashboard",
-        loadComponent: () =>
-          import("./features/dashboard/dashboard.component").then(
-            (m) => m.DashboardComponent,
-          ),
+        path: 'clients',
+        loadComponent: () => import('./features/clients/client-list/client-list.component').then(m => m.ClientListComponent)
       },
       {
-        path: "clientes",
-        loadComponent: () =>
-          import("./features/clientes/cliente-list/cliente-list.component").then(
-            (m) => m.ClienteListComponent,
-          ),
+        path: 'clients/new',
+        loadComponent: () => import('./features/clients/client-form/client-form.component').then(m => m.ClientFormComponent)
       },
       {
-        path: "clientes/novo",
-        loadComponent: () =>
-          import("./features/clientes/cliente-form/cliente-form.component").then(
-            (m) => m.ClienteFormComponent,
-          ),
+        path: 'clients/:id',
+        loadComponent: () => import('./features/clients/client-form/client-form.component').then(m => m.ClientFormComponent)
       },
       {
-        path: "clientes/:id",
-        loadComponent: () =>
-          import("./features/clientes/cliente-form/cliente-form.component").then(
-            (m) => m.ClienteFormComponent,
-          ),
+        path: 'vehicles',
+        loadComponent: () => import('./features/vehicles/vehicle-list/vehicle-list.component').then(m => m.VehicleListComponent)
       },
       {
-        path: "veiculos",
-        loadComponent: () =>
-          import("./features/veiculos/veiculo-list/veiculo-list.component").then(
-            (m) => m.VeiculoListComponent,
-          ),
+        path: 'vehicles/new',
+        loadComponent: () => import('./features/vehicles/vehicle-form/vehicle-form.component').then(m => m.VehicleFormComponent)
       },
       {
-        path: "veiculos/novo",
-        loadComponent: () =>
-          import("./features/veiculos/veiculo-form/veiculo-form.component").then(
-            (m) => m.VeiculoFormComponent,
-          ),
+        path: 'vehicles/:id',
+        loadComponent: () => import('./features/vehicles/vehicle-form/vehicle-form.component').then(m => m.VehicleFormComponent)
       },
       {
-        path: "veiculos/:id",
-        loadComponent: () =>
-          import("./features/veiculos/veiculo-form/veiculo-form.component").then(
-            (m) => m.VeiculoFormComponent,
-          ),
-      },
-      // Usuários (apenas admin)
-      {
-        path: "usuarios",
-        loadComponent: () =>
-          import("./features/usuarios/usuario-list/usuario-list.component").then(
-            (m) => m.UsuarioListComponent,
-          ),
+        path: 'users',
+        loadComponent: () => import('./features/users/user-list/user-list.component').then(m => m.UserListComponent)
       },
       {
-        path: "usuarios/novo",
-        loadComponent: () =>
-          import("./features/usuarios/usuario-form/usuario-form.component").then(
-            (m) => m.UsuarioFormComponent,
-          ),
+        path: 'users/new',
+        loadComponent: () => import('./features/users/user-form/user-form.component').then(m => m.UserFormComponent)
       },
       {
-        path: "usuarios/:id",
-        loadComponent: () =>
-          import("./features/usuarios/usuario-form/usuario-form.component").then(
-            (m) => m.UsuarioFormComponent,
-          ),
-      },
-    ],
+        path: 'users/:id',
+        loadComponent: () => import('./features/users/user-form/user-form.component').then(m => m.UserFormComponent)
+      }
+    ]
   },
-  {
-    path: "**",
-    redirectTo: "",
-  },
+  { path: '**', redirectTo: '/dashboard' }
 ];
