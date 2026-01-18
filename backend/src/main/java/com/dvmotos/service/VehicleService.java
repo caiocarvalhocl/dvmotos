@@ -25,11 +25,12 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public Page<VehicleResponse> findAll(String search, Pageable pageable) {
         Page<Vehicle> vehicles = (search != null && !search.trim().isEmpty())
-            ? vehicleRepository.search(search.trim(), pageable)
-            : vehicleRepository.findByActiveTrue(pageable);
+                ? vehicleRepository.search(search.trim(), pageable)
+                : vehicleRepository.findByActiveTrue(pageable);
         return vehicles.map(VehicleResponse::fromEntity);
     }
 
+    @Transactional
     public VehicleResponse findById(Long id) {
         return VehicleResponse.fromEntity(vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id)));
@@ -37,7 +38,8 @@ public class VehicleService {
 
     public VehicleResponse findByLicensePlate(String licensePlate) {
         return VehicleResponse.fromEntity(vehicleRepository.findByLicensePlate(licensePlate.toUpperCase())
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with license plate: " + licensePlate)));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Vehicle not found with license plate: " + licensePlate)));
     }
 
     public List<VehicleResponse> findByClient(Long clientId) {
@@ -66,7 +68,8 @@ public class VehicleService {
 
     @Transactional
     public VehicleResponse update(Long id, VehicleRequest request) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", request.getClientId()));
         String plate = request.getLicensePlate().toUpperCase();
@@ -78,17 +81,22 @@ public class VehicleService {
                 throw new BusinessException("A vehicle with this chassis number already exists");
             }
         }
-        vehicle.setClient(client); vehicle.setLicensePlate(plate);
-        vehicle.setBrand(request.getBrand()); vehicle.setModel(request.getModel());
-        vehicle.setYear(request.getYear()); vehicle.setColor(request.getColor());
+        vehicle.setClient(client);
+        vehicle.setLicensePlate(plate);
+        vehicle.setBrand(request.getBrand());
+        vehicle.setModel(request.getModel());
+        vehicle.setYear(request.getYear());
+        vehicle.setColor(request.getColor());
         vehicle.setChassisNumber(request.getChassisNumber());
-        vehicle.setCurrentMileage(request.getCurrentMileage()); vehicle.setNotes(request.getNotes());
+        vehicle.setCurrentMileage(request.getCurrentMileage());
+        vehicle.setNotes(request.getNotes());
         return VehicleResponse.fromEntity(vehicleRepository.save(vehicle));
     }
 
     @Transactional
     public void delete(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
     }

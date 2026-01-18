@@ -1,31 +1,145 @@
 <div class="page-container">
   <div class="page-header">
-    <div><h1>{{ isEditing() ? 'Editar Usuário' : 'Novo Usuário' }}</h1><p class="text-muted">{{ isEditing() ? 'Atualize os dados do usuário' : 'Preencha os dados do novo usuário' }}</p></div>
-    <a routerLink="/users" pButton icon="pi pi-arrow-left" label="Voltar" class="p-button-outlined"></a>
+    <div class="header-content">
+      <h1>{{ isEditing() ? "Editar Usuário" : "Novo Usuário" }}</h1>
+      <p class="text-muted">
+        {{
+          isEditing()
+            ? "Gerencie o acesso do usuário"
+            : "Cadastre um novo membro no sistema"
+        }}
+      </p>
+    </div>
+    <button
+      *ngIf="canEditRole()"
+      pButton
+      routerLink="/users"
+      icon="pi pi-arrow-left"
+      label="Voltar"
+      class="p-button-outlined p-button-secondary p-button-sm"
+    ></button>
   </div>
-  <div class="card">
+
+  <div class="card form-card">
     <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-      <div class="form-grid">
-        <div class="form-field col-12 md:col-6">
-          <label for="name">Nome *</label>
-          <input pInputText id="name" [(ngModel)]="user.name" name="name" required class="w-full"/>
+      <h5 class="section-title"><i class="pi pi-user"></i> Dados da Conta</h5>
+      <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+          <label for="name"
+            >Nome Completo <span class="text-red-500">*</span></label
+          >
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-id-card"></i>
+            <input
+              pInputText
+              id="name"
+              [(ngModel)]="user.name"
+              name="name"
+              required
+              class="w-full"
+            />
+          </span>
         </div>
-        <div class="form-field col-12 md:col-6">
-          <label for="email">Email *</label>
-          <input pInputText id="email" [(ngModel)]="user.email" name="email" type="email" required class="w-full"/>
-        </div>
-        <div class="form-field col-12 md:col-6">
-          <label for="password">Senha {{ isEditing() ? '(deixe em branco para manter)' : '*' }}</label>
-          <p-password id="password" [(ngModel)]="user.password" name="password" [required]="!isEditing()" [toggleMask]="true" [feedback]="false" styleClass="w-full"></p-password>
-        </div>
-        <div class="form-field col-12 md:col-6">
-          <label for="role">Perfil *</label>
-          <p-dropdown id="role" [(ngModel)]="user.role" name="role" [options]="roles" required styleClass="w-full"></p-dropdown>
+
+        <div class="field col-12 md:col-6">
+          <label for="email">Email <span class="text-red-500">*</span></label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input
+              pInputText
+              id="email"
+              [(ngModel)]="user.email"
+              name="email"
+              type="email"
+              required
+              class="w-full"
+            />
+          </span>
         </div>
       </div>
+
+      <h5 class="section-title">
+        <i class="pi pi-shield"></i> Segurança e Acesso
+      </h5>
+      <div class="formgrid grid">
+        <div class="field col-12 md:col-6">
+          <label for="role"
+            >Perfil de Acesso <span class="text-red-500">*</span></label
+          >
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-briefcase"></i>
+            <p-dropdown
+              id="role"
+              [(ngModel)]="user.role"
+              name="role"
+              [options]="roles"
+              [disabled]="!canEditRole()"
+              required
+              styleClass="w-full"
+            ></p-dropdown>
+          </span>
+          <small *ngIf="!canEditRole()" class="text-gray-500">
+            Contate um administrador para alterar seu perfil.
+          </small>
+        </div>
+
+        <div
+          class="field col-12 md:col-6"
+          *ngIf="canEditPassword(); else passwordLocked"
+        >
+          <label for="password">
+            Senha <span *ngIf="!isEditing()" class="text-red-500">*</span>
+          </label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-lock z-2"></i>
+            <p-password
+              id="password"
+              [(ngModel)]="user.password"
+              name="password"
+              [required]="!isEditing()"
+              [toggleMask]="true"
+              [feedback]="false"
+              placeholder="••••••••"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-5"
+            ></p-password>
+          </span>
+          <small *ngIf="isEditing()" class="block text-gray-500 mt-1">
+            <i class="pi pi-info-circle text-xs"></i> Deixe em branco para
+            manter a atual.
+          </small>
+        </div>
+
+        <ng-template #passwordLocked>
+          <div class="field col-12 md:col-6">
+            <label class="text-gray-500">Senha</label>
+            <div
+              class="p-3 border-1 border-gray-200 border-round bg-gray-50 flex align-items-center gap-2 text-gray-500"
+            >
+              <i class="pi pi-lock"></i>
+              <span>A gestão de senha é exclusiva do usuário.</span>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
       <div class="form-actions">
-        <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-outlined" routerLink="/users"></button>
-        <button pButton type="submit" label="Salvar" icon="pi pi-check" [loading]="saving()" [disabled]="!userForm.valid"></button>
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          class="p-button-text p-button-secondary"
+          (click)="onCancel()"
+        ></button>
+        <button
+          pButton
+          type="submit"
+          label="Salvar"
+          icon="pi pi-check"
+          [loading]="saving()"
+          [disabled]="!userForm.valid"
+          class="p-button-primary px-4"
+        ></button>
       </div>
     </form>
   </div>

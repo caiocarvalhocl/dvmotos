@@ -1,114 +1,124 @@
+$primary-color: #3b82f6;
+$text-color: #374151;
+$muted-color: #6b7280;
+$border-radius: 8px;
+
 .page-container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 800px; // Um pouco mais estreito que Veículos, pois tem menos campos
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #1e293b;
-    margin: 0 0 0.25rem;
+    color: #111827;
+    margin: 0 0 0.5rem;
   }
 
   p {
+    color: $muted-color;
     margin: 0;
+    font-size: 0.95rem;
   }
 }
 
-.form-grid {
-  display: grid;
-  gap: 1.5rem;
+.form-card {
+  background: #fff;
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
 }
 
-.form-section {
-  h3 {
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-color;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    color: $primary-color;
+    background: lighten($primary-color, 42%);
+    padding: 0.5rem;
+    border-radius: 6px;
     font-size: 1rem;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    i {
-      color: #16a34a;
-    }
   }
 }
 
-.form-group {
-  margin-bottom: 1rem;
-
-  &:last-child {
-    margin-bottom: 0;
+// --- CSS CORRETIVO PARA ÍCONES ---
+:host ::ng-deep {
+  .field {
+    margin-bottom: 1.5rem;
   }
 
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #374151;
+    color: $text-color;
     font-size: 0.875rem;
   }
-}
 
-.text-danger {
-  color: #ef4444;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-}
-
-.info-section {
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-top: 0.5rem;
-}
-
-.role-info {
-  display: grid;
-  gap: 1rem;
-}
-
-.role-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  border: 1px solid #e2e8f0;
-
-  p {
-    margin: 0;
-    color: #64748b;
-    font-size: 0.875rem;
+  // 1. Container Relativo
+  .p-input-icon-left {
+    position: relative;
+    display: block;
+    width: 100%;
   }
-}
 
-.role-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  // 2. Posicionamento do ícone
+  .p-input-icon-left > i {
+    position: absolute;
+    top: 50%;
+    margin-top: -0.5rem;
+    left: 0.75rem;
+    color: #9ca3af;
+    z-index: 2; // Crítico para ficar acima do Password
+  }
 
-  &.admin {
-    color: #d97706;
+  // 3. Padding para Inputs Normais
+  .p-input-icon-left > .p-inputtext {
+    padding-left: 2.5rem !important;
+  }
 
-    i {
-      color: #d97706;
+  // 4. Correção para Dropdown e Password
+  // O PrimeNG aninha o input real dentro de componentes
+  .p-dropdown .p-inputtext {
+    padding-left: 2.5rem !important;
+  }
+
+  // O Password é o mais chato: precisa atingir o input dentro do wrapper
+  .p-password-input {
+    padding-left: 2.5rem !important;
+  }
+
+  // Estilo visual dos inputs
+  .p-inputtext,
+  .p-dropdown,
+  .p-password {
+    width: 100%; // Garante largura total
+    border-radius: 6px;
+
+    // Borda suave
+    &:not(.p-button) {
+      border-color: #d1d5db;
     }
-  }
 
-  &.operador {
-    color: #3b82f6;
-
-    i {
-      color: #3b82f6;
+    // Foco
+    &:enabled:focus {
+      border-color: $primary-color;
     }
   }
 }
@@ -119,12 +129,16 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #f3f4f6;
+
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+    button {
+      width: 100%;
+    }
+  }
 }
 
-:host ::ng-deep {
-  .p-password,
-  .p-dropdown {
-    width: 100%;
-  }
+.p-button {
+  padding: 0.2rem;
 }

@@ -28,9 +28,17 @@
     <div class="topbar-end">
       <div class="user-info">
         <span class="user-name">{{ authService.currentUser()?.name }}</span>
-        <p-avatar [label]="authService.currentUser()?.name?.charAt(0)" shape="circle"></p-avatar>
+        <p-avatar
+          [label]="authService.currentUser()?.name?.charAt(0)"
+          shape="circle"
+        ></p-avatar>
         <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
-        <button pButton icon="pi pi-chevron-down" class="p-button-text p-button-sm" (click)="menu.toggle($event)"></button>
+        <button
+          pButton
+          icon="pi pi-chevron-down"
+          class="p-button-text p-button-sm"
+          (click)="menu.toggle($event)"
+        ></button>
       </div>
     </div>
   </header>

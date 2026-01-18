@@ -20,11 +20,12 @@ public class ClientService {
     @Transactional(readOnly = true)
     public Page<ClientResponse> findAll(String search, Pageable pageable) {
         Page<Client> clients = (search != null && !search.trim().isEmpty())
-            ? clientRepository.search(search.trim(), pageable)
-            : clientRepository.findByActiveTrue(pageable);
+                ? clientRepository.search(search.trim(), pageable)
+                : clientRepository.findByActiveTrue(pageable);
         return clients.map(ClientResponse::fromEntity);
     }
 
+    @Transactional
     public ClientResponse findById(Long id) {
         return ClientResponse.fromEntity(clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client", id)));
@@ -32,7 +33,8 @@ public class ClientService {
 
     @Transactional
     public ClientResponse create(ClientRequest request) {
-        if (request.getDocumentNumber() != null && clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
+        if (request.getDocumentNumber() != null
+                && clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
             throw new BusinessException("A client with this document number already exists");
         }
         Client client = Client.builder()
@@ -52,10 +54,14 @@ public class ClientService {
                 throw new BusinessException("A client with this document number already exists");
             }
         }
-        client.setName(request.getName()); client.setDocumentNumber(request.getDocumentNumber());
-        client.setPhone(request.getPhone()); client.setEmail(request.getEmail());
-        client.setAddress(request.getAddress()); client.setCity(request.getCity());
-        client.setState(request.getState()); client.setZipCode(request.getZipCode());
+        client.setName(request.getName());
+        client.setDocumentNumber(request.getDocumentNumber());
+        client.setPhone(request.getPhone());
+        client.setEmail(request.getEmail());
+        client.setAddress(request.getAddress());
+        client.setCity(request.getCity());
+        client.setState(request.getState());
+        client.setZipCode(request.getZipCode());
         client.setNotes(request.getNotes());
         return ClientResponse.fromEntity(clientRepository.save(client));
     }

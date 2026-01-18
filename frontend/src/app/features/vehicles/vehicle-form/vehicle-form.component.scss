@@ -1,92 +1,120 @@
+$primary-color: #3b82f6;
+$text-color: #374151;
+$muted-color: #6b7280;
+$border-radius: 8px;
+
 .page-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #1e293b;
-    margin: 0 0 0.25rem;
+    color: #111827;
+    margin: 0 0 0.5rem;
   }
 
   p {
+    color: $muted-color;
     margin: 0;
+    font-size: 0.95rem;
   }
 }
 
-.form-grid {
-  display: grid;
-  gap: 1.5rem;
+.form-card {
+  background: #fff;
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
 }
 
-.form-section {
-  h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    i {
-      color: #3b82f6;
-    }
-  }
-}
-
-.form-row {
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-color;
+  margin: 0 0 1.5rem 0;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 
-  &:last-child {
-    margin-bottom: 0;
+  i {
+    color: $primary-color;
+    background: lighten($primary-color, 42%);
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
   }
 }
 
-.form-group {
+// --- CSS CORRETIVO PARA ÍCONES ---
+:host ::ng-deep {
+  .field {
+    margin-bottom: 1.5rem;
+  }
+
   label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #374151;
+    color: $text-color;
     font-size: 0.875rem;
   }
-}
 
-.flex-1 {
-  flex: 1;
-}
-.full-width {
-  grid-column: 1 / -1;
-}
-
-.placa-input {
-  text-transform: uppercase;
-  font-family: monospace;
-  font-size: 1rem;
-  letter-spacing: 2px;
-}
-
-.cliente-item {
-  display: flex;
-  flex-direction: column;
-
-  .nome {
-    font-weight: 500;
+  // 1. Container Relativo
+  .p-input-icon-left {
+    position: relative;
+    display: block;
+    width: 100%;
   }
 
-  .info {
-    font-size: 0.75rem;
-    color: #64748b;
+  // 2. Posicionamento Absoluto do Ícone
+  .p-input-icon-left > i {
+    position: absolute;
+    top: 50%;
+    margin-top: -0.5rem;
+    left: 0.75rem; // Distância da borda esquerda
+    color: #9ca3af;
+    z-index: 2; // Garante ficar acima dos inputs
+  }
+
+  // 3. Padding para Inputs Normais e Máscaras
+  .p-input-icon-left > .p-inputtext,
+  .p-input-icon-left > .p-inputmask > .p-inputtext {
+    padding-left: 2.5rem !important;
+  }
+
+  // 4. Correção específica para AutoComplete e InputNumber
+  // Eles criam wrappers adicionais, então precisamos forçar o padding no input interno
+  .p-autocomplete-input,
+  .p-inputnumber-input {
+    padding-left: 2.5rem !important;
+  }
+
+  // Estilo visual dos inputs
+  .p-inputtext,
+  .p-dropdown {
+    border-radius: 6px;
+    border-color: #d1d5db;
+
+    &:enabled:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+  }
+
+  .uppercase {
+    text-transform: uppercase;
   }
 }
 
@@ -96,20 +124,15 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-}
+  border-top: 1px solid #f3f4f6;
 
-:host ::ng-deep {
-  .p-autocomplete,
-  .p-dropdown,
-  .p-inputmask,
-  .p-inputnumber {
-    width: 100%;
+  @media (max-width: 600px) {
+    flex-direction: column-reverse;
+    button {
+      width: 100%;
+    }
   }
 }
-
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
+.p-button {
+  padding: 0.3rem;
 }
