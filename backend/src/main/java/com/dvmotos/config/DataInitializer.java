@@ -24,6 +24,5 @@ public class DataInitializer implements CommandLineRunner {
                 .orElse(User.builder().name("Administrator").email(email).role(Role.ADMIN).active(true).build());
         admin.setPasswordHash(passwordEncoder.encode(password));
         userRepository.save(admin);
-        log.info("✅ Admin configured: {} / {}", email, password);
     }
 }

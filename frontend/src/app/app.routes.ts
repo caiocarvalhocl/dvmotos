@@ -89,9 +89,9 @@ export const routes: Routes = [
           ),
       },
       {
-        path: "my-profile",
+        path: "myprofile",
         loadComponent: () =>
-          import("./features/profile/my-profile.component").then(
+          import("./features/profile/my-profile/my-profile.component").then(
             (m) => m.MyProfileComponent,
           ),
       },

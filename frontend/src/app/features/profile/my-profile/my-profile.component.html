@@ -1,0 +1,160 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Meu Perfil</h1>
+      <p class="text-muted">Gerencie suas informações pessoais e segurança</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="flex flex-column align-items-center gap-3">
+        <i
+          class="pi pi-spin pi-spinner text-primary"
+          style="font-size: 2.5rem"
+        ></i>
+        <span class="text-gray-500">Carregando perfil...</span>
+      </div>
+    </div>
+  } @else {
+    <div class="profile-grid">
+      <div class="card profile-card">
+        <div class="profile-avatar-section">
+          <div class="avatar-circle">
+            {{ getUserInitials() }}
+          </div>
+          <h2 class="mb-1 mt-3 text-900 font-bold">{{ user.name }}</h2>
+          <p-tag
+            [value]="getRoleLabel(user.role)"
+            [severity]="getRoleSeverity(user.role)"
+            styleClass="px-3"
+          ></p-tag>
+        </div>
+
+        <div class="form-content">
+          <h5 class="section-title">
+            <i class="pi pi-id-card"></i> Dados Básicos
+          </h5>
+
+          <div class="field mb-4">
+            <label for="name">Nome Completo</label>
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-user"></i>
+              <input
+                pInputText
+                id="name"
+                [(ngModel)]="user.name"
+                class="w-full"
+                placeholder="Seu nome completo"
+              />
+            </span>
+          </div>
+
+          <div class="field mb-4">
+            <label for="email">Email</label>
+            <span class="p-input-icon-left w-full">
+              <i class="pi pi-envelope"></i>
+              <input
+                pInputText
+                id="email"
+                [(ngModel)]="user.email"
+                type="email"
+                class="w-full"
+                placeholder="seu@email.com"
+              />
+            </span>
+          </div>
+
+          <div class="form-actions mt-auto pt-2">
+            <button
+              pButton
+              label="Salvar Dados"
+              icon="pi pi-check"
+              class="p-button-primary w-full"
+              [loading]="savingProfile()"
+              (click)="onSaveProfile()"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card security-card">
+        <h5 class="section-title mb-4">
+          <i class="pi pi-shield"></i> Alterar Senha
+        </h5>
+        <p class="text-sm text-gray-500 mb-4">
+          Para sua segurança, utilize uma senha forte com caracteres especiais e
+          números.
+        </p>
+
+        <div class="field mb-4">
+          <label for="currentPassword">Senha Atual</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-lock z-2"></i>
+            <p-password
+              id="currentPassword"
+              [(ngModel)]="currentPassword"
+              [toggleMask]="true"
+              [feedback]="false"
+              placeholder="••••••••"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-5"
+            ></p-password>
+          </span>
+        </div>
+
+        <p-divider align="center">
+          <span class="text-gray-400 text-sm">Nova Senha</span>
+        </p-divider>
+
+        <div class="field mb-4">
+          <label for="newPassword">Nova Senha</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-key z-2"></i>
+            <p-password
+              id="newPassword"
+              [(ngModel)]="newPassword"
+              [toggleMask]="true"
+              [feedback]="true"
+              placeholder="Mínimo 6 caracteres"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-5"
+              weakLabel="Fraca"
+              mediumLabel="Média"
+              strongLabel="Forte"
+            ></p-password>
+          </span>
+        </div>
+
+        <div class="field mb-4">
+          <label for="confirmPassword">Confirmar Nova Senha</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-check-circle z-2"></i>
+            <p-password
+              id="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              [toggleMask]="true"
+              [feedback]="false"
+              placeholder="Repita a nova senha"
+              styleClass="w-full"
+              inputStyleClass="w-full pl-5"
+            ></p-password>
+          </span>
+        </div>
+
+        <div class="form-actions pt-2">
+          <button
+            pButton
+            label="Atualizar Senha"
+            icon="pi pi-lock"
+            [loading]="savingPassword()"
+            (click)="onChangePassword()"
+            class="p-button-outlined p-button-warning w-full"
+            [disabled]="!currentPassword || !newPassword || !confirmPassword"
+          ></button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+<p-toast></p-toast>

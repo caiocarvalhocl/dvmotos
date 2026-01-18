@@ -20,10 +20,51 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // ============ MY PROFILE METHODS ============
+
+    @Transactional
+    public UserResponse updateMyProfile(Long id, UserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Validate email uniqueness (excluding current user)
+        if (!user.getEmail().equalsIgnoreCase(request.getEmail()) &&
+                userRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email already registered for another user");
+        }
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail().toLowerCase().trim());
+        // Note: role cannot be changed via profile update
+
+        return UserResponse.fromEntity(userRepository.save(user));
+    }
+
+    @Transactional
+    public void changeMyPassword(Long id, String currentPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Validate current password
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new BusinessException("Current password is incorrect");
+        }
+
+        // Validate new password
+        if (newPassword == null || newPassword.length() < 6) {
+            throw new BusinessException("New password must be at least 6 characters");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    // ============ ADMIN METHODS ============
+
     public Page<UserResponse> findAll(Pageable pageable, String search) {
-        Page<User> users = (search != null && !search.isBlank()) 
-            ? userRepository.search(search, pageable) 
-            : userRepository.findAll(pageable);
+        Page<User> users = (search != null && !search.isBlank())
+                ? userRepository.search(search, pageable)
+                : userRepository.findAll(pageable);
         return users.map(UserResponse::fromEntity);
     }
 
@@ -57,7 +98,8 @@ public class UserService {
         }
         user.setName(request.getName());
         user.setEmail(request.getEmail().toLowerCase().trim());
-        if (request.getRole() != null) user.setRole(request.getRole());
+        if (request.getRole() != null)
+            user.setRole(request.getRole());
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         }

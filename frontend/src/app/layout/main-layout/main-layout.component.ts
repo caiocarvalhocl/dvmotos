@@ -38,7 +38,7 @@ export class MainLayoutComponent {
   ];
 
   userMenuItems: MenuItem[] = [
-    { label: "Meu Perfil", icon: "pi pi-user", routerLink: "/my-profile" },
+    { label: "Meu Perfil", icon: "pi pi-user", routerLink: "/myprofile" },
     { separator: true },
     {
       label: "Sair",

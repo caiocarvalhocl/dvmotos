@@ -2,6 +2,7 @@ package com.dvmotos.controller;
 
 import com.dvmotos.dto.request.UserRequest;
 import com.dvmotos.dto.response.UserResponse;
+import com.dvmotos.entity.User;
 import com.dvmotos.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
@@ -22,6 +24,33 @@ import java.util.Map;
 @Tag(name = "Users", description = "User management")
 public class UserController {
     private final UserService userService;
+
+    // ============ MY PROFILE ENDPOINTS ============
+
+    @GetMapping("/me")
+    @Operation(summary = "Get current user profile")
+    public ResponseEntity<UserResponse> getMyProfile(@AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(UserResponse.fromEntity(currentUser));
+    }
+
+    @PutMapping("/me")
+    @Operation(summary = "Update current user profile")
+    public ResponseEntity<UserResponse> updateMyProfile(
+            @AuthenticationPrincipal User currentUser,
+            @Valid @RequestBody UserRequest request) {
+        return ResponseEntity.ok(userService.updateMyProfile(currentUser.getId(), request));
+    }
+
+    @PatchMapping("/me/password")
+    @Operation(summary = "Change current user password")
+    public ResponseEntity<Map<String, String>> changeMyPassword(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody Map<String, String> request) {
+        userService.changeMyPassword(currentUser.getId(), request.get("currentPassword"), request.get("newPassword"));
+        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+    }
+
+    // ============ ADMIN ENDPOINTS ============
 
     @GetMapping
     @Operation(summary = "List users")
@@ -69,9 +98,10 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/password")
-    @Operation(summary = "Change user password")
+    @Operation(summary = "Change user password (admin)")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Map<String, String>> changePassword(@PathVariable Long id, @RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> changePassword(@PathVariable Long id,
+            @RequestBody Map<String, String> request) {
         userService.changePassword(id, request.get("password"));
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }

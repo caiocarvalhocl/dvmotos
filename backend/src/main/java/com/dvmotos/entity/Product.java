@@ -1,14 +1,25 @@
 package com.dvmotos.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "products")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product extends BaseEntity {
     @Column(nullable = false, length = 150)
     private String name;
@@ -35,5 +46,8 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     @Builder.Default
     private List<StockMovement> movements = new ArrayList<>();
-    public boolean isLowStock() { return stockQuantity <= minimumStock; }
+
+    public boolean isLowStock() {
+        return stockQuantity <= minimumStock;
+    }
 }

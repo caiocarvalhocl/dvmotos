@@ -1,13 +1,21 @@
 package com.dvmotos.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "categories")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Category extends BaseEntity {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
