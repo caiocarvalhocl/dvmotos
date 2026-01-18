@@ -52,6 +52,13 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.findByClient(clientId));
     }
 
+    @GetMapping("/count")
+    @Operation(summary = "Count vehicles")
+    public ResponseEntity<Long> count() {
+        long count = vehicleService.countVehicles();
+        return ResponseEntity.ok(count);
+    }
+
     @PostMapping
     @Operation(summary = "Create vehicle")
     public ResponseEntity<VehicleResponse> create(@Valid @RequestBody VehicleRequest request) {

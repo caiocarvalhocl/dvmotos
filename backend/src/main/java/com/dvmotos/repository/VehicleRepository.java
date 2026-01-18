@@ -29,4 +29,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     Page<Vehicle> searchWithStatus(@Param("search") String search, @Param("active") Boolean active, Pageable pageable);
 
     Page<Vehicle> findByActiveTrue(Pageable pageable);
+
+    @Query("SELECT COUNT(1) FROM Vehicle v WHERE v.active = true")
+    Long countActiveVehicles();
 }

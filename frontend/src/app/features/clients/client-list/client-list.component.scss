@@ -40,11 +40,9 @@
     left: 0.75rem;
     margin-top: 0;
   }
-}
-
-.search-input {
-  width: 350px;
-  padding: 0.45rem 0 0.45rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 :host ::ng-deep .p-datatable-thead > tr > th {
@@ -72,6 +70,10 @@
 
   .p-button-text.trash {
     color: #dc2626;
+  }
+
+  .p-button-text.active {
+    color: #16a34a;
   }
 }
 

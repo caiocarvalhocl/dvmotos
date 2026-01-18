@@ -24,4 +24,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     Page<Client> searchWithStatus(@Param("search") String search, @Param("active") Boolean active, Pageable pageable);
 
     Page<Client> findByActiveTrue(Pageable pageable);
+
+    @Query("SELECT COUNT(1) FROM Client c WHERE c.active = true")
+    Long countActiveClients();
 }

@@ -1,0 +1,47 @@
+.actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; // Ou flex-end, dependendo da sua tabela
+  gap: 0.5rem;
+}
+
+// Estilização profunda para atingir os botões do PrimeNG
+:host ::ng-deep {
+  .action-btn {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+
+    // Botão Editar (Cinza/Azul)
+    &.btn-secondary {
+      color: #64748b;
+      &:hover {
+        background-color: #f1f5f9;
+        color: #3b82f6;
+      }
+    }
+
+    // Botão Perigo (Vermelho - Lixeira ou Ban)
+    &.btn-danger {
+      color: #ef4444;
+      &:hover {
+        background-color: #fef2f2;
+        color: #dc2626;
+      }
+    }
+
+    // Botão Sucesso (Verde - Ativar)
+    &.btn-success {
+      color: #22c55e;
+      &:hover {
+        background-color: #f0fdf4;
+        color: #16a34a;
+      }
+    }
+
+    // Ajuste do ícone para ficar centralizado
+    .p-button-icon {
+      font-size: 1rem;
+    }
+  }
+}

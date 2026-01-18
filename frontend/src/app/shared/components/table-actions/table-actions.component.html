@@ -1,0 +1,22 @@
+<div class="actions-container">
+  @if (editRoute && id) {
+    <a
+      [routerLink]="[editRoute, id]"
+      pButton
+      icon="pi pi-pencil"
+      class="p-button-text p-button-sm action-btn btn-secondary"
+      [pTooltip]="editTooltip"
+      tooltipPosition="top"
+    ></a>
+  }
+
+  <button
+    pButton
+    type="button"
+    [icon]="actionIcon"
+    [class]="actionClass"
+    (click)="emitAction()"
+    [pTooltip]="actionTooltip"
+    tooltipPosition="top"
+  ></button>
+</div>

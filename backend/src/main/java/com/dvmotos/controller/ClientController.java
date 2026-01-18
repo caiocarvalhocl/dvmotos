@@ -39,6 +39,13 @@ public class ClientController {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
+    @GetMapping("/count")
+    @Operation(summary = "Count clients")
+    public ResponseEntity<Long> count() {
+        long count = clientService.countActiveClients();
+        return ResponseEntity.ok(count);
+    }
+
     @PostMapping
     @Operation(summary = "Create client")
     public ResponseEntity<ClientResponse> create(@Valid @RequestBody ClientRequest request) {
@@ -69,4 +76,5 @@ public class ClientController {
     public ResponseEntity<ClientResponse> toggleStatus(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.toggleStatus(id));
     }
+
 }

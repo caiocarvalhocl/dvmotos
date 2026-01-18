@@ -1,0 +1,24 @@
+<div class="filter-container">
+  <span class="p-input-icon-left search-wrapper">
+    <i class="pi pi-search"></i>
+    <input
+      pInputText
+      [placeholder]="placeholder"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      class="search-input"
+    />
+  </span>
+
+  @if (showStatus) {
+    <p-dropdown
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      (onChange)="emitFilter()"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Filtrar por status"
+      styleClass="status-dropdown"
+    ></p-dropdown>
+  }
+</div>

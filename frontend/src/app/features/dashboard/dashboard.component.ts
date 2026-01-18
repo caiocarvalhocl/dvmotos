@@ -4,6 +4,9 @@ import { RouterLink } from "@angular/router";
 import { CardModule } from "primeng/card";
 import { ButtonModule } from "primeng/button";
 import { AuthService } from "../../core/services/auth.service";
+import { ClientService } from "@core/services/client.service";
+import { Observable } from "rxjs";
+import { VehicleService } from "@core/services/vehicle.service";
 
 @Component({
   selector: "app-dashboard",
@@ -13,5 +16,12 @@ import { AuthService } from "../../core/services/auth.service";
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent {
-  constructor(public authService: AuthService) {}
+  countClients$: Observable<Number> = this.clientService.getActiveClients();
+  countVehicles$: Observable<Number> = this.vehicleService.getActiveVehicles();
+
+  constructor(
+    public authService: AuthService,
+    private clientService: ClientService,
+    private vehicleService: VehicleService,
+  ) {}
 }

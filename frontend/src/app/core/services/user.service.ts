@@ -75,6 +75,9 @@ export class UserService {
     return this.http.patch<User>(`${this.apiUrl}/${id}/activate`, {});
   }
 
+  toggleStatus(id: number): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}/toggle-status`, {});
+  }
   changePassword(id: number, password: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/password`, { password });
   }

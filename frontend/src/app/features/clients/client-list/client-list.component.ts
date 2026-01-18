@@ -4,17 +4,18 @@ import { RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
+import { DropdownModule } from "primeng/dropdown";
 import { TagModule } from "primeng/tag";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
+import { TooltipModule } from "primeng/tooltip";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { ClientService, Client } from "../../../core/services/client.service";
 import {
-  ClientService,
-  Client,
-  Page,
-} from "../../../core/services/client.service";
-import { debounceTime, Subject } from "rxjs";
+  FilterState,
+  TableFilterComponent,
+} from "@shared/components/table-filter/table-filter.component";
+import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
 
 @Component({
   selector: "app-client-list",
@@ -25,10 +26,13 @@ import { debounceTime, Subject } from "rxjs";
     FormsModule,
     TableModule,
     ButtonModule,
-    InputTextModule,
+    DropdownModule,
     TagModule,
     ConfirmDialogModule,
     ToastModule,
+    TooltipModule,
+    TableFilterComponent,
+    TableActionsComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./client-list.component.html",
@@ -38,45 +42,51 @@ export class ClientListComponent implements OnInit {
   clients = signal<Client[]>([]);
   loading = signal(false);
   totalRecords = signal(0);
-  searchTerm = "";
-  private searchSubject = new Subject<string>();
+
+  statusOptions = [
+    { label: "Todos", value: null },
+    { label: "Ativos", value: true },
+    { label: "Inativos", value: false },
+  ];
 
   constructor(
     private clientService: ClientService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {
-    this.searchSubject
-      .pipe(debounceTime(400))
-      .subscribe(() => this.loadClients({ first: 0, rows: 20 }));
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.loadClients({ first: 0, rows: 20 });
+  }
+
+  currentFilter: FilterState = { search: "", active: null };
+
+  onFilter(filter: FilterState): void {
+    this.currentFilter = filter;
+    // Sempre que filtrar, volta para página 1
     this.loadClients({ first: 0, rows: 20 });
   }
 
   loadClients(event: any): void {
     this.loading.set(true);
     const page = event.first / event.rows;
-    this.clientService.findAll(page, event.rows, this.searchTerm).subscribe({
-      next: (response: Page<Client>) => {
-        this.clients.set(response.content);
-        this.totalRecords.set(response.totalElements);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.messageService.add({
-          severity: "error",
-          summary: "Erro",
-          detail: "Não foi possível carregar os clientes",
-        });
-      },
-    });
-  }
 
-  onSearch(term: string): void {
-    this.searchSubject.next(term);
+    // Usa os valores guardados no currentFilter
+    this.clientService
+      .findAll(
+        page,
+        event.rows,
+        this.currentFilter.search,
+        this.currentFilter.active,
+      )
+      .subscribe({
+        next: (response) => {
+          this.clients.set(response.content);
+          this.totalRecords.set(response.totalElements);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   confirmDelete(client: Client): void {
@@ -105,6 +115,39 @@ export class ClientListComponent implements OnInit {
           severity: "error",
           summary: "Erro",
           detail: "Não foi possível desativar o cliente",
+        });
+      },
+    });
+  }
+
+  confirmToggleStatus(client: Client): void {
+    const action = client.active ? "desativar" : "ativar";
+    this.confirmationService.confirm({
+      message: `Deseja realmente ${action} o cliente "${client.name}"?`,
+      header: "Confirmar Ação",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: `Sim, ${action}`,
+      rejectLabel: "Cancelar",
+      accept: () => this.toggleStatus(client),
+    });
+  }
+
+  toggleStatus(client: Client): void {
+    this.clientService.toggleStatus(client.id!).subscribe({
+      next: () => {
+        const action = client.active ? "desativado" : "ativado";
+        this.messageService.add({
+          severity: "success",
+          summary: "Sucesso",
+          detail: `Cliente ${action} com sucesso`,
+        });
+        this.loadClients({ first: 0, rows: 20 });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível alterar o status do cliente",
         });
       },
     });

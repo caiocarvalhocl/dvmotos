@@ -36,7 +36,9 @@ public class ClientService {
         return clients.map(ClientResponse::fromEntity);
     }
 
+    @Transactional
     public ClientResponse findById(Long id) {
+        System.out.println("Finding client with ID: " + id);
         return ClientResponse.fromEntity(clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client", id)));
     }
@@ -96,5 +98,10 @@ public class ClientService {
         Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client", id));
         client.setActive(!client.getActive());
         return ClientResponse.fromEntity(clientRepository.save(client));
+    }
+
+    @Transactional(readOnly = true)
+    public long countActiveClients() {
+        return clientRepository.countActiveClients();
     }
 }

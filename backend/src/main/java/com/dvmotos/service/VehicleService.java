@@ -41,6 +41,7 @@ public class VehicleService {
         return vehicles.map(VehicleResponse::fromEntity);
     }
 
+    @Transactional
     public VehicleResponse findById(Long id) {
         return VehicleResponse.fromEntity(vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id)));
@@ -119,5 +120,10 @@ public class VehicleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
         vehicle.setActive(!vehicle.getActive());
         return VehicleResponse.fromEntity(vehicleRepository.save(vehicle));
+    }
+
+    @Transactional(readOnly = true)
+    public Long countVehicles() {
+        return vehicleRepository.countActiveVehicles();
     }
 }

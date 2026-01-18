@@ -69,8 +69,8 @@
           <i class="pi pi-users"></i>
         </div>
         <div class="stat-content">
-          <span class="stat-value">--</span>
-          <span class="stat-label">Clientes</span>
+          <span class="stat-value">{{ countClients$ | async }}</span>
+          <span class="stat-label">Clientes Ativos</span>
         </div>
       </div>
 
@@ -79,8 +79,8 @@
           <i class="pi pi-car"></i>
         </div>
         <div class="stat-content">
-          <span class="stat-value">--</span>
-          <span class="stat-label">Veículos</span>
+          <span class="stat-value"> {{ countVehicles$ | async }}</span>
+          <span class="stat-label">Veículos Ativos</span>
         </div>
       </div>
 

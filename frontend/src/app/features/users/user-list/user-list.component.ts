@@ -121,4 +121,24 @@ export class UserListComponent implements OnInit {
   getRoleLabel(role: string): string {
     return role === "ADMIN" ? "Administrador" : "Operador";
   }
+  toggleStatus(user: User): void {
+    this.userService.toggleStatus(user.id!).subscribe({
+      next: () => {
+        const action = user.active ? "desativado" : "ativado";
+        this.messageService.add({
+          severity: "success",
+          summary: "Sucesso",
+          detail: `Usuário ${action} com sucesso`,
+        });
+        this.loadUsers({ first: 0, rows: 20 });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível alterar o status do usuário",
+        });
+      },
+    });
+  }
 }
