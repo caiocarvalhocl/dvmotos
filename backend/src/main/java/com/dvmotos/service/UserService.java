@@ -27,7 +27,6 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // Validate email uniqueness (excluding current user)
         if (!user.getEmail().equalsIgnoreCase(request.getEmail()) &&
                 userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("Email already registered for another user");
@@ -35,7 +34,6 @@ public class UserService {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail().toLowerCase().trim());
-        // Note: role cannot be changed via profile update
 
         return UserResponse.fromEntity(userRepository.save(user));
     }
@@ -45,12 +43,10 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // Validate current password
         if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
             throw new BusinessException("Current password is incorrect");
         }
 
-        // Validate new password
         if (newPassword == null || newPassword.length() < 6) {
             throw new BusinessException("New password must be at least 6 characters");
         }
@@ -61,10 +57,21 @@ public class UserService {
 
     // ============ ADMIN METHODS ============
 
-    public Page<UserResponse> findAll(Pageable pageable, String search) {
-        Page<User> users = (search != null && !search.isBlank())
-                ? userRepository.search(search, pageable)
-                : userRepository.findAll(pageable);
+    public Page<UserResponse> findAll(Pageable pageable, String search, Boolean active) {
+        Page<User> users;
+
+        boolean hasSearch = search != null && !search.isBlank();
+
+        if (hasSearch && active != null) {
+            users = userRepository.searchWithStatus(search, active, pageable);
+        } else if (hasSearch) {
+            users = userRepository.search(search, pageable);
+        } else if (active != null) {
+            users = userRepository.findByActive(active, pageable);
+        } else {
+            users = userRepository.findAll(pageable);
+        }
+
         return users.map(UserResponse::fromEntity);
     }
 
@@ -117,6 +124,13 @@ public class UserService {
     public UserResponse activate(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setActive(true);
+        return UserResponse.fromEntity(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserResponse toggleStatus(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setActive(!user.getActive());
         return UserResponse.fromEntity(userRepository.save(user));
     }
 

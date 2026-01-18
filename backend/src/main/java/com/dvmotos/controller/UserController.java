@@ -57,8 +57,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserResponse>> findAll(
             @PageableDefault(size = 20, sort = "name") Pageable pageable,
-            @RequestParam(required = false) String search) {
-        return ResponseEntity.ok(userService.findAll(pageable, search));
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean active) {
+        return ResponseEntity.ok(userService.findAll(pageable, search, active));
     }
 
     @GetMapping("/{id}")
@@ -95,6 +96,13 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> activate(@PathVariable Long id) {
         return ResponseEntity.ok(userService.activate(id));
+    }
+
+    @PatchMapping("/{id}/toggle-status")
+    @Operation(summary = "Toggle user active status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.toggleStatus(id));
     }
 
     @PatchMapping("/{id}/password")

@@ -23,14 +23,24 @@ public class VehicleService {
     private final ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public Page<VehicleResponse> findAll(String search, Pageable pageable) {
-        Page<Vehicle> vehicles = (search != null && !search.trim().isEmpty())
-                ? vehicleRepository.search(search.trim(), pageable)
-                : vehicleRepository.findByActiveTrue(pageable);
+    public Page<VehicleResponse> findAll(String search, Boolean active, Pageable pageable) {
+        Page<Vehicle> vehicles;
+
+        boolean hasSearch = search != null && !search.trim().isEmpty();
+
+        if (hasSearch && active != null) {
+            vehicles = vehicleRepository.searchWithStatus(search.trim(), active, pageable);
+        } else if (hasSearch) {
+            vehicles = vehicleRepository.searchAll(search.trim(), pageable);
+        } else if (active != null) {
+            vehicles = vehicleRepository.findByActive(active, pageable);
+        } else {
+            vehicles = vehicleRepository.findAll(pageable);
+        }
+
         return vehicles.map(VehicleResponse::fromEntity);
     }
 
-    @Transactional
     public VehicleResponse findById(Long id) {
         return VehicleResponse.fromEntity(vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id)));
@@ -55,7 +65,8 @@ public class VehicleService {
         if (vehicleRepository.existsByLicensePlate(plate)) {
             throw new BusinessException("A vehicle with this license plate already exists");
         }
-        if (request.getChassisNumber() != null && vehicleRepository.existsByChassisNumber(request.getChassisNumber())) {
+        if (request.getChassisNumber() != null && !request.getChassisNumber().isBlank()
+                && vehicleRepository.existsByChassisNumber(request.getChassisNumber())) {
             throw new BusinessException("A vehicle with this chassis number already exists");
         }
         Vehicle vehicle = Vehicle.builder()
@@ -76,7 +87,8 @@ public class VehicleService {
         if (!plate.equals(vehicle.getLicensePlate()) && vehicleRepository.existsByLicensePlate(plate)) {
             throw new BusinessException("A vehicle with this license plate already exists");
         }
-        if (request.getChassisNumber() != null && !request.getChassisNumber().equals(vehicle.getChassisNumber())) {
+        if (request.getChassisNumber() != null && !request.getChassisNumber().isBlank()
+                && !request.getChassisNumber().equals(vehicle.getChassisNumber())) {
             if (vehicleRepository.existsByChassisNumber(request.getChassisNumber())) {
                 throw new BusinessException("A vehicle with this chassis number already exists");
             }
@@ -99,5 +111,13 @@ public class VehicleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
+    }
+
+    @Transactional
+    public VehicleResponse toggleStatus(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id));
+        vehicle.setActive(!vehicle.getActive());
+        return VehicleResponse.fromEntity(vehicleRepository.save(vehicle));
     }
 }

@@ -18,14 +18,24 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public Page<ClientResponse> findAll(String search, Pageable pageable) {
-        Page<Client> clients = (search != null && !search.trim().isEmpty())
-                ? clientRepository.search(search.trim(), pageable)
-                : clientRepository.findByActiveTrue(pageable);
+    public Page<ClientResponse> findAll(String search, Boolean active, Pageable pageable) {
+        Page<Client> clients;
+
+        boolean hasSearch = search != null && !search.trim().isEmpty();
+
+        if (hasSearch && active != null) {
+            clients = clientRepository.searchWithStatus(search.trim(), active, pageable);
+        } else if (hasSearch) {
+            clients = clientRepository.searchAll(search.trim(), pageable);
+        } else if (active != null) {
+            clients = clientRepository.findByActive(active, pageable);
+        } else {
+            clients = clientRepository.findAll(pageable);
+        }
+
         return clients.map(ClientResponse::fromEntity);
     }
 
-    @Transactional
     public ClientResponse findById(Long id) {
         return ClientResponse.fromEntity(clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client", id)));
@@ -33,7 +43,7 @@ public class ClientService {
 
     @Transactional
     public ClientResponse create(ClientRequest request) {
-        if (request.getDocumentNumber() != null
+        if (request.getDocumentNumber() != null && !request.getDocumentNumber().isBlank()
                 && clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
             throw new BusinessException("A client with this document number already exists");
         }
@@ -49,7 +59,8 @@ public class ClientService {
     @Transactional
     public ClientResponse update(Long id, ClientRequest request) {
         Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client", id));
-        if (request.getDocumentNumber() != null && !request.getDocumentNumber().equals(client.getDocumentNumber())) {
+        if (request.getDocumentNumber() != null && !request.getDocumentNumber().isBlank()
+                && !request.getDocumentNumber().equals(client.getDocumentNumber())) {
             if (clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
                 throw new BusinessException("A client with this document number already exists");
             }
@@ -77,6 +88,13 @@ public class ClientService {
     public ClientResponse activate(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client", id));
         client.setActive(true);
+        return ClientResponse.fromEntity(clientRepository.save(client));
+    }
+
+    @Transactional
+    public ClientResponse toggleStatus(Long id) {
+        Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client", id));
+        client.setActive(!client.getActive());
         return ClientResponse.fromEntity(clientRepository.save(client));
     }
 }

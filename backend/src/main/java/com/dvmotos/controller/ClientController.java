@@ -28,8 +28,9 @@ public class ClientController {
     @Operation(summary = "List clients")
     public ResponseEntity<Page<ClientResponse>> findAll(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean active,
             @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(clientService.findAll(search, pageable));
+        return ResponseEntity.ok(clientService.findAll(search, active, pageable));
     }
 
     @GetMapping("/{id}")
@@ -61,5 +62,11 @@ public class ClientController {
     @Operation(summary = "Reactivate client")
     public ResponseEntity<ClientResponse> activate(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.activate(id));
+    }
+
+    @PatchMapping("/{id}/toggle-status")
+    @Operation(summary = "Toggle client active status")
+    public ResponseEntity<ClientResponse> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.toggleStatus(id));
     }
 }

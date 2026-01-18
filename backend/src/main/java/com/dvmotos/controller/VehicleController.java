@@ -29,8 +29,9 @@ public class VehicleController {
     @Operation(summary = "List vehicles")
     public ResponseEntity<Page<VehicleResponse>> findAll(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean active,
             @PageableDefault(size = 20, sort = "licensePlate", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(vehicleService.findAll(search, pageable));
+        return ResponseEntity.ok(vehicleService.findAll(search, active, pageable));
     }
 
     @GetMapping("/{id}")
@@ -68,5 +69,11 @@ public class VehicleController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         vehicleService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/toggle-status")
+    @Operation(summary = "Toggle vehicle active status")
+    public ResponseEntity<VehicleResponse> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.toggleStatus(id));
     }
 }

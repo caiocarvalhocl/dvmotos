@@ -12,8 +12,16 @@ import java.util.Optional;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
     Optional<Client> findByDocumentNumber(String documentNumber);
+
     boolean existsByDocumentNumber(String documentNumber);
-    @Query("SELECT c FROM Client c WHERE c.active = true AND (LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%')) OR c.documentNumber LIKE CONCAT('%', :search, '%') OR c.phone LIKE CONCAT('%', :search, '%'))")
-    Page<Client> search(@Param("search") String search, Pageable pageable);
+
+    Page<Client> findByActive(Boolean active, Pageable pageable);
+
+    @Query("SELECT c FROM Client c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%')) OR c.documentNumber LIKE CONCAT('%', :search, '%') OR c.phone LIKE CONCAT('%', :search, '%')")
+    Page<Client> searchAll(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT c FROM Client c WHERE c.active = :active AND (LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%')) OR c.documentNumber LIKE CONCAT('%', :search, '%') OR c.phone LIKE CONCAT('%', :search, '%'))")
+    Page<Client> searchWithStatus(@Param("search") String search, @Param("active") Boolean active, Pageable pageable);
+
     Page<Client> findByActiveTrue(Pageable pageable);
 }
