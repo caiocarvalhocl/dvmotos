@@ -10,7 +10,11 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UserService, User, Page } from "../../../core/services/user.service";
-import { debounceTime, Subject } from "rxjs";
+import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
+import {
+  FilterState,
+  TableFilterComponent,
+} from "@shared/components/table-filter/table-filter.component";
 
 type SEVERITY =
   | "success"
@@ -34,6 +38,8 @@ type SEVERITY =
     TagModule,
     ConfirmDialogModule,
     ToastModule,
+    TableFilterComponent,
+    TableActionsComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./user-list.component.html",
@@ -43,45 +49,50 @@ export class UserListComponent implements OnInit {
   users = signal<User[]>([]);
   loading = signal(false);
   totalRecords = signal(0);
-  searchTerm = "";
-  private searchSubject = new Subject<string>();
 
   constructor(
     private userService: UserService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {
-    this.searchSubject
-      .pipe(debounceTime(400))
-      .subscribe(() => this.loadUsers({ first: 0, rows: 20 }));
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.loadUsers({ first: 0, rows: 20 });
+  }
+
+  currentFilter: FilterState = { search: "", active: null };
+
+  onFilter(filter: FilterState): void {
+    this.currentFilter = filter;
+    // Sempre que filtrar, volta para página 1
     this.loadUsers({ first: 0, rows: 20 });
   }
 
   loadUsers(event: any): void {
     this.loading.set(true);
     const page = event.first / event.rows;
-    this.userService.findAll(page, event.rows, this.searchTerm).subscribe({
-      next: (response: Page<User>) => {
-        this.users.set(response.content);
-        this.totalRecords.set(response.totalElements);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.messageService.add({
-          severity: "error",
-          summary: "Erro",
-          detail: "Não foi possível carregar os usuários",
-        });
-      },
-    });
-  }
-
-  onSearch(term: string): void {
-    this.searchSubject.next(term);
+    this.userService
+      .findAll(
+        page,
+        event.rows,
+        this.currentFilter.search,
+        this.currentFilter.active,
+      )
+      .subscribe({
+        next: (response: Page<User>) => {
+          this.users.set(response.content);
+          this.totalRecords.set(response.totalElements);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.messageService.add({
+            severity: "error",
+            summary: "Erro",
+            detail: "Não foi possível carregar os usuários",
+          });
+        },
+      });
   }
 
   confirmDelete(user: User): void {
@@ -121,6 +132,19 @@ export class UserListComponent implements OnInit {
   getRoleLabel(role: string): string {
     return role === "ADMIN" ? "Administrador" : "Operador";
   }
+
+  confirmToggleStatus(user: User): void {
+    const action = user.active ? "desativar" : "ativar";
+    this.confirmationService.confirm({
+      message: `Deseja realmente ${action} o usuário "${user.name}"?`,
+      header: "Confirmar Ação",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: `Sim, ${action}`,
+      rejectLabel: "Cancelar",
+      accept: () => this.toggleStatus(user),
+    });
+  }
+
   toggleStatus(user: User): void {
     this.userService.toggleStatus(user.id!).subscribe({
       next: () => {

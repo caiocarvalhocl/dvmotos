@@ -46,12 +46,25 @@ export class UserService {
   }
 
   // ============ ADMIN METHODS ============
-
-  findAll(page = 0, size = 20, search?: string): Observable<Page<User>> {
+  findAll(
+    page = 0,
+    size = 20,
+    search?: string,
+    active?: boolean | null,
+  ): Observable<Page<User>> {
     let params = new HttpParams()
       .set("page", page.toString())
       .set("size", size.toString());
-    if (search) params = params.set("search", search);
+
+    if (search) {
+      params = params.set("search", search);
+    }
+
+    // 2. Adicione a lógica para enviar o status apenas se não for nulo (Todos)
+    if (active !== null && active !== undefined) {
+      params = params.set("active", active.toString());
+    }
+
     return this.http.get<Page<User>>(this.apiUrl, { params });
   }
 

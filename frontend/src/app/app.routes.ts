@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
+import { adminGuard } from "@core/guards/admin.guard";
 
 export const routes: Routes = [
   { path: "", redirectTo: "/dashboard", pathMatch: "full" },
@@ -67,26 +68,33 @@ export const routes: Routes = [
             (m) => m.VehicleFormComponent,
           ),
       },
+      // Users routes protected by adminGuard
       {
         path: "users",
-        loadComponent: () =>
-          import("./features/users/user-list/user-list.component").then(
-            (m) => m.UserListComponent,
-          ),
-      },
-      {
-        path: "users/new",
-        loadComponent: () =>
-          import("./features/users/user-form/user-form.component").then(
-            (m) => m.UserFormComponent,
-          ),
-      },
-      {
-        path: "users/:id",
-        loadComponent: () =>
-          import("./features/users/user-form/user-form.component").then(
-            (m) => m.UserFormComponent,
-          ),
+        canActivate: [adminGuard],
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/users/user-list/user-list.component").then(
+                (m) => m.UserListComponent,
+              ),
+          },
+          {
+            path: "new",
+            loadComponent: () =>
+              import("./features/users/user-form/user-form.component").then(
+                (m) => m.UserFormComponent,
+              ),
+          },
+          {
+            path: ":id",
+            loadComponent: () =>
+              import("./features/users/user-form/user-form.component").then(
+                (m) => m.UserFormComponent,
+              ),
+          },
+        ],
       },
       {
         path: "myprofile",

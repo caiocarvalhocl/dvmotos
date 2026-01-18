@@ -1,6 +1,7 @@
 package com.dvmotos.controller;
 
 import com.dvmotos.dto.request.UserRequest;
+import com.dvmotos.dto.request.UserUpdateRequest;
 import com.dvmotos.dto.response.UserResponse;
 import com.dvmotos.entity.User;
 import com.dvmotos.service.UserService;
@@ -79,7 +80,7 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Update user")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest request) {
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.ok(userService.update(id, request));
     }
 

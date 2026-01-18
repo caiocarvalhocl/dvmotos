@@ -10,16 +10,10 @@
   </div>
   <div class="card">
     <div class="table-header">
-      <span class="p-input-icon-left"
-        ><i class="pi pi-search"></i>
-        <input
-          pInputText
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearch($event)"
-          placeholder="Buscar por nome ou email..."
-          class="search-input"
-        />
-      </span>
+      <app-table-filter
+        placeholder="Buscar por nome, CPF ou telefone..."
+        (filterChange)="onFilter($event)"
+      ></app-table-filter>
     </div>
     <p-table
       [value]="users()"
@@ -61,20 +55,12 @@
             ></p-tag>
           </td>
           <td>
-            <div class="action-buttons">
-              <a
-                [routerLink]="['/users', user.id]"
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-text p-button-sm"
-              ></a
-              ><button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-text trash p-button-sm"
-                (click)="confirmDelete(user)"
-              ></button>
-            </div>
+            <app-table-actions
+              editRoute="/users"
+              [id]="user.id"
+              [isActive]="user.active"
+              (onAction)="confirmToggleStatus(user)"
+            ></app-table-actions>
           </td>
         </tr>
       </ng-template>

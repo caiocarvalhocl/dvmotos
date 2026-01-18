@@ -34,7 +34,6 @@ export class UserFormComponent implements OnInit {
   isEditing = signal(false);
   saving = signal(false);
 
-  // Usuário logado no sistema
   currentUser = signal<User | null>(null);
 
   roles = [
@@ -96,7 +95,10 @@ export class UserFormComponent implements OnInit {
   // Regra: Apenas ADMIN pode ver/mudar o dropdown de Role.
   // Operador não pode se promover a Admin.
   canEditRole(): boolean {
-    return this.currentUser()?.role === "ADMIN";
+    return (
+      this.currentUser()?.role === "ADMIN" &&
+      this.currentUser()?.id !== this.user.id
+    );
   }
 
   // Regra:

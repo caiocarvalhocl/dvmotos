@@ -1,6 +1,7 @@
 package com.dvmotos.service;
 
 import com.dvmotos.dto.request.UserRequest;
+import com.dvmotos.dto.request.UserUpdateRequest;
 import com.dvmotos.dto.response.UserResponse;
 import com.dvmotos.entity.Role;
 import com.dvmotos.entity.User;
@@ -75,6 +76,7 @@ public class UserService {
         return users.map(UserResponse::fromEntity);
     }
 
+    @Transactional
     public UserResponse findById(Long id) {
         return UserResponse.fromEntity(userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found")));
@@ -98,7 +100,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse update(Long id, UserRequest request) {
+    public UserResponse update(Long id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (!user.getEmail().equalsIgnoreCase(request.getEmail()) && userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("Email already registered for another user");
@@ -107,9 +109,6 @@ public class UserService {
         user.setEmail(request.getEmail().toLowerCase().trim());
         if (request.getRole() != null)
             user.setRole(request.getRole());
-        if (request.getPassword() != null && !request.getPassword().isBlank()) {
-            user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        }
         return UserResponse.fromEntity(userRepository.save(user));
     }
 
