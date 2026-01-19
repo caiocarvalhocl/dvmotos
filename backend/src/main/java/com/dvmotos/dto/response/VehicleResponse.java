@@ -4,7 +4,10 @@ import com.dvmotos.entity.Vehicle;
 import lombok.*;
 import java.time.LocalDateTime;
 
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehicleResponse {
     private Long id;
     private Long clientId;

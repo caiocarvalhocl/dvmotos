@@ -50,7 +50,7 @@ public class VehicleService {
     public VehicleResponse findByLicensePlate(String licensePlate) {
         return VehicleResponse.fromEntity(vehicleRepository.findByLicensePlate(licensePlate.toUpperCase())
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Vehicle not found with license plate: " + licensePlate)));
+                        () -> new ResourceNotFoundException("Veículo não encontrado com a placa: " + licensePlate)));
     }
 
     public List<VehicleResponse> findByClient(Long clientId) {
@@ -64,11 +64,11 @@ public class VehicleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", request.getClientId()));
         String plate = request.getLicensePlate().toUpperCase();
         if (vehicleRepository.existsByLicensePlate(plate)) {
-            throw new BusinessException("A vehicle with this license plate already exists");
+            throw new BusinessException("Um veículo com esta placa já existe");
         }
         if (request.getChassisNumber() != null && !request.getChassisNumber().isBlank()
                 && vehicleRepository.existsByChassisNumber(request.getChassisNumber())) {
-            throw new BusinessException("A vehicle with this chassis number already exists");
+            throw new BusinessException("Um veículo com este número de chassi já existe");
         }
         Vehicle vehicle = Vehicle.builder()
                 .client(client).licensePlate(plate).brand(request.getBrand())
@@ -86,12 +86,12 @@ public class VehicleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", request.getClientId()));
         String plate = request.getLicensePlate().toUpperCase();
         if (!plate.equals(vehicle.getLicensePlate()) && vehicleRepository.existsByLicensePlate(plate)) {
-            throw new BusinessException("A vehicle with this license plate already exists");
+            throw new BusinessException("Um veículo com esta placa já existe");
         }
         if (request.getChassisNumber() != null && !request.getChassisNumber().isBlank()
                 && !request.getChassisNumber().equals(vehicle.getChassisNumber())) {
             if (vehicleRepository.existsByChassisNumber(request.getChassisNumber())) {
-                throw new BusinessException("A vehicle with this chassis number already exists");
+                throw new BusinessException("Um veículo com este número de chassi já existe");
             }
         }
         vehicle.setClient(client);

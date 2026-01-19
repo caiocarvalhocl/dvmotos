@@ -38,7 +38,6 @@ public class ClientService {
 
     @Transactional
     public ClientResponse findById(Long id) {
-        System.out.println("Finding client with ID: " + id);
         return ClientResponse.fromEntity(clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client", id)));
     }
@@ -47,7 +46,7 @@ public class ClientService {
     public ClientResponse create(ClientRequest request) {
         if (request.getDocumentNumber() != null && !request.getDocumentNumber().isBlank()
                 && clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
-            throw new BusinessException("A client with this document number already exists");
+            throw new BusinessException("CPF já cadastrado em outro cliente");
         }
         Client client = Client.builder()
                 .name(request.getName()).documentNumber(request.getDocumentNumber())
@@ -64,7 +63,7 @@ public class ClientService {
         if (request.getDocumentNumber() != null && !request.getDocumentNumber().isBlank()
                 && !request.getDocumentNumber().equals(client.getDocumentNumber())) {
             if (clientRepository.existsByDocumentNumber(request.getDocumentNumber())) {
-                throw new BusinessException("A client with this document number already exists");
+                throw new BusinessException("CPF já cadastrado em outro cliente");
             }
         }
         client.setName(request.getName());

@@ -67,7 +67,7 @@ CREATE TABLE produtos (
     preco_custo DECIMAL(10, 2),
     preco_venda DECIMAL(10, 2) NOT NULL,
     qtd_estoque INTEGER NOT NULL DEFAULT 0,
-    qtd_minima INTEGER DEFAULT 5,
+    qtd_minima INTEGER DEFAULT 0,
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP
