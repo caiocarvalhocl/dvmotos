@@ -18,6 +18,14 @@
         <i class="pi pi-car"></i>
         <span>Veículos</span>
       </a>
+      <a routerLink="/categories" routerLinkActive="active" class="menu-item">
+        <i class="pi pi-tags"></i>
+        <span>Categorias</span>
+      </a>
+      <a routerLink="/products" routerLinkActive="active" class="menu-item">
+        <i class="pi pi-box"></i>
+        <span>Produtos</span>
+      </a>
       @if (authService.isAdmin()) {
         <a routerLink="/users" routerLinkActive="active" class="menu-item">
           <i class="pi pi-user-edit"></i>

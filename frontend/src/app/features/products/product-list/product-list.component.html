@@ -1,0 +1,146 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Produtos</h1>
+      <p class="text-muted">Gerencie os produtos e estoque</p>
+    </div>
+    <div class="header-actions">
+      @if (lowStockCount() > 0) {
+        <div class="low-stock-alert">
+          <i class="pi pi-exclamation-triangle"></i>
+          <span>{{ lowStockCount() }} produto(s) com estoque baixo</span>
+        </div>
+      }
+      <a routerLink="/products/new" pButton icon="pi pi-plus" class="btn-new">
+        <span class="btn-text">Novo Produto</span>
+      </a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-header">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Buscar por nome ou código de barras..."
+          class="search-input"
+        />
+      </span>
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="onStatusChange()"
+        styleClass="status-filter"
+      ></p-dropdown>
+    </div>
+    <p-table
+      [value]="products()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="20"
+      [totalRecords]="totalRecords()"
+      [lazy]="true"
+      (onLazyLoad)="loadProducts($event)"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} produtos"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Produto</th>
+          <th>Categoria</th>
+          <th>Preço Custo</th>
+          <th>Preço Venda</th>
+          <th>Estoque</th>
+          <th>Status</th>
+          <th style="width: 150px">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr
+          [class.inactive-row]="!product.active"
+          [class.low-stock-row]="product.lowStock && product.active"
+        >
+          <td>
+            <div class="product-info">
+              <span class="font-bold">{{ product.name }}</span>
+              @if (product.barcode) {
+                <small class="text-muted">{{ product.barcode }}</small>
+              }
+            </div>
+          </td>
+          <td>{{ product.categoryName || "-" }}</td>
+          <td>{{ product.costPrice | currency: "BRL" }}</td>
+          <td class="font-bold">{{ product.salePrice | currency: "BRL" }}</td>
+          <td>
+            <div class="stock-info">
+              <p-tag
+                [value]="product.stockQuantity + ' ' + product.unit"
+                [severity]="getStockSeverity(product)"
+              ></p-tag>
+              @if (product.lowStock) {
+                <i
+                  class="pi pi-exclamation-triangle text-warning"
+                  pTooltip="Estoque baixo"
+                  tooltipPosition="top"
+                ></i>
+              }
+            </div>
+          </td>
+          <td>
+            <p-tag
+              [value]="product.active ? 'Ativo' : 'Inativo'"
+              [severity]="product.active ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a
+                [routerLink]="['/products', product.id]"
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-text p-button-sm"
+                pTooltip="Editar"
+                tooltipPosition="top"
+              ></a>
+              <a
+                [routerLink]="['/products', product.id, 'stock']"
+                pButton
+                icon="pi pi-box"
+                class="p-button-text p-button-sm btn-stock"
+                pTooltip="Movimentar Estoque"
+                tooltipPosition="top"
+              ></a>
+              <button
+                pButton
+                [icon]="product.active ? 'pi pi-ban' : 'pi pi-check-circle'"
+                [class]="
+                  product.active
+                    ? 'p-button-text p-button-sm btn-deactivate'
+                    : 'p-button-text p-button-sm btn-activate'
+                "
+                (click)="confirmToggleStatus(product)"
+                [pTooltip]="product.active ? 'Desativar' : 'Ativar'"
+                tooltipPosition="top"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-box"></i>
+              <p>Nenhum produto encontrado</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

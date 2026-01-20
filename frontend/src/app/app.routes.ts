@@ -103,6 +103,57 @@ export const routes: Routes = [
             (m) => m.MyProfileComponent,
           ),
       },
+      // Categories
+      {
+        path: "categories",
+        loadComponent: () =>
+          import("./features/categories/category-list/category-list.component").then(
+            (m) => m.CategoryListComponent,
+          ),
+      },
+      {
+        path: "categories/new",
+        loadComponent: () =>
+          import("./features/categories/category-form/category-form.component").then(
+            (m) => m.CategoryFormComponent,
+          ),
+      },
+      {
+        path: "categories/:id",
+        loadComponent: () =>
+          import("./features/categories/category-form/category-form.component").then(
+            (m) => m.CategoryFormComponent,
+          ),
+      },
+      // Products
+      {
+        path: "products",
+        loadComponent: () =>
+          import("./features/products/product-list/product-list.component").then(
+            (m) => m.ProductListComponent,
+          ),
+      },
+      {
+        path: "products/new",
+        loadComponent: () =>
+          import("./features/products/product-form/product-form.component").then(
+            (m) => m.ProductFormComponent,
+          ),
+      },
+      {
+        path: "products/:id",
+        loadComponent: () =>
+          import("./features/products/product-form/product-form.component").then(
+            (m) => m.ProductFormComponent,
+          ),
+      },
+      {
+        path: "products/:id/stock",
+        loadComponent: () =>
+          import("./features/products/stock-movement/stock-movement.component").then(
+            (m) => m.StockMovementComponent,
+          ),
+      },
     ],
   },
   { path: "**", redirectTo: "/dashboard" },

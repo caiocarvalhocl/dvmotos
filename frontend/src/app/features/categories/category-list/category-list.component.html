@@ -1,0 +1,108 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Categorias</h1>
+      <p class="text-muted">Gerencie as categorias de produtos</p>
+    </div>
+    <a routerLink="/categories/new" pButton icon="pi pi-plus" class="btn-new">
+      <span class="btn-text">Nova Categoria</span>
+    </a>
+  </div>
+  <div class="card">
+    <div class="table-header">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Buscar por nome..."
+          class="search-input"
+        />
+      </span>
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="onStatusChange()"
+        styleClass="status-filter"
+      ></p-dropdown>
+    </div>
+    <p-table
+      [value]="categories()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="20"
+      [totalRecords]="totalRecords()"
+      [lazy]="true"
+      (onLazyLoad)="loadCategories($event)"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorias"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Produtos</th>
+          <th>Status</th>
+          <th style="width: 120px">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-category>
+        <tr [class.inactive-row]="!category.active">
+          <td>
+            <span class="font-bold">{{ category.name }}</span>
+          </td>
+          <td>{{ category.description || "-" }}</td>
+          <td>
+            <span class="products-badge">{{
+              category.totalProducts || 0
+            }}</span>
+          </td>
+          <td>
+            <p-tag
+              [value]="category.active ? 'Ativo' : 'Inativo'"
+              [severity]="category.active ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a
+                [routerLink]="['/categories', category.id]"
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-text p-button-sm"
+                pTooltip="Editar"
+                tooltipPosition="top"
+              ></a>
+              <button
+                pButton
+                [icon]="category.active ? 'pi pi-ban' : 'pi pi-check-circle'"
+                [class]="
+                  category.active
+                    ? 'p-button-text p-button-sm btn-deactivate'
+                    : 'p-button-text p-button-sm btn-activate'
+                "
+                (click)="confirmToggleStatus(category)"
+                [pTooltip]="category.active ? 'Desativar' : 'Ativar'"
+                tooltipPosition="top"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-tags"></i>
+              <p>Nenhuma categoria encontrada</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

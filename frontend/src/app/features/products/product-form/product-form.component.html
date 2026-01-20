@@ -1,0 +1,174 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>{{ isEditing() ? "Editar Produto" : "Novo Produto" }}</h1>
+      <p class="text-muted">
+        {{
+          isEditing()
+            ? "Atualize os dados do produto"
+            : "Cadastre um novo produto no estoque"
+        }}
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Nome -->
+        <div class="form-field span-2">
+          <label for="name">Nome *</label>
+          <input
+            pInputText
+            id="name"
+            [(ngModel)]="product.name"
+            name="name"
+            class="w-full"
+            placeholder="Nome do produto"
+            [disabled]="loading()"
+          />
+        </div>
+
+        <!-- Código de Barras -->
+        <div class="form-field">
+          <label for="barcode">Código de Barras</label>
+          <input
+            pInputText
+            id="barcode"
+            [(ngModel)]="product.barcode"
+            name="barcode"
+            class="w-full"
+            placeholder="Ex: 7891234567890"
+            [disabled]="loading()"
+          />
+        </div>
+
+        <!-- Categoria -->
+        <div class="form-field">
+          <label for="category">Categoria</label>
+          <p-dropdown
+            id="category"
+            [(ngModel)]="product.categoryId"
+            name="categoryId"
+            [options]="categories"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Selecione..."
+            [showClear]="true"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-dropdown>
+        </div>
+
+        <!-- Preço de Custo -->
+        <div class="form-field">
+          <label for="costPrice">Preço de Custo</label>
+          <p-inputNumber
+            id="costPrice"
+            [(ngModel)]="product.costPrice"
+            name="costPrice"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Preço de Venda -->
+        <div class="form-field">
+          <label for="salePrice">Preço de Venda *</label>
+          <p-inputNumber
+            id="salePrice"
+            [(ngModel)]="product.salePrice"
+            name="salePrice"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Quantidade em Estoque -->
+        <div class="form-field">
+          <label for="stockQuantity">Quantidade em Estoque *</label>
+          <p-inputNumber
+            id="stockQuantity"
+            [(ngModel)]="product.stockQuantity"
+            name="stockQuantity"
+            [min]="0"
+            styleClass="w-full"
+            [disabled]="isEditing() || loading()"
+          ></p-inputNumber>
+          @if (isEditing()) {
+            <small class="text-muted"
+              >Use "Movimentar Estoque" para alterar</small
+            >
+          }
+        </div>
+
+        <!-- Estoque Mínimo -->
+        <div class="form-field">
+          <label for="minimumStock">Estoque Mínimo</label>
+          <p-inputNumber
+            id="minimumStock"
+            [(ngModel)]="product.minimumStock"
+            name="minimumStock"
+            [min]="0"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Unidade -->
+        <div class="form-field">
+          <label for="unit">Unidade</label>
+          <p-dropdown
+            id="unit"
+            [(ngModel)]="product.unit"
+            name="unit"
+            [options]="unitOptions"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-dropdown>
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-field span-3">
+          <label for="description">Descrição</label>
+          <textarea
+            pInputTextarea
+            id="description"
+            [(ngModel)]="product.description"
+            name="description"
+            rows="3"
+            class="w-full"
+            placeholder="Descrição do produto (opcional)"
+            [disabled]="loading()"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a
+          routerLink="/products"
+          pButton
+          label="Cancelar"
+          class="p-button-outlined"
+        ></a>
+        <button
+          pButton
+          type="submit"
+          [label]="isEditing() ? 'Atualizar' : 'Salvar'"
+          icon="pi pi-check"
+          [loading]="saving()"
+          [disabled]="loading()"
+        ></button>
+      </div>
+    </form>
+  </div>
+</div>
+<p-toast></p-toast>

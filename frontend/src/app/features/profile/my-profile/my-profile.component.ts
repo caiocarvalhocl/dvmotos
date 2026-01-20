@@ -16,15 +16,7 @@ import {
   ChangePasswordRequest,
 } from "../../../core/services/user.service";
 import { AuthService } from "../../../core/services/auth.service";
-
-type SEVERITY =
-  | "success"
-  | "info"
-  | "secondary"
-  | "contrast"
-  | "warning"
-  | "danger"
-  | undefined;
+import { Severity } from "@shared/types/Severity";
 
 @Component({
   selector: "app-my-profile",
@@ -194,7 +186,7 @@ export class MyProfileComponent implements OnInit {
     return role === "ADMIN" ? "Administrador" : "Operador";
   }
 
-  getRoleSeverity(role: string): SEVERITY {
+  getRoleSeverity(role: string): Severity {
     return role === "ADMIN" ? "danger" : "info";
   }
 

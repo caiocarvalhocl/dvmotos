@@ -1,0 +1,147 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+
+  i {
+    font-size: 2rem;
+    color: #94a3b8;
+  }
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+:host ::ng-deep {
+  .product-card {
+    .p-card-body {
+      padding-top: 0;
+    }
+  }
+
+  .history-card {
+    grid-column: span 2;
+
+    @media (max-width: 992px) {
+      grid-column: span 1;
+    }
+  }
+}
+
+.product-header {
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+  }
+
+  small {
+    opacity: 0.8;
+    font-family: monospace;
+  }
+}
+
+.product-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+
+  .stat {
+    text-align: center;
+
+    .stat-label {
+      display: block;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+
+      &.low-stock {
+        color: #dc2626;
+      }
+    }
+  }
+}
+
+.low-stock-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #fef3c7;
+  color: #d97706;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    color: #374151;
+  }
+
+  &.full-width {
+    grid-column: span 2;
+  }
+}
+
+:host ::ng-deep .p-inputnumber {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}

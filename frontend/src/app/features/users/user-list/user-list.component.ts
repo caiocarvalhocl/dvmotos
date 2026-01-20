@@ -15,15 +15,7 @@ import {
   FilterState,
   TableFilterComponent,
 } from "@shared/components/table-filter/table-filter.component";
-
-type SEVERITY =
-  | "success"
-  | "info"
-  | "secondary"
-  | "contrast"
-  | "warning"
-  | "danger"
-  | undefined;
+import { Severity } from "@shared/types/Severity";
 
 @Component({
   selector: "app-user-list",
@@ -126,7 +118,7 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  getRoleSeverity(role: string): SEVERITY {
+  getRoleSeverity(role: string): Severity {
     return role === "ADMIN" ? "danger" : "info";
   }
   getRoleLabel(role: string): string {

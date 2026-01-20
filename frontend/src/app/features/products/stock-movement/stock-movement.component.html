@@ -1,0 +1,163 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Movimentação de Estoque</h1>
+      <p class="text-muted">Registre entradas, saídas e ajustes</p>
+    </div>
+    <a
+      routerLink="/products"
+      pButton
+      label="Voltar"
+      icon="pi pi-arrow-left"
+      class="p-button-outlined"
+    ></a>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+  } @else if (product) {
+    <div class="content-grid">
+      <!-- Product Info Card -->
+      <p-card styleClass="product-card">
+        <ng-template pTemplate="header">
+          <div class="product-header">
+            <h3>{{ product.name }}</h3>
+            @if (product.barcode) {
+              <small>{{ product.barcode }}</small>
+            }
+          </div>
+        </ng-template>
+        <div class="product-stats">
+          <div class="stat">
+            <span class="stat-label">Estoque Atual</span>
+            <span class="stat-value" [class.low-stock]="product.lowStock">
+              {{ product.stockQuantity }} {{ product.unit }}
+            </span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Estoque Mínimo</span>
+            <span class="stat-value"
+              >{{ product.minimumStock }} {{ product.unit }}</span
+            >
+          </div>
+          <div class="stat">
+            <span class="stat-label">Preço de Venda</span>
+            <span class="stat-value">{{
+              product.salePrice | currency: "BRL"
+            }}</span>
+          </div>
+        </div>
+        @if (product.lowStock) {
+          <div class="low-stock-alert">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>Estoque abaixo do mínimo!</span>
+          </div>
+        }
+      </p-card>
+
+      <!-- Movement Form Card -->
+      <p-card header="Nova Movimentação">
+        <form (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="type">Tipo *</label>
+              <p-dropdown
+                id="type"
+                [(ngModel)]="movementType"
+                name="type"
+                [options]="typeOptions"
+                optionLabel="label"
+                optionValue="value"
+                styleClass="w-full"
+              ></p-dropdown>
+            </div>
+            <div class="form-field">
+              <label for="quantity">Quantidade *</label>
+              <p-inputNumber
+                id="quantity"
+                [(ngModel)]="quantity"
+                name="quantity"
+                [min]="1"
+                styleClass="w-full"
+              ></p-inputNumber>
+            </div>
+            <div class="form-field full-width">
+              <label for="reason">Motivo</label>
+              <textarea
+                pInputTextarea
+                id="reason"
+                [(ngModel)]="reason"
+                name="reason"
+                rows="2"
+                class="w-full"
+                placeholder="Ex: Compra de fornecedor, Venda avulsa, Ajuste de inventário..."
+              ></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button
+              pButton
+              type="submit"
+              label="Registrar Movimentação"
+              icon="pi pi-check"
+              [loading]="saving()"
+            ></button>
+          </div>
+        </form>
+      </p-card>
+
+      <!-- History Table -->
+      <p-card header="Histórico de Movimentações" styleClass="history-card">
+        <p-table
+          [value]="movements()"
+          [paginator]="true"
+          [rows]="10"
+          [totalRecords]="totalRecords()"
+          [lazy]="true"
+          (onLazyLoad)="loadMovements(product.id!, $event)"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Qtd</th>
+              <th>Anterior</th>
+              <th>Novo</th>
+              <th>Motivo</th>
+              <th>Usuário</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-mov>
+            <tr>
+              <td>{{ mov.createdAt | date: "dd/MM/yyyy HH:mm" }}</td>
+              <td>
+                <p-tag
+                  [value]="getTypeLabel(mov.type)"
+                  [severity]="getTypeSeverity(mov.type)"
+                ></p-tag>
+              </td>
+              <td class="font-bold">
+                {{ mov.type === "OUT" ? "-" : "+" }}{{ mov.quantity }}
+              </td>
+              <td>{{ mov.previousQuantity }}</td>
+              <td>{{ mov.newQuantity }}</td>
+              <td>{{ mov.reason || "-" }}</td>
+              <td>{{ mov.userName || "-" }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" class="text-center">
+                <p class="text-muted">Nenhuma movimentação registrada</p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  }
+</div>
+<p-toast></p-toast>
