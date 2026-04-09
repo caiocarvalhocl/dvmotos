@@ -1,2 +1,5 @@
 package com.dvmotos.entity;
-public enum ServiceOrderItemType { SERVICE, PART }
+
+public enum ServiceOrderItemType {
+    SERVICE, PART
+}

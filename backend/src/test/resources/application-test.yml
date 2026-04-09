@@ -14,8 +14,12 @@ spring:
   flyway:
     enabled: false
 
+admin:
+  email: test@test.com
+  password: test123
+
 jwt:
-  secret: dGVzdHNlY3JldGtleWZvcnRlc3RpbmdwdXJwb3Nlc29ubHltaW5pbXVtMjU2Yml0c3JlcXVpcmVk
+  secret: dGVzdC1zZWNyZXQtZm9yLWgyLWludGVncmF0aW9uLXRlc3Rz
   expiration: 3600000
 
 logging:

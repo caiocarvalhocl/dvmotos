@@ -17,8 +17,22 @@ public interface ServiceOrderRepository extends JpaRepository<ServiceOrder, Long
     Page<ServiceOrder> findByVehicleId(Long vehicleId, Pageable pageable);
     Page<ServiceOrder> findByStatus(ServiceOrderStatus status, Pageable pageable);
     List<ServiceOrder> findByStatusIn(List<ServiceOrderStatus> statuses);
+
     @Query("SELECT so FROM ServiceOrder so WHERE so.createdAt BETWEEN :start AND :end")
     List<ServiceOrder> findByPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
     @Query("SELECT COUNT(so) FROM ServiceOrder so WHERE so.status = :status")
     Long countByStatus(@Param("status") ServiceOrderStatus status);
+
+    @Query("SELECT so FROM ServiceOrder so WHERE " +
+           "LOWER(so.client.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(so.vehicle.licensePlate) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(so.vehicle.model) LIKE LOWER(CONCAT('%', :search, '%'))")
+    Page<ServiceOrder> searchAll(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT so FROM ServiceOrder so WHERE so.status = :status AND (" +
+           "LOWER(so.client.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(so.vehicle.licensePlate) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(so.vehicle.model) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<ServiceOrder> searchWithStatus(@Param("search") String search, @Param("status") ServiceOrderStatus status, Pageable pageable);
 }

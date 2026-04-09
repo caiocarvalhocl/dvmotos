@@ -1,7 +1,4 @@
-# Use este arquivo para desenvolvimento local
-# 1. Copie o .env.example:  cp .env.example .env
-# 2. Preencha as variáveis no .env
-# 3. Execute: docker-compose -f docker-compose.dev.yml up -d
+# Execute: docker-compose -f docker-compose.dev.yml up -d
 
 services:
   # PostgreSQL Database

@@ -5,7 +5,10 @@ import com.dvmotos.entity.User;
 import lombok.*;
 import java.time.LocalDateTime;
 
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
     private Long id;
     private String name;

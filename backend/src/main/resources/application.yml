@@ -4,7 +4,7 @@ spring:
   
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:dvmotos}
-    username: ${DB_USER:dvmotos}
+    username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   
@@ -36,8 +36,8 @@ jwt:
 
 # Initial Admin
 admin:
-  email: ${ADMIN_EMAIL:admin@dvmotos.com.br}
-  password: ${ADMIN_PASSWORD:}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
 
 # Logging
 logging:
