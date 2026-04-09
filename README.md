@@ -166,14 +166,6 @@ dvmotos/
 | `JWT_SECRET` | Chave secreta JWT | (desenvolvimento) |
 | `SERVER_PORT` | Porta da API | 8080 |
 
-## 📅 Roadmap
-
-- [x] Semana 1-2: Setup + Autenticação
-- [x] Semana 3-4: Clientes + Veículos
-- [ ] Semana 5: Estoque + Categorias
-- [ ] Semana 6-7: Ordens de Serviço
-- [ ] Semana 8: Dashboard + Deploy
-
 ## 🤝 Contribuição
 
 1. Fork o projeto
