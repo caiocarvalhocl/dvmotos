@@ -32,10 +32,14 @@
 
 .search-input {
   width: 100%;
+  outline: auto red;
   padding: 0.45rem 0 0.45rem 2.5rem;
 
   @media (min-width: 768px) {
     width: 20rem;
+  }
+  &::placeholder {
+    font-size: 0.9rem;
   }
 }
 

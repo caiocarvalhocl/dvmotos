@@ -171,6 +171,7 @@ body {
 .p-button {
   border-radius: 8px;
   font-weight: 500;
+  padding: 0.2rem;
 
   &.p-button-primary {
     background: var(--primary-color);
@@ -407,4 +408,49 @@ body {
   border-radius: 8px;
   color: white;
   font-weight: 700;
+}
+
+.tooltip-text .p-tooltip-text {
+  padding: 0.25rem;
+}
+
+// =============================================
+// Confirm Dialog
+// =============================================
+.p-confirm-dialog {
+  // Card
+  border-radius: 12px;
+  min-width: 400px;
+
+  // Header
+  .p-dialog-header {
+    background: var(--surface-ground);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 1.25rem 1.5rem;
+
+    .p-dialog-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+
+  // Body
+  .p-dialog-content {
+    padding: 1.5rem;
+
+    .p-confirm-dialog-message {
+      margin-left: 0.75rem;
+    }
+  }
+
+  // Footer buttons
+  .p-dialog-footer {
+    padding: 1rem 1.5rem;
+    gap: 0.5rem;
+
+    button {
+      border-radius: 8px;
+      min-width: 100px;
+    }
+  }
 }
