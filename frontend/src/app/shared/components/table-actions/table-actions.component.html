@@ -7,6 +7,7 @@
       class="p-button-text p-button-sm action-btn btn-secondary"
       [pTooltip]="editTooltip"
       tooltipPosition="top"
+      tooltipStyleClass="tooltip-text"
     ></a>
   }
 
@@ -14,9 +15,11 @@
     pButton
     type="button"
     [icon]="actionIcon"
-    [class]="actionClass"
+    [ngClass]="actionClass"
     (click)="emitAction()"
     [pTooltip]="actionTooltip"
     tooltipPosition="top"
+    tooltipStyleClass="tooltip-text"
   ></button>
+  <ng-content></ng-content>
 </div>

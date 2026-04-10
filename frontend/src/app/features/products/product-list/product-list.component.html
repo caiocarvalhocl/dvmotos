@@ -18,22 +18,10 @@
   </div>
   <div class="card">
     <div class="table-header">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearch($event)"
-          placeholder="Buscar por nome ou código de barras..."
-          class="search-input"
-        />
-      </span>
-      <p-dropdown
-        [options]="statusOptions"
-        [(ngModel)]="selectedStatus"
-        (onChange)="onStatusChange()"
-        styleClass="status-filter"
-      ></p-dropdown>
+      <app-table-filter
+        placeholder="Buscar por nome ou código de barras..."
+        (filterChange)="onFilter($event)"
+      ></app-table-filter>
     </div>
     <p-table
       [value]="products()"
@@ -96,15 +84,12 @@
             ></p-tag>
           </td>
           <td>
-            <div class="action-buttons">
-              <a
-                [routerLink]="['/products', product.id]"
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-text p-button-sm"
-                pTooltip="Editar"
-                tooltipPosition="top"
-              ></a>
+            <app-table-actions
+              editRoute="/products/"
+              [id]="product.id"
+              [isActive]="product.active"
+              (onAction)="confirmToggleStatus(product)"
+            >
               <a
                 [routerLink]="['/products', product.id, 'stock']"
                 pButton
@@ -112,20 +97,9 @@
                 class="p-button-text p-button-sm btn-stock"
                 pTooltip="Movimentar Estoque"
                 tooltipPosition="top"
+                tooltipStyleClass="tooltip-text"
               ></a>
-              <button
-                pButton
-                [icon]="product.active ? 'pi pi-ban' : 'pi pi-check-circle'"
-                [class]="
-                  product.active
-                    ? 'p-button-text p-button-sm btn-deactivate'
-                    : 'p-button-text p-button-sm btn-activate'
-                "
-                (click)="confirmToggleStatus(product)"
-                [pTooltip]="product.active ? 'Desativar' : 'Ativar'"
-                tooltipPosition="top"
-              ></button>
-            </div>
+            </app-table-actions>
           </td>
         </tr>
       </ng-template>

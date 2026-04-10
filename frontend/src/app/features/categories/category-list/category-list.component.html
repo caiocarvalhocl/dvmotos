@@ -10,22 +10,10 @@
   </div>
   <div class="card">
     <div class="table-header">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearch($event)"
-          placeholder="Buscar por nome..."
-          class="search-input"
-        />
-      </span>
-      <p-dropdown
-        [options]="statusOptions"
-        [(ngModel)]="selectedStatus"
-        (onChange)="onStatusChange()"
-        styleClass="status-filter"
-      ></p-dropdown>
+      <app-table-filter
+        placeholder="Buscar por nome"
+        (filterChange)="onFilter($event)"
+      ></app-table-filter>
     </div>
     <p-table
       [value]="categories()"
@@ -66,28 +54,12 @@
             ></p-tag>
           </td>
           <td>
-            <div class="action-buttons">
-              <a
-                [routerLink]="['/categories', category.id]"
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-text p-button-sm"
-                pTooltip="Editar"
-                tooltipPosition="top"
-              ></a>
-              <button
-                pButton
-                [icon]="category.active ? 'pi pi-ban' : 'pi pi-check-circle'"
-                [class]="
-                  category.active
-                    ? 'p-button-text p-button-sm btn-deactivate'
-                    : 'p-button-text p-button-sm btn-activate'
-                "
-                (click)="confirmToggleStatus(category)"
-                [pTooltip]="category.active ? 'Desativar' : 'Ativar'"
-                tooltipPosition="top"
-              ></button>
-            </div>
+            <app-table-actions
+              editRoute="/categories/"
+              [id]="category.id"
+              [isActive]="category.active"
+              (onAction)="confirmToggleStatus(category)"
+            ></app-table-actions>
           </td>
         </tr>
       </ng-template>

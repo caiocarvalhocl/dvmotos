@@ -43,12 +43,6 @@ export class ClientListComponent implements OnInit {
   loading = signal(false);
   totalRecords = signal(0);
 
-  statusOptions = [
-    { label: "Todos", value: null },
-    { label: "Ativos", value: true },
-    { label: "Inativos", value: false },
-  ];
-
   constructor(
     private clientService: ClientService,
     private confirmationService: ConfirmationService,
@@ -122,12 +116,15 @@ export class ClientListComponent implements OnInit {
 
   confirmToggleStatus(client: Client): void {
     const action = client.active ? "desativar" : "ativar";
+
     this.confirmationService.confirm({
       message: `Deseja realmente ${action} o cliente "${client.name}"?`,
       header: "Confirmar Ação",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",
+      rejectButtonStyleClass: "p-button-text p-button-secondary",
+      acceptButtonStyleClass: "p-button-text p-button-primary text-white mx-2",
       accept: () => this.toggleStatus(client),
     });
   }

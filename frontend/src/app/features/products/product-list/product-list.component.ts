@@ -16,8 +16,12 @@ import {
   Product,
   Page,
 } from "../../../core/services/product.service";
-import { debounceTime, Subject } from "rxjs";
 import { Severity } from "@shared/types/Severity";
+import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
+import {
+  FilterState,
+  TableFilterComponent,
+} from "@shared/components/table-filter/table-filter.component";
 
 @Component({
   selector: "app-product-list",
@@ -35,6 +39,8 @@ import { Severity } from "@shared/types/Severity";
     ToastModule,
     TooltipModule,
     CurrencyPipe,
+    TableActionsComponent,
+    TableFilterComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./product-list.component.html",
@@ -46,37 +52,34 @@ export class ProductListComponent implements OnInit {
   totalRecords = signal(0);
   lowStockCount = signal(0);
 
-  searchTerm = "";
-  selectedStatus: boolean | null = true;
-
-  statusOptions = [
-    { label: "Todos", value: null },
-    { label: "Ativos", value: true },
-    { label: "Inativos", value: false },
-  ];
-
-  private searchSubject = new Subject<string>();
+  currentFilter: FilterState = { search: "", active: null };
 
   constructor(
     private productService: ProductService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {
-    this.searchSubject
-      .pipe(debounceTime(400))
-      .subscribe(() => this.loadProducts({ first: 0, rows: 20 }));
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts({ first: 0, rows: 20 });
     this.loadLowStockCount();
   }
 
+  onFilter(filter: FilterState): void {
+    this.currentFilter = filter;
+    this.loadProducts({ first: 0, rows: 20 });
+  }
+
   loadProducts(event: any): void {
     this.loading.set(true);
     const page = event.first / event.rows;
     this.productService
-      .findAll(page, event.rows, this.searchTerm, this.selectedStatus)
+      .findAll(
+        page,
+        event.rows,
+        this.currentFilter.search,
+        this.currentFilter.active,
+      )
       .subscribe({
         next: (response: Page<Product>) => {
           this.products.set(response.content);
@@ -100,10 +103,6 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  onSearch(term: string): void {
-    this.searchSubject.next(term);
-  }
-
   onStatusChange(): void {
     this.loadProducts({ first: 0, rows: 20 });
   }
@@ -116,6 +115,8 @@ export class ProductListComponent implements OnInit {
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",
+      rejectButtonStyleClass: "p-button-text p-button-secondary",
+      acceptButtonStyleClass: "p-button-text p-button-primary text-white mx-2",
       accept: () => this.toggleStatus(product),
     });
   }
