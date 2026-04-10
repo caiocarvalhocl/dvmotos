@@ -31,12 +31,13 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (adminPassword == null || adminPassword.isBlank()) {
-            log.warn("ADMIN_PASSWORD not set. Skipping admin user creation. Set ADMIN_PASSWORD env var to create the initial admin.");
+            log.warn(
+                    "ADMIN_PASSWORD not set. Skipping admin user creation. Set ADMIN_PASSWORD env var to create the initial admin.");
             return;
         }
 
         User admin = User.builder()
-                .name("Administrator")
+                .name("Administrador")
                 .email(adminEmail)
                 .role(Role.ADMIN)
                 .active(true)
