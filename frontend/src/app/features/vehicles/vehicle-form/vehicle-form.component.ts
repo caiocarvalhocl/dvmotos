@@ -16,6 +16,7 @@ import {
   Vehicle,
 } from "../../../core/services/vehicle.service";
 import { ClientService, Client } from "../../../core/services/client.service";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-vehicle-form",
@@ -32,6 +33,7 @@ import { ClientService, Client } from "../../../core/services/client.service";
     DropdownModule,
     AutoCompleteModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./vehicle-form.component.html",

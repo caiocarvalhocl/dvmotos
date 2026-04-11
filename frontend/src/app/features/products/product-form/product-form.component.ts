@@ -17,6 +17,7 @@ import {
   CategoryService,
   Category,
 } from "../../../core/services/category.service";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-product-form",
@@ -31,6 +32,7 @@ import {
     DropdownModule,
     ButtonModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./product-form.component.html",

@@ -49,119 +49,119 @@
 
       <h5 class="section-title"><i class="pi pi-car"></i> Identificação</h5>
       <div class="formgrid grid">
-        <div class="field col-12 md:col-4">
-          <label for="licensePlate"
-            >Placa <span class="text-red-500">*</span></label
-          >
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-id-card"></i>
-            <input
-              pInputText
-              id="licensePlate"
-              [(ngModel)]="vehicle.licensePlate"
-              name="licensePlate"
-              required
-              placeholder="ABC-1234"
-              class="w-full font-bold uppercase"
-              style="letter-spacing: 1px"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Placa"
+          inputId="licensePlate"
+          icon="pi pi-id-card"
+          colClass="md:col-3"
+        >
+          <input
+            pInputText
+            id="licensePlate"
+            [(ngModel)]="vehicle.licensePlate"
+            name="licensePlate"
+            required
+            placeholder="ABC-1234"
+            class="w-full font-bold uppercase"
+            style="letter-spacing: 1px"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-4">
-          <label for="brand">Marca <span class="text-red-500">*</span></label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-tag"></i>
-            <input
-              pInputText
-              id="brand"
-              [(ngModel)]="vehicle.brand"
-              name="brand"
-              required
-              placeholder="Ex: Toyota"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Marca"
+          inputId="brand"
+          icon="pi pi-tag"
+          colClass="md:col-3"
+        >
+          <input
+            pInputText
+            id="brand"
+            [(ngModel)]="vehicle.brand"
+            name="brand"
+            required
+            placeholder="Ex: Toyota"
+            class="w-full"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-4">
-          <label for="model">Modelo <span class="text-red-500">*</span></label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-info-circle"></i>
-            <input
-              pInputText
-              id="model"
-              [(ngModel)]="vehicle.model"
-              name="model"
-              required
-              placeholder="Ex: Corolla XEi"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field label="Modelo" inputId="model" icon="pi pi-info-circle">
+          <input
+            pInputText
+            id="model"
+            [(ngModel)]="vehicle.model"
+            name="model"
+            required
+            placeholder="Ex: Corolla XEi"
+            class="w-full"
+          />
+        </app-form-field>
       </div>
 
       <div class="formgrid grid mt-2">
-        <div class="field col-12 md:col-3">
-          <label for="year">Ano</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-calendar"></i>
-            <input
-              pInputText
-              id="year"
-              [(ngModel)]="vehicle.year"
-              name="year"
-              maxlength="4"
-              placeholder="Ex: 2023"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Ano"
+          inputId="year"
+          icon="pi pi-calendar"
+          colClass="md:col-3"
+        >
+          <input
+            pInputText
+            id="year"
+            [(ngModel)]="vehicle.year"
+            name="year"
+            maxlength="4"
+            placeholder="Ex: 2023"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-3">
-          <label for="color">Cor</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-palette"></i>
-            <input
-              pInputText
-              id="color"
-              [(ngModel)]="vehicle.color"
-              name="color"
-              placeholder="Ex: Prata"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Cor"
+          inputId="color"
+          icon="pi pi-pallete"
+          colClass="md:col-3"
+        >
+          <input
+            pInputText
+            id="color"
+            [(ngModel)]="vehicle.color"
+            name="color"
+            placeholder="Ex: Prata"
+            class="w-full"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-3">
-          <label for="chassisNumber">Chassi</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-bars"></i>
-            <input
-              pInputText
-              id="chassisNumber"
-              [(ngModel)]="vehicle.chassisNumber"
-              name="chassisNumber"
-              placeholder="Opcional"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Chassi"
+          inputId="chassisNumber"
+          icon="pi pi-bars"
+          colClass="md:col-3"
+        >
+          <input
+            pInputText
+            id="chassisNumber"
+            [(ngModel)]="vehicle.chassisNumber"
+            name="chassisNumber"
+            placeholder="Opcional"
+            class="w-full"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-3">
-          <label for="currentMileage">KM Atual</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-compass" style="z-index: 2"></i>
-            <p-inputNumber
-              id="currentMileage"
-              [(ngModel)]="vehicle.currentMileage"
-              name="currentMileage"
-              [useGrouping]="true"
-              placeholder="0"
-              styleClass="w-full"
-              inputStyleClass="w-full pl-5"
-            ></p-inputNumber>
-          </span>
-        </div>
+        <app-form-field
+          label="KM Atual"
+          inputId="currentMileage"
+          icon="pi pi-compass"
+          colClass="md:col-3"
+        >
+          <p-inputNumber
+            id="currentMileage"
+            [(ngModel)]="vehicle.currentMileage"
+            name="currentMileage"
+            [useGrouping]="true"
+            placeholder="0"
+            styleClass="w-full"
+            inputStyleClass="w-full pl-5"
+          ></p-inputNumber>
+        </app-form-field>
       </div>
 
       <div class="field mt-3">

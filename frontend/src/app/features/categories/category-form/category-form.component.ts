@@ -11,6 +11,7 @@ import {
   CategoryService,
   Category,
 } from "../../../core/services/category.service";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-category-form",
@@ -23,6 +24,7 @@ import {
     InputTextareaModule,
     ButtonModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./category-form.component.html",

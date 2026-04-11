@@ -23,89 +23,87 @@
     <form (ngSubmit)="onSubmit()" #clientForm="ngForm">
       <h5 class="section-title"><i class="pi pi-user"></i> Dados Pessoais</h5>
       <div class="formgrid grid">
-        <div class="field col-12 md:col-6">
-          <label for="name"
-            >Nome Completo <span class="text-red-500">*</span></label
-          >
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-user"></i>
-            <input
-              pInputText
-              id="name"
-              [(ngModel)]="client.name"
-              name="name"
-              required
-              placeholder="Ex: João Silva"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field
+          label="Nome Completo"
+          inputId="name"
+          icon="pi pi-user"
+          [required]="true"
+        >
+          <input
+            pInputText
+            id="name"
+            [(ngModel)]="client.name"
+            name="name"
+            required
+            placeholder="Ex: João Silva"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-6">
-          <label for="documentNumber">CPF/CNPJ</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-id-card"></i>
-            <p-inputMask
-              id="documentNumber"
-              [(ngModel)]="client.documentNumber"
-              name="documentNumber"
-              mask="999.999.999-99"
-              styleClass="w-full"
-            ></p-inputMask>
-          </span>
-        </div>
+        <app-form-field
+          label="CPF/CNPJ"
+          inputId="documentNumber"
+          icon="pi pi-id-card"
+        >
+          <p-inputMask
+            id="documentNumber"
+            [(ngModel)]="client.documentNumber"
+            name="documentNumber"
+            mask="999.999.999-99"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-6">
-          <label for="email">Email</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-envelope"></i>
-            <input
-              pInputText
-              id="email"
-              [(ngModel)]="client.email"
-              name="email"
-              type="email"
-              placeholder="contato@exemplo.com"
-              class="w-full"
-            />
-          </span>
-        </div>
+        <app-form-field label="Email" inputId="email" icon="pi pi-envelope">
+          <input
+            pInputText
+            id="email"
+            [(ngModel)]="client.email"
+            name="email"
+            type="email"
+            placeholder="contato@exemplo.com"
+          />
+        </app-form-field>
 
-        <div class="field col-12 md:col-6">
-          <label for="phone">Telefone</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-phone"></i>
-            <p-inputMask
-              id="phone"
-              [(ngModel)]="client.phone"
-              name="phone"
-              mask="(99) 99999-9999"
-              placeholder="(00) 00000-0000"
-              styleClass="w-full pl-5"
-            ></p-inputMask>
-          </span>
-        </div>
+        <app-form-field label="Telefone" inputId="phone" icon="pi pi-phone">
+          <p-inputMask
+            id="phone"
+            [(ngModel)]="client.phone"
+            name="phone"
+            mask="(99) 99999-9999"
+            placeholder="(00) 00000-0000"
+            styleClass="w-full pl-5"
+          ></p-inputMask>
+        </app-form-field>
+
+        <app-form-field label="Observações" inputId="notes" colClass="col-12">
+          <textarea
+            pInputTextarea
+            id="notes"
+            [(ngModel)]="client.notes"
+            name="notes"
+            rows="3"
+            style="resize: vertical"
+          ></textarea>
+        </app-form-field>
       </div>
 
       <h5 class="section-title"><i class="pi pi-map-marker"></i> Endereço</h5>
       <div class="formgrid grid">
-        <div class="field col-12 md:col-3">
-          <label for="zipCode">CEP</label>
-          <span class="p-input-icon-right w-full">
-            <i class="pi pi-search cursor-pointer"></i>
-            <p-inputMask
-              id="zipCode"
-              [(ngModel)]="client.zipCode"
-              name="zipCode"
-              mask="99999-999"
-              placeholder="00000-000"
-              styleClass="w-full"
-            ></p-inputMask>
-          </span>
-        </div>
+        <app-form-field
+          label="CEP"
+          inputId="zipCode"
+          icon="pi pi-search cursor-pointer"
+        >
+          <p-inputMask
+            id="zipCode"
+            [(ngModel)]="client.zipCode"
+            name="zipCode"
+            mask="99999-999"
+            placeholder="00000-000"
+            styleClass="w-full"
+          ></p-inputMask>
+        </app-form-field>
 
-        <div class="field col-12 md:col-6">
-          <label for="address">Logradouro</label>
+        <app-form-field label="Logradouro" inputId="address">
           <input
             pInputText
             id="address"
@@ -114,10 +112,9 @@
             placeholder="Rua, Número, Bairro"
             class="w-full"
           />
-        </div>
+        </app-form-field>
 
-        <div class="field col-12 md:col-3">
-          <label for="city">Cidade</label>
+        <app-form-field label="Cidade" inputId="city" colClass="md:col-3">
           <input
             pInputText
             id="city"
@@ -125,10 +122,9 @@
             name="city"
             class="w-full"
           />
-        </div>
+        </app-form-field>
 
-        <div class="field col-12 md:col-3">
-          <label for="state">Estado</label>
+        <app-form-field label="Estado" inputId="state" colClass="md:col-3">
           <p-dropdown
             id="state"
             [(ngModel)]="client.state"
@@ -138,20 +134,7 @@
             [filter]="true"
             styleClass="w-full"
           ></p-dropdown>
-        </div>
-      </div>
-
-      <div class="field mt-3">
-        <label for="notes">Observações</label>
-        <textarea
-          pInputTextarea
-          id="notes"
-          [(ngModel)]="client.notes"
-          name="notes"
-          rows="3"
-          placeholder="Informações adicionais sobre o cliente..."
-          class="w-full"
-        ></textarea>
+        </app-form-field>
       </div>
 
       <div class="form-actions">

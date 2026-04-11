@@ -130,6 +130,8 @@ export class VehicleListComponent implements OnInit {
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",
+      rejectButtonStyleClass: "p-button-text p-button-secondary",
+      acceptButtonStyleClass: "p-button-text p-button-primary text-white mx-2",
       accept: () => this.toggleStatus(vehicle),
     });
   }

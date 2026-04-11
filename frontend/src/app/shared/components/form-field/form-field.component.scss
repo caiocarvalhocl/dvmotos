@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+
+  &.has-icon {
+    > i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-color-secondary);
+      z-index: 1;
+      font-size: 0.875rem;
+    }
+
+    // Aplica padding-left em qualquer input/componente dentro do ng-content
+    ::ng-deep {
+      input,
+      .p-inputtext,
+      .p-dropdown,
+      .p-inputmask,
+      .p-autocomplete > input,
+      .p-inputnumber > input,
+      textarea {
+        padding-left: 2.5rem !important;
+      }
+    }
+  }
+
+  ::ng-deep {
+    input,
+    .p-inputtext,
+    .p-dropdown,
+    .p-inputmask,
+    .p-autocomplete,
+    .p-inputnumber,
+    textarea,
+    .p-password {
+      width: 100%;
+      padding: 0.2rem;
+    }
+  }
+}
