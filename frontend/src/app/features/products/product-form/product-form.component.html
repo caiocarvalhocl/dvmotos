@@ -15,9 +15,11 @@
   <div class="card">
     <form (ngSubmit)="onSubmit()">
       <div class="form-grid">
-        <!-- Nome -->
-        <div class="form-field span-2">
-          <label for="name">Nome *</label>
+        <app-form-field
+          label="Nome"
+          inputId="name"
+          colClass="form-field span-2"
+        >
           <input
             pInputText
             id="name"
@@ -27,11 +29,13 @@
             placeholder="Nome do produto"
             [disabled]="loading()"
           />
-        </div>
+        </app-form-field>
 
-        <!-- Código de Barras -->
-        <div class="form-field">
-          <label for="barcode">Código de Barras</label>
+        <app-form-field
+          label="Código de Barras"
+          inputId="barcode"
+          colClass="form-field"
+        >
           <input
             pInputText
             id="barcode"
@@ -41,11 +45,13 @@
             placeholder="Ex: 7891234567890"
             [disabled]="loading()"
           />
-        </div>
+        </app-form-field>
 
-        <!-- Categoria -->
-        <div class="form-field">
-          <label for="category">Categoria</label>
+        <app-form-field
+          label="Categoria"
+          inputId="category"
+          colClass="form-field"
+        >
           <p-dropdown
             id="category"
             [(ngModel)]="product.categoryId"
@@ -58,11 +64,13 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-dropdown>
-        </div>
+        </app-form-field>
 
-        <!-- Preço de Custo -->
-        <div class="form-field">
-          <label for="costPrice">Preço de Custo</label>
+        <app-form-field
+          label="Preço de Custo"
+          inputId="costPrice"
+          colClass="form-field"
+        >
           <p-inputNumber
             id="costPrice"
             [(ngModel)]="product.costPrice"
@@ -73,11 +81,13 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-inputNumber>
-        </div>
+        </app-form-field>
 
-        <!-- Preço de Venda -->
-        <div class="form-field">
-          <label for="salePrice">Preço de Venda *</label>
+        <app-form-field
+          label="Preço de Venda"
+          inputId="salePrice"
+          colClass="form-field"
+        >
           <p-inputNumber
             id="salePrice"
             [(ngModel)]="product.salePrice"
@@ -88,11 +98,13 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-inputNumber>
-        </div>
+        </app-form-field>
 
-        <!-- Quantidade em Estoque -->
-        <div class="form-field">
-          <label for="stockQuantity">Quantidade em Estoque *</label>
+        <app-form-field
+          label="Quantidade em Estoque"
+          inputId="stockQuantity"
+          colClass="form-field"
+        >
           <p-inputNumber
             id="stockQuantity"
             [(ngModel)]="product.stockQuantity"
@@ -106,11 +118,13 @@
               >Use "Movimentar Estoque" para alterar</small
             >
           }
-        </div>
+        </app-form-field>
 
-        <!-- Estoque Mínimo -->
-        <div class="form-field">
-          <label for="minimumStock">Estoque Mínimo</label>
+        <app-form-field
+          label="Estoque Mínimo"
+          inputId="minimumStock"
+          colClass="form-field"
+        >
           <p-inputNumber
             id="minimumStock"
             [(ngModel)]="product.minimumStock"
@@ -119,11 +133,9 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-inputNumber>
-        </div>
+        </app-form-field>
 
-        <!-- Unidade -->
-        <div class="form-field">
-          <label for="unit">Unidade</label>
+        <app-form-field label="Unidade" inputId="unit" colClass="form-field">
           <p-dropdown
             id="unit"
             [(ngModel)]="product.unit"
@@ -134,11 +146,13 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-dropdown>
-        </div>
+        </app-form-field>
 
-        <!-- Descrição -->
-        <div class="form-field span-3">
-          <label for="description">Descrição</label>
+        <app-form-field
+          label="Descrição"
+          inputId="description"
+          colClass="form-field span-3"
+        >
           <textarea
             pInputTextarea
             id="description"
@@ -149,16 +163,17 @@
             placeholder="Descrição do produto (opcional)"
             [disabled]="loading()"
           ></textarea>
-        </div>
+        </app-form-field>
       </div>
 
       <div class="form-actions">
-        <a
-          routerLink="/products"
+        <button
           pButton
+          type="button"
           label="Cancelar"
-          class="p-button-outlined"
-        ></a>
+          class="p-button-text p-button-secondary"
+          routerLink="/products"
+        ></button>
         <button
           pButton
           type="submit"
@@ -166,6 +181,7 @@
           icon="pi pi-check"
           [loading]="saving()"
           [disabled]="loading()"
+          class="p-button-success px-4"
         ></button>
       </div>
     </form>

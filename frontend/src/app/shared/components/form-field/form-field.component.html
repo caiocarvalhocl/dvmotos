@@ -1,0 +1,8 @@
+<label [for]="inputId">
+  {{ label }}
+  <span *ngIf="required" class="text-red-500">*</span>
+</label>
+<div class="input-wrapper" [class.has-icon]="icon">
+  <i *ngIf="icon" [class]="icon"></i>
+  <ng-content></ng-content>
+</div>

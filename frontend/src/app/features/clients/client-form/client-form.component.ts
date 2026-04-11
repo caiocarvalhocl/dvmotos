@@ -10,6 +10,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { ToastModule } from "primeng/toast";
 import { MessageService } from "primeng/api";
 import { ClientService, Client } from "../../../core/services/client.service";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-client-form",
@@ -24,6 +25,7 @@ import { ClientService, Client } from "../../../core/services/client.service";
     ButtonModule,
     DropdownModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./client-form.component.html",
