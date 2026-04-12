@@ -37,7 +37,6 @@ import { FormFieldComponent } from "@shared/components/form-field/form-field.com
   ],
   providers: [MessageService],
   templateUrl: "./vehicle-form.component.html",
-  styleUrls: ["./vehicle-form.component.scss"],
 })
 export class VehicleFormComponent implements OnInit {
   vehicle: Vehicle = {

@@ -36,7 +36,6 @@ import { FormFieldComponent } from "@shared/components/form-field/form-field.com
   ],
   providers: [MessageService],
   templateUrl: "./product-form.component.html",
-  styleUrls: ["./product-form.component.scss"],
 })
 export class ProductFormComponent implements OnInit {
   product: Product = {

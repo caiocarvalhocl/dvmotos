@@ -1,0 +1,228 @@
+// =============================================
+// FORM PAGE LAYOUT
+// =============================================
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-container .page-header {
+  align-items: flex-start;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem;
+  }
+  p {
+    color: var(--text-color-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .header-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  .status-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+// =============================================
+// FORM CARD & SECTIONS
+// =============================================
+.card.form-card {
+  padding: 2rem;
+  border: 1px solid var(--surface-border);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-color-secondary);
+  margin: 2rem 0 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--surface-border);
+
+  i {
+    color: var(--primary-color);
+    font-size: 0.8rem;
+  }
+}
+
+.form-card form .section-title:first-child {
+  margin-top: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .section-title {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+}
+
+// =============================================
+// FORM FIELDS
+// =============================================
+.field {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+
+    .required {
+      color: var(--red-500);
+      margin-left: 2px;
+    }
+  }
+}
+
+// =============================================
+// INPUT WITH ICON (form-field component)
+// =============================================
+.input-wrapper {
+  position: relative;
+  width: 100%;
+
+  &.has-icon {
+    > i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-color-secondary);
+      font-size: 0.9rem;
+      z-index: 1;
+    }
+
+    input.p-inputtext,
+    .p-inputmask .p-inputtext,
+    .p-dropdown,
+    .p-inputnumber .p-inputtext,
+    .p-password .p-inputtext {
+      padding-left: 2.5rem !important;
+    }
+  }
+}
+
+// =============================================
+// PRIMENG INPUT OVERRIDES
+// =============================================
+.p-inputtext,
+.p-dropdown,
+.p-inputmask .p-inputtext,
+.p-inputnumber-input,
+.p-password-input {
+  width: 100%;
+  border-radius: 8px;
+  border-color: var(--surface-border);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:enabled:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-100);
+  }
+}
+
+textarea.p-inputtextarea {
+  width: 100%;
+  border-radius: 8px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.p-dropdown {
+  width: 100%;
+}
+
+// =============================================
+// FORM ACTIONS
+// =============================================
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+// =============================================
+// FIELD STATES
+// =============================================
+.field-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.field-error {
+  .p-inputtext,
+  .p-dropdown {
+    border-color: var(--red-500);
+  }
+  .error-message {
+    color: var(--red-500);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+}
+
+// =============================================
+// RESPONSIVE
+// =============================================
+@media (max-width: 768px) {
+  .page-container .page-header {
+    flex-direction: column;
+    .header-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

@@ -1,29 +1,21 @@
-@use "./styles/variables" as *;
+@import "./styles/variables";
+@import "./styles/forms";
 
 // =============================================
 // CSS VARIABLES (runtime)
 // =============================================
 :root {
-  // Primary
   --primary-color: #{$color-primary};
   --primary-dark: #{$color-primary-dark};
   --primary-light: #{$color-primary-light};
-
-  // Secondary
   --secondary-color: #{$color-secondary};
-
-  // Surface
   --surface-ground: #{$surface-ground};
   --surface-card: #{$surface-card};
   --surface-border: #{$surface-border};
   --surface-hover: #{$surface-hover};
-
-  // Text
   --text-color: #{$text-primary};
   --text-secondary: #{$text-secondary};
   --text-muted: #{$text-muted};
-
-  // Feedback
   --success-color: #{$success};
   --warning-color: #{$warning};
   --danger-color: #{$danger};
@@ -81,40 +73,8 @@ body {
 }
 
 // =============================================
-// PAGE HEADER
-// =============================================
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-color);
-  }
-}
-
-// =============================================
-// FORMS
-// =============================================
-.form-group {
-  margin-bottom: 1rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-  }
-}
-
-// =============================================
 // PRIMENG CUSTOMIZATIONS
 // =============================================
-
-// Botões
 .p-button {
   border-radius: 8px;
   font-weight: 500;
@@ -123,75 +83,46 @@ body {
   &.p-button-primary {
     background: var(--primary-color);
     border-color: var(--primary-color);
-
     &:hover {
       background: var(--primary-dark);
       border-color: var(--primary-dark);
     }
   }
-
   &.p-button-secondary {
     background: var(--secondary-color);
     border-color: var(--secondary-color);
     color: #{$neutral-900};
-
     &:hover {
       background: var(--secondary-dark);
       border-color: var(--secondary-dark);
     }
   }
-
   &.p-button-success {
     background: var(--success-color);
     border-color: var(--success-color);
   }
-
   &.p-button-danger {
     background: var(--danger-color);
     border-color: var(--danger-color);
   }
 }
 
-// Inputs
-.p-inputtext {
-  border-radius: 8px;
-
-  &:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px #{$primary-100};
-  }
-}
-
-// Dropdown
-.p-dropdown {
-  border-radius: 8px;
-
-  &:not(.p-disabled).p-focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px #{$primary-100};
-  }
-}
-
-// DataTable
 .p-datatable {
   .p-datatable-header {
     background: transparent;
     border: none;
     padding: 0 0 1rem 0;
   }
-
   .p-datatable-thead > tr > th {
     background: #{$primary-50};
     color: #{$primary-900};
     font-weight: 600;
     border-color: #{$primary-100};
   }
-
   .p-datatable-tbody > tr {
     &:hover {
       background: #{$primary-50};
     }
-
     &.p-highlight {
       background: #{$primary-100};
       color: #{$primary-900};
@@ -199,31 +130,25 @@ body {
   }
 }
 
-// Dialog
 .p-dialog {
   border-radius: 12px;
-
   .p-dialog-header {
     border-bottom: 1px solid var(--surface-border);
     border-radius: 12px 12px 0 0;
   }
-
   .p-dialog-footer {
     border-top: 1px solid var(--surface-border);
     border-radius: 0 0 12px 12px;
   }
 }
 
-// Toast
 .p-toast {
   .p-toast-message {
     border-radius: 8px;
-
     &.p-toast-message-success {
       background: #{$primary-50};
       border-left: 4px solid var(--primary-color);
       color: #{$primary-900};
-
       .p-toast-message-icon,
       .p-toast-icon-close {
         color: var(--primary-color);
@@ -232,26 +157,54 @@ body {
   }
 }
 
-// Tag
 .p-tag {
   border-radius: 6px;
-
   &.p-tag-success {
     background: #{$primary-100};
     color: #{$primary-700};
   }
-
   &.p-tag-warning {
     background: #{$secondary-100};
     color: #{$secondary-700};
   }
 }
 
-// Menu / Menubar
 .p-menubar {
   background: #{$primary-900};
   border: none;
   border-radius: 0;
+}
+
+.p-confirm-dialog {
+  border-radius: 12px;
+  min-width: 400px;
+  .p-dialog-header {
+    background: var(--surface-ground);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 1.25rem 1.5rem;
+    .p-dialog-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+  .p-dialog-content {
+    padding: 1.5rem;
+    .p-confirm-dialog-message {
+      margin-left: 0.75rem;
+    }
+  }
+  .p-dialog-footer {
+    padding: 1rem 1.5rem;
+    gap: 0.5rem;
+    button {
+      border-radius: 8px;
+      min-width: 100px;
+    }
+  }
+}
+
+.tooltip-text .p-tooltip-text {
+  padding: 0.25rem;
 }
 
 // =============================================
@@ -275,7 +228,6 @@ body {
 .text-secondary {
   color: var(--secondary-color);
 }
-
 .bg-primary {
   background-color: var(--primary-color);
 }
@@ -288,7 +240,6 @@ body {
 .bg-secondary-light {
   background-color: var(--secondary-100);
 }
-
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -301,7 +252,6 @@ body {
 .mt-4 {
   margin-top: 1.5rem;
 }
-
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -325,26 +275,20 @@ body {
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
-
   &.status-active {
     background-color: #{$primary-100};
     color: #{$primary-700};
   }
-
   &.status-inactive {
     background-color: #fee2e2;
     color: #991b1b;
   }
-
   &.status-pending {
     background-color: #{$secondary-100};
     color: #{$secondary-700};
   }
 }
 
-// =============================================
-// LOGO BADGE (para usar a identidade visual)
-// =============================================
 .brand-badge {
   display: inline-flex;
   align-items: center;
@@ -355,49 +299,4 @@ body {
   border-radius: 8px;
   color: white;
   font-weight: 700;
-}
-
-.tooltip-text .p-tooltip-text {
-  padding: 0.25rem;
-}
-
-// =============================================
-// Confirm Dialog
-// =============================================
-.p-confirm-dialog {
-  // Card
-  border-radius: 12px;
-  min-width: 400px;
-
-  // Header
-  .p-dialog-header {
-    background: var(--surface-ground);
-    border-bottom: 1px solid var(--surface-border);
-    padding: 1.25rem 1.5rem;
-
-    .p-dialog-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-  }
-
-  // Body
-  .p-dialog-content {
-    padding: 1.5rem;
-
-    .p-confirm-dialog-message {
-      margin-left: 0.75rem;
-    }
-  }
-
-  // Footer buttons
-  .p-dialog-footer {
-    padding: 1rem 1.5rem;
-    gap: 0.5rem;
-
-    button {
-      border-radius: 8px;
-      min-width: 100px;
-    }
-  }
 }
