@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="page-header">
-    <div>
+    <div class="header-content">
       <h1>{{ isEditing() ? "Editar Produto" : "Novo Produto" }}</h1>
       <p class="text-muted">
         {{
@@ -10,22 +10,33 @@
         }}
       </p>
     </div>
+    <button
+      pButton
+      routerLink="/products"
+      icon="pi pi-arrow-left"
+      label="Voltar"
+      class="p-button-outlined p-button-secondary p-button-sm"
+    ></button>
   </div>
 
-  <div class="card">
+  <div class="card form-card">
     <form (ngSubmit)="onSubmit()">
-      <div class="form-grid">
+      <h5 class="section-title">
+        <i class="pi pi-box"></i> Informações do Produto
+      </h5>
+      <div class="formgrid grid">
         <app-form-field
           label="Nome"
           inputId="name"
-          colClass="form-field span-2"
+          icon="pi pi-tag"
+          [required]="true"
+          colClass="col-12 md:col-8"
         >
           <input
             pInputText
             id="name"
             [(ngModel)]="product.name"
             name="name"
-            class="w-full"
             placeholder="Nome do produto"
             [disabled]="loading()"
           />
@@ -34,14 +45,14 @@
         <app-form-field
           label="Código de Barras"
           inputId="barcode"
-          colClass="form-field"
+          icon="pi pi-qrcode"
+          colClass="col-12 md:col-4"
         >
           <input
             pInputText
             id="barcode"
             [(ngModel)]="product.barcode"
             name="barcode"
-            class="w-full"
             placeholder="Ex: 7891234567890"
             [disabled]="loading()"
           />
@@ -50,7 +61,7 @@
         <app-form-field
           label="Categoria"
           inputId="category"
-          colClass="form-field"
+          colClass="md:col-6"
         >
           <p-dropdown
             id="category"
@@ -66,10 +77,42 @@
           ></p-dropdown>
         </app-form-field>
 
+        <app-form-field label="Unidade" inputId="unit" colClass="md:col-6">
+          <p-dropdown
+            id="unit"
+            [(ngModel)]="product.unit"
+            name="unit"
+            [options]="unitOptions"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-full"
+            [disabled]="loading()"
+          ></p-dropdown>
+        </app-form-field>
+
+        <app-form-field
+          label="Descrição"
+          inputId="description"
+          colClass="col-12"
+        >
+          <textarea
+            pInputTextarea
+            id="description"
+            [(ngModel)]="product.description"
+            name="description"
+            rows="3"
+            placeholder="Descrição do produto (opcional)"
+            [disabled]="loading()"
+          ></textarea>
+        </app-form-field>
+      </div>
+
+      <h5 class="section-title"><i class="pi pi-dollar"></i> Preços</h5>
+      <div class="formgrid grid">
         <app-form-field
           label="Preço de Custo"
           inputId="costPrice"
-          colClass="form-field"
+          colClass="md:col-6"
         >
           <p-inputNumber
             id="costPrice"
@@ -86,7 +129,9 @@
         <app-form-field
           label="Preço de Venda"
           inputId="salePrice"
-          colClass="form-field"
+          icon="pi pi-dollar"
+          [required]="true"
+          colClass="md:col-6"
         >
           <p-inputNumber
             id="salePrice"
@@ -99,11 +144,14 @@
             [disabled]="loading()"
           ></p-inputNumber>
         </app-form-field>
+      </div>
 
+      <h5 class="section-title"><i class="pi pi-warehouse"></i> Estoque</h5>
+      <div class="formgrid grid">
         <app-form-field
           label="Quantidade em Estoque"
           inputId="stockQuantity"
-          colClass="form-field"
+          colClass="md:col-6"
         >
           <p-inputNumber
             id="stockQuantity"
@@ -123,7 +171,7 @@
         <app-form-field
           label="Estoque Mínimo"
           inputId="minimumStock"
-          colClass="form-field"
+          colClass="md:col-6"
         >
           <p-inputNumber
             id="minimumStock"
@@ -133,36 +181,6 @@
             styleClass="w-full"
             [disabled]="loading()"
           ></p-inputNumber>
-        </app-form-field>
-
-        <app-form-field label="Unidade" inputId="unit" colClass="form-field">
-          <p-dropdown
-            id="unit"
-            [(ngModel)]="product.unit"
-            name="unit"
-            [options]="unitOptions"
-            optionLabel="label"
-            optionValue="value"
-            styleClass="w-full"
-            [disabled]="loading()"
-          ></p-dropdown>
-        </app-form-field>
-
-        <app-form-field
-          label="Descrição"
-          inputId="description"
-          colClass="form-field span-3"
-        >
-          <textarea
-            pInputTextarea
-            id="description"
-            [(ngModel)]="product.description"
-            name="description"
-            rows="3"
-            class="w-full"
-            placeholder="Descrição do produto (opcional)"
-            [disabled]="loading()"
-          ></textarea>
         </app-form-field>
       </div>
 
@@ -181,7 +199,7 @@
           icon="pi pi-check"
           [loading]="saving()"
           [disabled]="loading()"
-          class="p-button-success px-4"
+          class="p-button-primary px-4"
         ></button>
       </div>
     </form>

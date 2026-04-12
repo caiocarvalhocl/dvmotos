@@ -28,7 +28,6 @@ import { FormFieldComponent } from "@shared/components/form-field/form-field.com
   ],
   providers: [MessageService],
   templateUrl: "./category-form.component.html",
-  styleUrls: ["./category-form.component.scss"],
 })
 export class CategoryFormComponent implements OnInit {
   category: Category = { name: "" };

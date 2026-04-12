@@ -9,8 +9,8 @@ import { PasswordModule } from "primeng/password";
 import { ToastModule } from "primeng/toast";
 import { MessageService } from "primeng/api";
 import { UserService, User } from "../../../core/services/user.service";
-// Importe seu AuthService real aqui
 import { AuthService } from "../../../core/services/auth.service";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-user-form",
@@ -24,6 +24,7 @@ import { AuthService } from "../../../core/services/auth.service";
     DropdownModule,
     PasswordModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./user-form.component.html",
@@ -43,27 +44,25 @@ export class UserFormComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authService: AuthService, // Injete o AuthService
+    private authService: AuthService,
     private messageService: MessageService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    // 1. Obter usuário logado (simulação, adapte para seu método real)
     const logged = this.authService.currentUser();
     this.currentUser.set(logged);
 
     const idParam = this.route.snapshot.paramMap.get("id");
 
-    // REGRA 1: Se for Operador tentando acessar rota de edição com ID diferente do dele
     if (logged?.role === "OPERADOR" && idParam && +idParam !== logged.id) {
       this.messageService.add({
         severity: "warn",
         summary: "Acesso Negado",
         detail: "Você só pode editar seu próprio perfil.",
       });
-      this.router.navigate(["/home"]); // ou para onde desejar
+      this.router.navigate(["/home"]);
       return;
     }
 
@@ -77,7 +76,7 @@ export class UserFormComponent implements OnInit {
     this.userService.findById(id).subscribe({
       next: (user) => {
         this.user = user;
-        this.user.password = ""; // Limpa hash da senha por segurança
+        this.user.password = "";
       },
       error: () => {
         this.messageService.add({
@@ -90,10 +89,8 @@ export class UserFormComponent implements OnInit {
     });
   }
 
-  // --- REGRAS DE VISUALIZAÇÃO ---
-
   // Regra: Apenas ADMIN pode ver/mudar o dropdown de Role.
-  // Operador não pode se promover a Admin.
+
   canEditRole(): boolean {
     return (
       this.currentUser()?.role === "ADMIN" &&
@@ -106,10 +103,8 @@ export class UserFormComponent implements OnInit {
   // 2. Editando a si mesmo? Pode mudar senha.
   // 3. Admin editando outro? NÃO pode mudar senha (REGRA SOLICITADA).
   canEditPassword(): boolean {
-    // Se for criação (novo usuário), sempre permite (senha é obrigatória)
     if (!this.isEditing()) return true;
 
-    // Se estiver editando, só pode se for o próprio usuário
     const loggedId = this.currentUser()?.id;
     const targetId = this.user.id;
 
@@ -119,10 +114,7 @@ export class UserFormComponent implements OnInit {
   onSubmit(): void {
     this.saving.set(true);
 
-    // Segurança extra: Se não for admin, garante que o role enviado é o original (evita injeção)
     if (!this.canEditRole() && this.isEditing()) {
-      // Mantém o role original ou força OPERADOR se for novo cadastro self-service
-      // Aqui assumimos que loadUser já preencheu o objeto corretamente
     }
 
     const operation = this.isEditing()
@@ -138,7 +130,7 @@ export class UserFormComponent implements OnInit {
             ? "Dados atualizados!"
             : "Usuário cadastrado!",
         });
-        // Se for operador editando a si mesmo, talvez não deva voltar para /users, mas sim dashboard
+
         const redirect =
           this.currentUser()?.role === "ADMIN" ? ["/users"] : ["/dashboard"];
         setTimeout(() => this.router.navigate(redirect), 1500);
@@ -157,7 +149,7 @@ export class UserFormComponent implements OnInit {
     if (this.canEditRole()) {
       this.router.navigate(["/users"]);
     } else {
-      this.router.navigate(["/dashboard"]); // ou '/home' dependendo da sua rota
+      this.router.navigate(["/dashboard"]);
     }
   }
 }

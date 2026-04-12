@@ -29,7 +29,6 @@ import { FormFieldComponent } from "@shared/components/form-field/form-field.com
   ],
   providers: [MessageService],
   templateUrl: "./client-form.component.html",
-  styleUrls: ["./client-form.component.scss"],
 })
 export class ClientFormComponent implements OnInit {
   client: Client = {
