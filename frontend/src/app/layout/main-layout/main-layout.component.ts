@@ -7,6 +7,7 @@ import { AvatarModule } from "primeng/avatar";
 import { MenuModule } from "primeng/menu";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "../../core/services/auth.service";
+import { TagModule } from "primeng/tag";
 
 @Component({
   selector: "app-main-layout",
@@ -15,6 +16,7 @@ import { AuthService } from "../../core/services/auth.service";
     CommonModule,
     RouterOutlet,
     RouterLink,
+    TagModule,
     RouterLinkActive,
     MenubarModule,
     ButtonModule,
@@ -29,6 +31,13 @@ export class MainLayoutComponent {
     { label: "Dashboard", icon: "pi pi-home", routerLink: "/dashboard" },
     { label: "Clientes", icon: "pi pi-users", routerLink: "/clients" },
     { label: "Veículos", icon: "pi pi-car", routerLink: "/vehicles" },
+    { label: "Categorias", icon: "pi pi-tags", routerLink: "/categories" },
+    { label: "Produtos", icon: "pi pi-box", routerLink: "/products" },
+    {
+      label: "Ordens de Serviço",
+      icon: "pi pi-file-edit",
+      routerLink: "/service-orders",
+    },
     {
       label: "Usuários",
       icon: "pi pi-user-edit",
@@ -36,6 +45,16 @@ export class MainLayoutComponent {
       visible: this.authService.isAdmin(),
     },
   ];
+
+  menuOpen = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
 
   userMenuItems: MenuItem[] = [
     { label: "Meu Perfil", icon: "pi pi-user", routerLink: "/myprofile" },

@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container narrow">
   <div class="page-header">
     <div>
       <h1>{{ isEditing() ? "Editar Categoria" : "Nova Categoria" }}</h1>
@@ -10,6 +10,14 @@
         }}
       </p>
     </div>
+
+    <button
+      pButton
+      routerLink="/categories"
+      icon="pi pi-arrow-left"
+      label="Voltar"
+      class="p-button-outlined p-button-secondary p-button-sm"
+    ></button>
   </div>
 
   <div class="card">

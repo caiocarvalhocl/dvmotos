@@ -1,0 +1,408 @@
+<div class="page-container narrow">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-title-row">
+        <h1>{{ isEditing() ? "OS #" + order.id : "Nova Ordem de Serviço" }}</h1>
+        @if (isEditing() && order.status) {
+          <p-tag
+            [value]="getStatusLabel(order.status)"
+            [severity]="getStatusSeverity(order.status)"
+          ></p-tag>
+        }
+      </div>
+      <p class="text-muted">
+        {{
+          isEditing()
+            ? "Gerencie os detalhes da ordem de serviço"
+            : "Abra uma nova OS para o cliente"
+        }}
+      </p>
+    </div>
+    <div class="header-actions">
+      @if (isEditing() && isEditable) {
+        <div class="status-actions">
+          @if (order.status === "OPEN") {
+            <button
+              pButton
+              label="Iniciar"
+              icon="pi pi-play"
+              class="p-button-sm p-button-warning"
+              (click)="changeStatus('IN_PROGRESS')"
+            ></button>
+          }
+          @if (order.status === "IN_PROGRESS") {
+            <button
+              pButton
+              label="Aguardando Peças"
+              icon="pi pi-clock"
+              class="p-button-sm p-button-secondary"
+              (click)="changeStatus('WAITING_PARTS')"
+            ></button>
+            <button
+              pButton
+              label="Concluir"
+              icon="pi pi-check"
+              class="p-button-sm p-button-success"
+              (click)="changeStatus('COMPLETED')"
+            ></button>
+          }
+          @if (order.status === "WAITING_PARTS") {
+            <button
+              pButton
+              label="Retomar"
+              icon="pi pi-play"
+              class="p-button-sm p-button-warning"
+              (click)="changeStatus('IN_PROGRESS')"
+            ></button>
+          }
+          @if (order.status !== "COMPLETED" && order.status !== "CANCELLED") {
+            <button
+              pButton
+              icon="pi pi-times"
+              class="p-button-sm p-button-danger"
+              label="Cancelar OS"
+              (click)="changeStatus('CANCELLED')"
+            ></button>
+          }
+        </div>
+      }
+      <button
+        pButton
+        routerLink="/service-orders"
+        icon="pi pi-arrow-left"
+        label="Voltar"
+        class="p-button-outlined p-button-secondary p-button-sm"
+      ></button>
+    </div>
+  </div>
+
+  <div class="card form-card">
+    <form (ngSubmit)="onSubmit()">
+      <!-- ===== CLIENTE E VEÍCULO ===== -->
+      <h5 class="section-title">
+        <i class="pi pi-user"></i> Cliente e Veículo
+      </h5>
+      <div class="formgrid grid">
+        <app-form-field
+          label="Cliente"
+          inputId="client"
+          icon="pi pi-user"
+          [required]="true"
+        >
+          <p-autoComplete
+            id="client"
+            [(ngModel)]="selectedClient"
+            name="client"
+            [suggestions]="filteredClients"
+            (completeMethod)="filterClients($event)"
+            (onSelect)="onClientSelect($event)"
+            (onClear)="onClientClear()"
+            field="name"
+            placeholder="Buscar cliente..."
+            [dropdown]="true"
+            styleClass="w-full"
+            [disabled]="!isEditable"
+          ></p-autoComplete>
+        </app-form-field>
+
+        <app-form-field
+          label="Veículo"
+          inputId="vehicle"
+          icon="pi pi-car"
+          [required]="true"
+        >
+          <p-dropdown
+            id="vehicle"
+            [(ngModel)]="order.vehicleId"
+            name="vehicleId"
+            [options]="clientVehicles"
+            optionLabel="licensePlate"
+            optionValue="id"
+            placeholder="{{
+              clientVehicles.length
+                ? 'Selecione o veículo'
+                : 'Selecione um cliente primeiro'
+            }}"
+            [disabled]="!clientVehicles.length || !isEditable"
+            styleClass="w-full"
+          >
+            <ng-template let-v pTemplate="item">
+              <span>{{ v.licensePlate }} — {{ v.brand }} {{ v.model }}</span>
+            </ng-template>
+          </p-dropdown>
+        </app-form-field>
+
+        <app-form-field
+          label="Km de Entrada"
+          inputId="entryMileage"
+          icon="pi pi-gauge"
+          colClass="md:col-4"
+        >
+          <p-inputNumber
+            id="entryMileage"
+            [(ngModel)]="order.entryMileage"
+            name="entryMileage"
+            [min]="0"
+            suffix=" km"
+            styleClass="w-full"
+            [disabled]="!isEditable"
+          ></p-inputNumber>
+        </app-form-field>
+
+        <app-form-field label="Desconto" inputId="discount" colClass="md:col-4">
+          <p-inputNumber
+            id="discount"
+            [(ngModel)]="order.discountAmount"
+            name="discountAmount"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            styleClass="w-full"
+            [disabled]="!isEditable"
+          ></p-inputNumber>
+        </app-form-field>
+
+        <app-form-field label="Observações" inputId="notes" colClass="col-12">
+          <textarea
+            pInputTextarea
+            id="notes"
+            [(ngModel)]="order.notes"
+            name="notes"
+            rows="2"
+            placeholder="Observações gerais da OS..."
+            [disabled]="!isEditable"
+          ></textarea>
+        </app-form-field>
+      </div>
+
+      <!-- ===== ITENS ===== -->
+      <div class="section-header">
+        <h5 class="section-title"><i class="pi pi-list"></i> Itens da OS</h5>
+        @if (isEditable) {
+          <button
+            pButton
+            type="button"
+            label="Adicionar Item"
+            icon="pi pi-plus"
+            class="p-button-sm p-button-outlined"
+            (click)="openItemDialog()"
+          ></button>
+        }
+      </div>
+
+      <p-table [value]="order.items || []" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tipo</th>
+            <th>Descrição</th>
+            <th style="width: 80px">Qtd</th>
+            <th style="width: 120px">Unitário</th>
+            <th style="width: 120px">Total</th>
+            @if (isEditable) {
+              <th style="width: 60px"></th>
+            }
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item let-i="rowIndex">
+          <tr>
+            <td>
+              <p-tag
+                [value]="getItemTypeLabel(item.type)"
+                [severity]="getItemTypeSeverity(item.type)"
+              ></p-tag>
+            </td>
+            <td>
+              {{ item.description }}
+              @if (item.productName && item.productName !== item.description) {
+                <br /><small class="text-muted">{{ item.productName }}</small>
+              }
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unitPrice | currency: "BRL" }}</td>
+            <td class="font-bold">
+              {{
+                item.totalPrice || item.unitPrice * item.quantity
+                  | currency: "BRL"
+              }}
+            </td>
+            @if (isEditable) {
+              <td>
+                <button
+                  pButton
+                  icon="pi pi-trash"
+                  class="p-button-text p-button-sm p-button-danger"
+                  (click)="confirmRemoveItem(item, i)"
+                ></button>
+              </td>
+            }
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td [attr.colspan]="isEditable ? 6 : 5" class="text-center p-3">
+              <small class="text-muted">Nenhum item adicionado</small>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="4" class="text-right font-bold">Subtotal:</td>
+            <td class="font-bold" [attr.colspan]="isEditable ? 2 : 1">
+              {{
+                (order.servicesAmount || 0) + (order.partsAmount || 0)
+                  | currency: "BRL"
+              }}
+            </td>
+          </tr>
+          @if (order.discountAmount) {
+            <tr>
+              <td colspan="4" class="text-right text-muted">Desconto:</td>
+              <td class="text-muted" [attr.colspan]="isEditable ? 2 : 1">
+                -{{ order.discountAmount | currency: "BRL" }}
+              </td>
+            </tr>
+          }
+          <tr>
+            <td
+              colspan="4"
+              class="text-right font-bold"
+              style="font-size: 1.1rem"
+            >
+              Total:
+            </td>
+            <td
+              class="font-bold"
+              style="font-size: 1.1rem"
+              [attr.colspan]="isEditable ? 2 : 1"
+            >
+              {{
+                (isEditing() ? order.totalAmount : localTotal) | currency: "BRL"
+              }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- ===== ACTIONS ===== -->
+      @if (isEditable) {
+        <div class="form-actions">
+          <button
+            pButton
+            type="button"
+            label="Cancelar"
+            class="p-button-text p-button-secondary"
+            routerLink="/service-orders"
+          ></button>
+          <button
+            pButton
+            type="submit"
+            [label]="isEditing() ? 'Salvar Alterações' : 'Abrir OS'"
+            icon="pi pi-check"
+            [loading]="saving()"
+            class="p-button-primary px-4"
+          ></button>
+        </div>
+      }
+    </form>
+  </div>
+</div>
+
+<!-- ===== ITEM DIALOG ===== -->
+<p-dialog
+  header="Adicionar Item"
+  [(visible)]="showItemDialog"
+  [style]="{ width: '35rem' }"
+  [modal]="true"
+  [contentStyle]="{ padding: '.5rem' }"
+>
+  <div class="formgrid grid">
+    <app-form-field label="Tipo" inputId="itemType" colClass="col-12">
+      <p-dropdown
+        id="itemType"
+        [(ngModel)]="newItem.type"
+        name="itemType"
+        [options]="itemTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onItemTypeChange()"
+        styleClass="w-full"
+      ></p-dropdown>
+    </app-form-field>
+
+    @if (newItem.type === "PART") {
+      <app-form-field label="Produto" inputId="product" colClass="col-12">
+        <p-autoComplete
+          id="product"
+          [(ngModel)]="selectedProduct"
+          name="product"
+          [suggestions]="filteredProducts"
+          (completeMethod)="filterProducts($event)"
+          (onSelect)="onProductSelect($event)"
+          field="name"
+          placeholder="Buscar produto..."
+          [dropdown]="true"
+          styleClass="w-full"
+        ></p-autoComplete>
+      </app-form-field>
+    }
+
+    <app-form-field
+      label="Descrição"
+      inputId="itemDescription"
+      [required]="true"
+      colClass="col-12"
+    >
+      <input
+        pInputText
+        id="itemDescription"
+        [(ngModel)]="newItem.description"
+        name="itemDescription"
+        placeholder="Ex: Troca de óleo, Filtro de ar..."
+      />
+    </app-form-field>
+
+    <app-form-field label="Quantidade" inputId="itemQty">
+      <p-inputNumber
+        id="itemQty"
+        [(ngModel)]="newItem.quantity"
+        name="itemQty"
+        [min]="1"
+        styleClass="w-full"
+      ></p-inputNumber>
+    </app-form-field>
+
+    <app-form-field label="Preço Unitário" inputId="itemPrice">
+      <p-inputNumber
+        id="itemPrice"
+        [(ngModel)]="newItem.unitPrice"
+        name="itemPrice"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        styleClass="w-full"
+      ></p-inputNumber>
+    </app-form-field>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Cancelar"
+      class="p-button-text p-button-secondary mr-1"
+      (click)="showItemDialog = false"
+    ></button>
+    <button
+      pButton
+      label="Adicionar"
+      icon="pi pi-plus"
+      class="p-button-primary"
+      (click)="addItem()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

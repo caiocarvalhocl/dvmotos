@@ -1,0 +1,106 @@
+<div class="page-container narrow">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Ordens de Serviço</h1>
+      <p class="text-muted">Gerencie as OS da oficina</p>
+    </div>
+    <a
+      routerLink="/service-orders/new"
+      pButton
+      icon="pi pi-plus"
+      class="btn-new"
+    >
+      <span class="btn-text">Nova OS</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="os-filter">
+      <app-table-filter
+        placeholder="Buscar por cliente ou placa..."
+        [showStatus]="false"
+        (filterChange)="onFilter($event)"
+      ></app-table-filter>
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="onStatusChange()"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Filtrar por status"
+        styleClass="status-dropdown"
+      ></p-dropdown>
+    </div>
+
+    <p-table
+      [value]="orders()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="20"
+      [totalRecords]="totalRecords()"
+      [lazy]="true"
+      (onLazyLoad)="loadOrders($event)"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} OS"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 70px">OS</th>
+          <th>Cliente</th>
+          <th>Veículo</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Data</th>
+          <th style="width: 100px">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>
+            <span class="font-bold">#{{ order.id }}</span>
+          </td>
+          <td>{{ order.clientName }}</td>
+          <td>
+            {{ order.vehiclePlate }}
+            <br />
+            <small class="text-muted">{{ order.vehicleModel }}</small>
+          </td>
+          <td class="td-status">
+            <p-tag
+              [value]="getStatusLabel(order.status)"
+              [severity]="getStatusSeverity(order.status)"
+            ></p-tag>
+          </td>
+          <td class="font-bold">{{ order.totalAmount | currency: "BRL" }}</td>
+          <td>{{ order.createdAt | date: "dd/MM/yyyy HH:mm" }}</td>
+          <td>
+            <app-table-actions
+              editRoute="/service-orders"
+              [id]="order.id"
+              editTooltip="Ver / Editar"
+              [isActive]="canCancel(order) ? true : undefined"
+              (onAction)="confirmCancel(order)"
+            ></app-table-actions>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center p-4">
+            <i
+              class="pi pi-file-edit"
+              style="font-size: 2rem; color: var(--text-color-secondary)"
+            ></i>
+            <p class="text-muted mt-2">Nenhuma ordem de serviço encontrada</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

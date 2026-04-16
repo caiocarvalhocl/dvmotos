@@ -38,7 +38,6 @@ import { TableActionsComponent } from "@shared/components/table-actions/table-ac
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./vehicle-list.component.html",
-  styleUrls: ["./vehicle-list.component.scss"],
 })
 export class VehicleListComponent implements OnInit {
   vehicles = signal<Vehicle[]>([]);

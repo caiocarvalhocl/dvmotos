@@ -44,23 +44,165 @@
     text-decoration: none;
     color: var(--text-color);
     transition: all 0.2s;
-    &:hover { background: var(--surface-hover); }
-    &.active { background: var(--primary-color); color: white; }
+    &:hover {
+      background: var(--surface-hover);
+    }
+    &.active {
+      background: var(--primary-color);
+      color: white;
+    }
   }
 }
 
 .topbar-end {
   margin-left: auto;
+  display: flex; // Adicionado
+  align-items: center; // Adicionado
+  gap: 1rem; // Adicionado para separar o avatar do hambúrguer
+
   .user-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    .user-name { font-weight: 500; }
+    .user-name {
+      font-weight: 500;
+    }
   }
 }
-
 .layout-main {
   margin-top: 60px;
   padding: 1.5rem;
   flex: 1;
+}
+// =============================================
+// HAMBURGER BUTTON (hidden on desktop)
+// =============================================
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// =============================================
+// OVERLAY
+// =============================================
+.menu-overlay {
+  display: none;
+}
+
+// =============================================
+// MOBILE
+// =============================================
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+
+  .topbar-menu {
+    display: none;
+    position: fixed;
+    top: 60px; // adjust to your topbar height
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--surface-card);
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.25rem;
+    z-index: 1000;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &.menu-open {
+      display: flex;
+    }
+
+    .menu-item {
+      color: var(--text-color);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--surface-hover);
+      }
+
+      &.active {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      i {
+        width: 24px;
+      }
+    }
+  }
+
+  .menu-overlay {
+    display: block;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
+
+  // Hide user name on mobile, keep avatar
+  .user-name {
+    display: none;
+  }
+}
+
+// =============================================
+// USER MENU DROPDOWN
+// =============================================
+:host ::ng-deep .user-menu {
+  min-width: 220px;
+  right: 0 !important;
+  left: auto !important;
+}
+
+.user-menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 0.25rem;
+}
+
+.user-menu-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.user-menu-email {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.user-menu-role {
+  margin-top: 0.25rem;
+  align-self: flex-start;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

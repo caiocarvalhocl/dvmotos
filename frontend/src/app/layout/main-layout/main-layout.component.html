@@ -5,42 +5,55 @@
         <span class="logo-text">DV Motos</span>
       </a>
     </div>
-    <nav class="topbar-menu">
-      <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
-        <i class="pi pi-home"></i>
-        <span>Dashboard</span>
-      </a>
-      <a routerLink="/clients" routerLinkActive="active" class="menu-item">
-        <i class="pi pi-users"></i>
-        <span>Clientes</span>
-      </a>
-      <a routerLink="/vehicles" routerLinkActive="active" class="menu-item">
-        <i class="pi pi-car"></i>
-        <span>Veículos</span>
-      </a>
-      <a routerLink="/categories" routerLinkActive="active" class="menu-item">
-        <i class="pi pi-tags"></i>
-        <span>Categorias</span>
-      </a>
-      <a routerLink="/products" routerLinkActive="active" class="menu-item">
-        <i class="pi pi-box"></i>
-        <span>Produtos</span>
-      </a>
-      @if (authService.isAdmin()) {
-        <a routerLink="/users" routerLinkActive="active" class="menu-item">
-          <i class="pi pi-user-edit"></i>
-          <span>Usuários</span>
-        </a>
+
+    <nav class="topbar-menu" [class.menu-open]="menuOpen">
+      @for (item of menuItems; track item.label) {
+        @if (item.visible !== false) {
+          <a
+            [routerLink]="item.routerLink"
+            routerLinkActive="active"
+            class="menu-item"
+            (click)="closeMenu()"
+          >
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        }
       }
     </nav>
+
+    @if (menuOpen) {
+      <div class="menu-overlay" (click)="closeMenu()"></div>
+    }
+
     <div class="topbar-end">
       <div class="user-info">
         <span class="user-name">{{ authService.currentUser()?.name }}</span>
         <p-avatar
           [label]="authService.currentUser()?.name?.charAt(0)"
           shape="circle"
+          (click)="menu.toggle($event)"
+          class="cursor-pointer"
         ></p-avatar>
-        <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+
+        <p-menu
+          #menu
+          [model]="userMenuItems"
+          [popup]="true"
+          styleClass="user-menu"
+        >
+          <ng-template pTemplate="start">
+            <div class="user-menu-header">
+              <span class="user-menu-name">{{
+                authService.currentUser()?.name
+              }}</span>
+              <span class="user-menu-email">{{
+                authService.currentUser()?.email
+              }}</span>
+            </div>
+          </ng-template>
+        </p-menu>
+
         <button
           pButton
           icon="pi pi-chevron-down"
@@ -48,8 +61,17 @@
           (click)="menu.toggle($event)"
         ></button>
       </div>
+
+      <button
+        class="hamburger"
+        (click)="toggleMenu()"
+        [class.is-active]="menuOpen"
+      >
+        <i class="pi" [ngClass]="menuOpen ? 'pi-times' : 'pi-bars'"></i>
+      </button>
     </div>
   </header>
+
   <main class="layout-main">
     <router-outlet></router-outlet>
   </main>
