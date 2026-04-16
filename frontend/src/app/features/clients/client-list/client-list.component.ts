@@ -36,7 +36,6 @@ import { TableActionsComponent } from "@shared/components/table-actions/table-ac
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./client-list.component.html",
-  styleUrls: ["./client-list.component.scss"],
 })
 export class ClientListComponent implements OnInit {
   clients = signal<Client[]>([]);

@@ -16,7 +16,6 @@ import {
   Category,
   Page,
 } from "../../../core/services/category.service";
-import { debounceTime, Subject } from "rxjs";
 import {
   FilterState,
   TableFilterComponent,
@@ -43,7 +42,6 @@ import { TableActionsComponent } from "@shared/components/table-actions/table-ac
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./category-list.component.html",
-  styleUrls: ["./category-list.component.scss"],
 })
 export class CategoryListComponent implements OnInit {
   categories = signal<Category[]>([]);

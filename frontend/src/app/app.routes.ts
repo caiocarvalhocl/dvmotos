@@ -154,6 +154,27 @@ export const routes: Routes = [
             (m) => m.StockMovementComponent,
           ),
       },
+      {
+        path: "service-orders",
+        loadComponent: () =>
+          import("./features/service-orders/service-order-list/service-order-list.component").then(
+            (m) => m.ServiceOrderListComponent,
+          ),
+      },
+      {
+        path: "service-orders/new",
+        loadComponent: () =>
+          import("./features/service-orders/service-order-form/service-order-form.component").then(
+            (m) => m.ServiceOrderFormComponent,
+          ),
+      },
+      {
+        path: "service-orders/:id",
+        loadComponent: () =>
+          import("./features/service-orders/service-order-form/service-order-form.component").then(
+            (m) => m.ServiceOrderFormComponent,
+          ),
+      },
     ],
   },
   { path: "**", redirectTo: "/dashboard" },

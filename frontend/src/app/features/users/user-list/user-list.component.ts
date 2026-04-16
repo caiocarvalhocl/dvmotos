@@ -35,7 +35,6 @@ import { Severity } from "@shared/types/Severity";
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./user-list.component.html",
-  styleUrls: ["./user-list.component.scss"],
 })
 export class UserListComponent implements OnInit {
   users = signal<User[]>([]);

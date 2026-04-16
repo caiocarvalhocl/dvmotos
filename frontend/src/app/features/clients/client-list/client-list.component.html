@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container wide">
   <div class="page-header">
     <div>
       <h1>Clientes</h1>
@@ -40,7 +40,7 @@
         </tr></ng-template
       >
       <ng-template pTemplate="body" let-client>
-        <tr [class.inactive-row]="!client.active">
+        <tr>
           <td>
             <span class="font-bold">{{ client.name }}</span>
             @if (client.email) {
@@ -51,7 +51,9 @@
           <td>{{ client.phone || "-" }}</td>
           <td>{{ client.city ? client.city + "/" + client.state : "-" }}</td>
           <td>
-            <span class="veiculos-badge">{{ client.totalVehicles || 0 }}</span>
+            <span class="count-badge badge-primary">{{
+              client.totalVehicles || 0
+            }}</span>
           </td>
           <td>
             <p-tag

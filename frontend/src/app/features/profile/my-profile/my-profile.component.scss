@@ -1,28 +1,3 @@
-$primary-color: #3b82f6;
-$text-color: #374151;
-$bg-color: #f3f4f6;
-$card-border: #e5e7eb;
-
-.page-container {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.page-header {
-  margin-bottom: 2rem;
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #111827;
-    margin: 0;
-  }
-  p {
-    color: #6b7280;
-    margin-top: 0.5rem;
-  }
-}
-
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -32,22 +7,6 @@ $card-border: #e5e7eb;
   @media (min-width: 992px) {
     grid-template-columns: 1fr 1fr;
     align-items: start; // Impede que os cards estiquem se um for menor
-  }
-}
-
-// Estilo Base dos Cards
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  border: 1px solid $card-border;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -64,8 +23,8 @@ $card-border: #e5e7eb;
     height: 80px;
     background: linear-gradient(
       135deg,
-      $primary-color,
-      darken($primary-color, 15%)
+      var(--primary-color),
+      var(--primary-color)
     );
     color: white;
     border-radius: 50%;
@@ -74,77 +33,9 @@ $card-border: #e5e7eb;
     justify-content: center;
     font-size: 1.75rem;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba($primary-color, 0.3);
+    box-shadow: 0 4px 10px rgba(var(--primary-color), 0.3);
     border: 4px solid white;
     outline: 2px solid #e5e7eb;
-  }
-}
-
-.section-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: $text-color;
-  margin: 0 0 1rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  i {
-    color: $primary-color;
-  }
-}
-
-// Correções de Ícones e Inputs (Padrão System)
-:host ::ng-deep {
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  label {
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: $text-color;
-  }
-
-  // Wrapper Relativo
-  .p-input-icon-left {
-    position: relative;
-    width: 100%;
-
-    // Ícone Absoluto
-    > i {
-      position: absolute;
-      top: 50%;
-      margin-top: -0.5rem;
-      left: 0.75rem;
-      color: #9ca3af;
-      z-index: 2; // Garante ficar sobre o input/password
-    }
-
-    // Padding no Input Texto
-    > .p-inputtext {
-      padding-left: 2.5rem !important;
-    }
-
-    // Padding no Input Password (que fica dentro de um wrapper)
-    .p-password-input {
-      padding-left: 2.5rem !important;
-    }
-  }
-
-  .p-inputtext,
-  .p-password {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  // Estilização específica do botão de warning (outline)
-  .p-button.p-button-outlined.p-button-warning {
-    &:hover {
-      background: #fffbeb;
-    }
   }
 }
 
