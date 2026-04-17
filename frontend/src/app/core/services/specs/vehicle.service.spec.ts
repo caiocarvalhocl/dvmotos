@@ -4,7 +4,7 @@ import {
   HttpTestingController,
 } from "@angular/common/http/testing";
 import { VehicleService, Vehicle } from "../vehicle.service";
-import { Page } from "../client.service";
+import { Page } from "@shared/types/Page";
 import { environment } from "@env/environment";
 
 describe("VehicleService", () => {

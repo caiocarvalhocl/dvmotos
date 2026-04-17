@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductListComponent } from './product-list.component';
-import { ProductService, Product, Page } from '../../../core/services/product.service';
+import { ProductService, Product } from '../../../core/services/product.service';
+import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -40,32 +41,34 @@ describe('ProductListComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', () => expect(component).toBeTruthy());
 
   it('should load products and low stock count on init', () => {
     component.ngOnInit();
-    expect(productService.findAll).toHaveBeenCalled();
+    expect(productService.findAll).toHaveBeenCalledWith(0, 20, '', null);
     expect(productService.countLowStock).toHaveBeenCalled();
     expect(component.products().length).toBe(1);
     expect(component.lowStockCount()).toBe(3);
   });
 
-  it('should handle load error', () => {
+  it('should set loading false after load', () => {
+    component.ngOnInit();
+    expect(component.loading()).toBeFalse();
+  });
+
+  it('should handle load error and show toast', () => {
     productService.findAll.and.returnValue(throwError(() => new Error('err')));
     component.ngOnInit();
     expect(component.loading()).toBeFalse();
-    expect(messageService.add).toHaveBeenCalled();
+    expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
   });
 
-  it('should search with debounce', fakeAsync(() => {
+  it('should apply filter and reload', () => {
     component.ngOnInit();
     productService.findAll.calls.reset();
-    component.onSearch('oleo');
-    tick(400);
-    expect(productService.findAll).toHaveBeenCalled();
-  }));
+    component.onFilter({ search: 'oleo', active: true });
+    expect(productService.findAll).toHaveBeenCalledWith(0, 20, 'oleo', true);
+  });
 
   it('should reload on status change', () => {
     component.ngOnInit();
@@ -80,7 +83,6 @@ describe('ProductListComponent', () => {
   });
 
   it('should toggle status and reload', () => {
-    component.ngOnInit();
     productService.findAll.calls.reset();
     component.toggleStatus({ id: 1, name: 'Óleo', salePrice: 35, stockQuantity: 50, active: true });
     expect(productService.toggleStatus).toHaveBeenCalledWith(1);

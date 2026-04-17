@@ -43,10 +43,10 @@ export class CategoryFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params["id"];
+    const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.isEditing.set(true);
-      this.loadCategory(id);
+      this.loadCategory(+id);
     }
   }
 
@@ -70,15 +70,6 @@ export class CategoryFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.category.name?.trim()) {
-      this.messageService.add({
-        severity: "warn",
-        summary: "Atenção",
-        detail: "Nome é obrigatório",
-      });
-      return;
-    }
-
     this.saving.set(true);
     const operation = this.isEditing()
       ? this.categoryService.update(this.category.id!, this.category)

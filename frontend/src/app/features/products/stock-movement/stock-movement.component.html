@@ -59,10 +59,14 @@
 
       <!-- Movement Form Card -->
       <p-card header="Nova Movimentação">
-        <form (ngSubmit)="onSubmit()">
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="type">Tipo *</label>
+        <form (ngSubmit)="onSubmit()" #movementForm="ngForm">
+          <div class="formgrid grid">
+            <app-form-field
+              label="Tipo"
+              inputId="type"
+              [required]="true"
+              colClass="md:col-6"
+            >
               <p-dropdown
                 id="type"
                 [(ngModel)]="movementType"
@@ -72,30 +76,36 @@
                 optionValue="value"
                 styleClass="w-full"
               ></p-dropdown>
-            </div>
-            <div class="form-field">
-              <label for="quantity">Quantidade *</label>
+            </app-form-field>
+
+            <app-form-field
+              label="Quantidade"
+              inputId="quantity"
+              [required]="true"
+              colClass="md:col-6"
+            >
               <p-inputNumber
                 id="quantity"
                 [(ngModel)]="quantity"
                 name="quantity"
                 [min]="1"
+                required
                 styleClass="w-full"
               ></p-inputNumber>
-            </div>
-            <div class="form-field full-width">
-              <label for="reason">Motivo</label>
+            </app-form-field>
+
+            <app-form-field label="Motivo" inputId="reason" colClass="col-12">
               <textarea
                 pInputTextarea
                 id="reason"
                 [(ngModel)]="reason"
                 name="reason"
                 rows="2"
-                class="w-full"
                 placeholder="Ex: Compra de fornecedor, Venda avulsa, Ajuste de inventário..."
               ></textarea>
-            </div>
+            </app-form-field>
           </div>
+
           <div class="form-actions">
             <button
               pButton
@@ -103,6 +113,7 @@
               label="Registrar Movimentação"
               icon="pi pi-check"
               [loading]="saving()"
+              [disabled]="!movementForm.valid"
             ></button>
           </div>
         </form>

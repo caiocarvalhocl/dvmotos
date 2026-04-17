@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "@env/environment";
+import { Page } from "@shared/types/Page";
+
+export { Page };
 
 export interface Product {
   id?: number;
@@ -31,14 +34,6 @@ export interface StockMovement {
   reason?: string;
   userName?: string;
   createdAt?: string;
-}
-
-export interface Page<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
 }
 
 @Injectable({ providedIn: "root" })

@@ -42,6 +42,8 @@ export class ClientListComponent implements OnInit {
   loading = signal(false);
   totalRecords = signal(0);
 
+  currentFilter: FilterState = { search: "", active: null };
+
   constructor(
     private clientService: ClientService,
     private confirmationService: ConfirmationService,
@@ -52,11 +54,8 @@ export class ClientListComponent implements OnInit {
     this.loadClients({ first: 0, rows: 20 });
   }
 
-  currentFilter: FilterState = { search: "", active: null };
-
   onFilter(filter: FilterState): void {
     this.currentFilter = filter;
-    // Sempre que filtrar, volta para página 1
     this.loadClients({ first: 0, rows: 20 });
   }
 
@@ -64,61 +63,30 @@ export class ClientListComponent implements OnInit {
     this.loading.set(true);
     const page = event.first / event.rows;
 
-    // Usa os valores guardados no currentFilter
     this.clientService
-      .findAll(
-        page,
-        event.rows,
-        this.currentFilter.search,
-        this.currentFilter.active,
-      )
+      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response) => {
           this.clients.set(response.content);
           this.totalRecords.set(response.totalElements);
           this.loading.set(false);
         },
-        error: () => this.loading.set(false),
+        error: () => {
+          this.loading.set(false);
+          this.messageService.add({
+            severity: "error",
+            summary: "Erro",
+            detail: "Não foi possível carregar os clientes",
+          });
+        },
       });
-  }
-
-  confirmDelete(client: Client): void {
-    this.confirmationService.confirm({
-      message: `Deseja realmente desativar o cliente "${client.name}"?`,
-      header: "Confirmar Exclusão",
-      icon: "pi pi-exclamation-triangle",
-      acceptLabel: "Sim, desativar",
-      rejectLabel: "Cancelar",
-      accept: () => this.deleteClient(client),
-    });
-  }
-
-  deleteClient(client: Client): void {
-    this.clientService.delete(client.id!).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Cliente desativado com sucesso",
-        });
-        this.loadClients({ first: 0, rows: 20 });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Erro",
-          detail: "Não foi possível desativar o cliente",
-        });
-      },
-    });
   }
 
   confirmToggleStatus(client: Client): void {
     const action = client.active ? "desativar" : "ativar";
-
     this.confirmationService.confirm({
       message: `Deseja realmente ${action} o cliente "${client.name}"?`,
-      header: "Confirmar Ação",
+      header: "Confirmar",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",

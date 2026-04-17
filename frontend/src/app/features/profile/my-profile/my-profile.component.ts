@@ -17,6 +17,7 @@ import {
 } from "../../../core/services/user.service";
 import { AuthService } from "../../../core/services/auth.service";
 import { Severity } from "@shared/types/Severity";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-my-profile",
@@ -32,6 +33,7 @@ import { Severity } from "@shared/types/Severity";
     DividerModule,
     TagModule,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./my-profile.component.html",

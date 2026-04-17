@@ -52,7 +52,6 @@ export class TableActionsComponent {
   }
 
   emitAction(): void {
-    console.log(this.editRoute, this.id, this.isActive);
     this.onAction.emit();
   }
 }

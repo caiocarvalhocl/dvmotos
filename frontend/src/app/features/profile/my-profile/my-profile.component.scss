@@ -1,16 +1,20 @@
+// Estilos específicos do My Profile.
+// Layout de página, card, section-title e form-actions
+// são herdados de src/styles/_forms.scss e src/styles/_lists.scss.
+
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
 
-  // Em desktop, divide em colunas. A de info é um pouco maior ou igual.
+  // Em desktop, divide em duas colunas.
   @media (min-width: 992px) {
     grid-template-columns: 1fr 1fr;
-    align-items: start; // Impede que os cards estiquem se um for menor
+    align-items: start;
   }
 }
 
-// Seção do Avatar
+// Seção do avatar.
 .profile-avatar-section {
   display: flex;
   flex-direction: column;
@@ -23,19 +27,18 @@
     height: 80px;
     background: linear-gradient(
       135deg,
-      var(--primary-color),
-      var(--primary-color)
+      var(--primary-color) 0%,
+      var(--primary-dark) 100%
     );
-    color: white;
+    color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.75rem;
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(var(--primary-color), 0.3);
-    border: 4px solid white;
-    outline: 2px solid #e5e7eb;
+    border: 4px solid #fff;
+    outline: 2px solid var(--surface-border);
   }
 }
 

@@ -23,28 +23,27 @@
     <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
       <h5 class="section-title"><i class="pi pi-user"></i> Proprietário</h5>
       <div class="formgrid grid">
-        <div class="field col-12">
-          <label for="client"
-            >Cliente Responsável <span class="text-red-500">*</span></label
-          >
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-search"></i>
-            <p-autoComplete
-              id="client"
-              [(ngModel)]="selectedClient"
-              name="client"
-              [suggestions]="filteredClients"
-              (completeMethod)="filterClients($event)"
-              (onSelect)="onClientSelect($event)"
-              field="name"
-              [dropdown]="true"
-              placeholder="Digite para buscar o cliente..."
-              styleClass="w-full"
-              inputStyleClass="w-full pl-5"
-              required
-            ></p-autoComplete>
-          </span>
-        </div>
+        <app-form-field
+          label="Cliente Responsável"
+          inputId="client"
+          icon="pi pi-search"
+          [required]="true"
+          colClass="col-12"
+        >
+          <p-autoComplete
+            id="client"
+            [(ngModel)]="selectedClient"
+            name="client"
+            [suggestions]="filteredClients"
+            (completeMethod)="filterClients($event)"
+            (onSelect)="onClientSelect($event)"
+            field="name"
+            [dropdown]="true"
+            placeholder="Digite para buscar o cliente..."
+            styleClass="w-full"
+            required
+          ></p-autoComplete>
+        </app-form-field>
       </div>
 
       <h5 class="section-title"><i class="pi pi-car"></i> Identificação</h5>
@@ -62,8 +61,7 @@
             name="licensePlate"
             required
             placeholder="ABC-1234"
-            class="w-full font-bold uppercase"
-            style="letter-spacing: 1px"
+            class="uppercase"
           />
         </app-form-field>
 
@@ -159,7 +157,6 @@
             [useGrouping]="true"
             placeholder="0"
             styleClass="w-full"
-            inputStyleClass="w-full pl-5"
           ></p-inputNumber>
         </app-form-field>
       </div>

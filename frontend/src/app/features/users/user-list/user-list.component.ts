@@ -41,6 +41,8 @@ export class UserListComponent implements OnInit {
   loading = signal(false);
   totalRecords = signal(0);
 
+  currentFilter: FilterState = { search: "", active: null };
+
   constructor(
     private userService: UserService,
     private confirmationService: ConfirmationService,
@@ -51,11 +53,8 @@ export class UserListComponent implements OnInit {
     this.loadUsers({ first: 0, rows: 20 });
   }
 
-  currentFilter: FilterState = { search: "", active: null };
-
   onFilter(filter: FilterState): void {
     this.currentFilter = filter;
-    // Sempre que filtrar, volta para página 1
     this.loadUsers({ first: 0, rows: 20 });
   }
 
@@ -63,12 +62,7 @@ export class UserListComponent implements OnInit {
     this.loading.set(true);
     const page = event.first / event.rows;
     this.userService
-      .findAll(
-        page,
-        event.rows,
-        this.currentFilter.search,
-        this.currentFilter.active,
-      )
+      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response: Page<User>) => {
           this.users.set(response.content);
@@ -86,40 +80,10 @@ export class UserListComponent implements OnInit {
       });
   }
 
-  confirmDelete(user: User): void {
-    this.confirmationService.confirm({
-      message: `Deseja realmente desativar o usuário "${user.name}"?`,
-      header: "Confirmar Exclusão",
-      icon: "pi pi-exclamation-triangle",
-      acceptLabel: "Sim, desativar",
-      rejectLabel: "Cancelar",
-      accept: () => this.deleteUser(user),
-    });
-  }
-
-  deleteUser(user: User): void {
-    this.userService.delete(user.id!).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Usuário desativado com sucesso",
-        });
-        this.loadUsers({ first: 0, rows: 20 });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Erro",
-          detail: "Não foi possível desativar o usuário",
-        });
-      },
-    });
-  }
-
   getRoleSeverity(role: string): Severity {
     return role === "ADMIN" ? "danger" : "info";
   }
+
   getRoleLabel(role: string): string {
     return role === "ADMIN" ? "Administrador" : "Operador";
   }
@@ -128,7 +92,7 @@ export class UserListComponent implements OnInit {
     const action = user.active ? "desativar" : "ativar";
     this.confirmationService.confirm({
       message: `Deseja realmente ${action} o usuário "${user.name}"?`,
-      header: "Confirmar Ação",
+      header: "Confirmar",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",

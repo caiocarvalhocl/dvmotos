@@ -1,13 +1,6 @@
-.loading {
-  display: flex;
-  justify-content: center;
-  padding: 3rem;
-
-  i {
-    font-size: 2rem;
-    color: #94a3b8;
-  }
-}
+// Estilos específicos do Stock Movement.
+// Layout de página, card, section-title, form-actions e empty-state
+// são herdados de src/styles/_forms.scss e src/styles/_lists.scss.
 
 .content-grid {
   display: grid;
@@ -19,10 +12,25 @@
   }
 }
 
+:host ::ng-deep {
+  .history-card {
+    grid-column: span 2;
+
+    @media (max-width: 992px) {
+      grid-column: span 1;
+    }
+  }
+}
+
+// Header do card de produto — usa o tema (verde) em vez de azul hardcoded.
 .product-header {
   padding: 1.25rem;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
+  color: #fff;
 
   h3 {
     margin: 0 0 0.25rem;
@@ -30,7 +38,7 @@
   }
 
   small {
-    opacity: 0.8;
+    opacity: 0.85;
     font-family: monospace;
   }
 }
@@ -42,23 +50,37 @@
   padding: 1rem 0;
 
   .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
     text-align: center;
 
     .stat-label {
-      display: block;
       font-size: 0.75rem;
-      color: #64748b;
-      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     .stat-value {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      color: #1e293b;
+      color: var(--text-color);
 
       &.low-stock {
-        color: #dc2626;
+        color: var(--danger-color);
       }
     }
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+
+  i {
+    font-size: 2rem;
+    color: var(--text-muted);
   }
 }

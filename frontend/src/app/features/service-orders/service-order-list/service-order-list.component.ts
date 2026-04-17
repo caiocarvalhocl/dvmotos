@@ -20,7 +20,7 @@ import {
   ServiceOrder,
   ServiceOrderStatus,
 } from "../../../core/services/service-order.service";
-import { Page } from "../../../core/services/client.service";
+import { Page } from "@shared/types/Page";
 import { Severity } from "@shared/types/Severity";
 
 @Component({

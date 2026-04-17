@@ -8,11 +8,8 @@ import { TagModule } from "primeng/tag";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
 import { ConfirmationService, MessageService } from "primeng/api";
-import {
-  VehicleService,
-  Vehicle,
-} from "../../../core/services/vehicle.service";
-import { Page } from "../../../core/services/client.service";
+import { VehicleService, Vehicle } from "../../../core/services/vehicle.service";
+import { Page } from "@shared/types/Page";
 import {
   FilterState,
   TableFilterComponent,
@@ -44,6 +41,8 @@ export class VehicleListComponent implements OnInit {
   loading = signal(false);
   totalRecords = signal(0);
 
+  currentFilter: FilterState = { search: "", active: null };
+
   constructor(
     private vehicleService: VehicleService,
     private confirmationService: ConfirmationService,
@@ -54,11 +53,8 @@ export class VehicleListComponent implements OnInit {
     this.loadVehicles({ first: 0, rows: 20 });
   }
 
-  currentFilter: FilterState = { search: "", active: null };
-
   onFilter(filter: FilterState): void {
     this.currentFilter = filter;
-    // Sempre que filtrar, volta para página 1
     this.loadVehicles({ first: 0, rows: 20 });
   }
 
@@ -67,12 +63,7 @@ export class VehicleListComponent implements OnInit {
     const page = event.first / event.rows;
 
     this.vehicleService
-      .findAll(
-        page,
-        event.rows,
-        this.currentFilter.search,
-        this.currentFilter.active,
-      )
+      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response: Page<Vehicle>) => {
           this.vehicles.set(response.content);
@@ -90,42 +81,11 @@ export class VehicleListComponent implements OnInit {
       });
   }
 
-  confirmDelete(vehicle: Vehicle): void {
-    this.confirmationService.confirm({
-      message: `Deseja realmente desativar o veículo "${vehicle.licensePlate}"?`,
-      header: "Confirmar Exclusão",
-      icon: "pi pi-exclamation-triangle",
-      acceptLabel: "Sim, desativar",
-      rejectLabel: "Cancelar",
-      accept: () => this.deleteVehicle(vehicle),
-    });
-  }
-
-  deleteVehicle(vehicle: Vehicle): void {
-    this.vehicleService.delete(vehicle.id!).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Veículo desativado com sucesso",
-        });
-        this.loadVehicles({ first: 0, rows: 20 });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Erro",
-          detail: "Não foi possível desativar o veículo",
-        });
-      },
-    });
-  }
-
   confirmToggleStatus(vehicle: Vehicle): void {
     const action = vehicle.active ? "desativar" : "ativar";
     this.confirmationService.confirm({
       message: `Deseja realmente ${action} o veículo "${vehicle.licensePlate}"?`,
-      header: "Confirmar Ação",
+      header: "Confirmar",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: `Sim, ${action}`,
       rejectLabel: "Cancelar",

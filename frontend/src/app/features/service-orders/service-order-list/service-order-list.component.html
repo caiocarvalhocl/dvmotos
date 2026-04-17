@@ -89,12 +89,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7" class="text-center p-4">
-            <i
-              class="pi pi-file-edit"
-              style="font-size: 2rem; color: var(--text-color-secondary)"
-            ></i>
-            <p class="text-muted mt-2">Nenhuma ordem de serviço encontrada</p>
+          <td colspan="7" class="text-center">
+            <div class="empty-state">
+              <i class="pi pi-file-edit"></i>
+              <p>Nenhuma ordem de serviço encontrada</p>
+            </div>
           </td>
         </tr>
       </ng-template>

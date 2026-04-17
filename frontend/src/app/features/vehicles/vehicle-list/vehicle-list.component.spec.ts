@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VehicleListComponent } from './vehicle-list.component';
 import { VehicleService, Vehicle } from '../../../core/services/vehicle.service';
-import { Page } from '../../../core/services/client.service';
+import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -19,12 +19,11 @@ describe('VehicleListComponent', () => {
   };
 
   beforeEach(async () => {
-    vehicleService = jasmine.createSpyObj('VehicleService', ['findAll', 'delete', 'toggleStatus']);
+    vehicleService = jasmine.createSpyObj('VehicleService', ['findAll', 'toggleStatus']);
     confirmationService = jasmine.createSpyObj('ConfirmationService', ['confirm']);
     messageService = jasmine.createSpyObj('MessageService', ['add']);
 
     vehicleService.findAll.and.returnValue(of(mockPage));
-    vehicleService.delete.and.returnValue(of(void 0));
     vehicleService.toggleStatus.and.returnValue(of({} as any));
 
     await TestBed.configureTestingModule({
@@ -41,14 +40,17 @@ describe('VehicleListComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should create', () => expect(component).toBeTruthy());
+
+  it('should load vehicles on init with default filter', () => {
+    component.ngOnInit();
+    expect(vehicleService.findAll).toHaveBeenCalledWith(0, 20, '', null);
+    expect(component.vehicles().length).toBe(1);
   });
 
-  it('should load vehicles on init', () => {
+  it('should set loading false after load', () => {
     component.ngOnInit();
-    expect(vehicleService.findAll).toHaveBeenCalled();
-    expect(component.vehicles().length).toBe(1);
+    expect(component.loading()).toBeFalse();
   });
 
   it('should apply filter', () => {
@@ -58,28 +60,19 @@ describe('VehicleListComponent', () => {
     expect(vehicleService.findAll).toHaveBeenCalledWith(0, 20, 'Honda', true);
   });
 
-  it('should handle load error', () => {
+  it('should handle load error and show toast', () => {
     vehicleService.findAll.and.returnValue(throwError(() => new Error('err')));
     component.ngOnInit();
     expect(component.loading()).toBeFalse();
-  });
-
-  it('should delete vehicle', () => {
-    component.ngOnInit();
-    const v: Vehicle = { id: 1, clientId: 1, licensePlate: 'ABC-1234', brand: 'Honda', model: 'CG 160', active: true };
-    component.deleteVehicle(v);
-    expect(vehicleService.delete).toHaveBeenCalledWith(1);
-    expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'success' }));
-  });
-
-  it('should handle delete error', () => {
-    vehicleService.delete.and.returnValue(throwError(() => new Error('err')));
-    component.deleteVehicle({ id: 1, clientId: 1, licensePlate: 'X', brand: 'X', model: 'X' });
     expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
   });
 
+  it('should confirm toggle status', () => {
+    component.confirmToggleStatus({ id: 1, clientId: 1, licensePlate: 'ABC-1234', brand: 'Honda', model: 'CG 160', active: true });
+    expect(confirmationService.confirm).toHaveBeenCalled();
+  });
+
   it('should toggle status', () => {
-    component.ngOnInit();
     component.toggleStatus({ id: 1, clientId: 1, licensePlate: 'ABC-1234', brand: 'Honda', model: 'CG 160', active: true });
     expect(vehicleService.toggleStatus).toHaveBeenCalledWith(1);
   });
