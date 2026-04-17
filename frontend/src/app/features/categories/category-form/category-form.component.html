@@ -1,6 +1,6 @@
 <div class="page-container narrow">
   <div class="page-header">
-    <div>
+    <div class="header-content">
       <h1>{{ isEditing() ? "Editar Categoria" : "Nova Categoria" }}</h1>
       <p class="text-muted">
         {{
@@ -20,16 +20,23 @@
     ></button>
   </div>
 
-  <div class="card">
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-grid">
-        <app-form-field label="Nome" inputId="name" colClass="form-field">
+  <div class="card form-card">
+    <form (ngSubmit)="onSubmit()" #categoryForm="ngForm">
+      <h5 class="section-title"><i class="pi pi-tag"></i> Dados da Categoria</h5>
+      <div class="formgrid grid">
+        <app-form-field
+          label="Nome"
+          inputId="name"
+          icon="pi pi-tag"
+          [required]="true"
+          colClass="col-12"
+        >
           <input
             pInputText
             id="name"
             [(ngModel)]="category.name"
             name="name"
-            class="w-full"
+            required
             placeholder="Nome da categoria"
             [disabled]="loading()"
           />
@@ -38,7 +45,7 @@
         <app-form-field
           label="Descrição"
           inputId="description"
-          colClass="form-field full-width"
+          colClass="col-12"
         >
           <textarea
             pInputTextarea
@@ -46,7 +53,6 @@
             [(ngModel)]="category.description"
             name="description"
             rows="3"
-            class="w-full"
             placeholder="Descrição da categoria (opcional)"
             [disabled]="loading()"
           ></textarea>
@@ -67,8 +73,8 @@
           [label]="isEditing() ? 'Atualizar' : 'Salvar'"
           icon="pi pi-check"
           [loading]="saving()"
-          [disabled]="loading()"
-          class="p-button-success px-4"
+          [disabled]="loading() || !categoryForm.valid"
+          class="p-button-primary px-4"
         ></button>
       </div>
     </form>

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from "@angular/core";
+import { Component, OnInit, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
@@ -113,9 +113,6 @@ export class UserFormComponent implements OnInit {
 
   onSubmit(): void {
     this.saving.set(true);
-
-    if (!this.canEditRole() && this.isEditing()) {
-    }
 
     const operation = this.isEditing()
       ? this.userService.update(this.user.id!, this.user)

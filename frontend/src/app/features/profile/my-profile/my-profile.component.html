@@ -13,17 +13,17 @@
           class="pi pi-spin pi-spinner text-primary"
           style="font-size: 2.5rem"
         ></i>
-        <span class="text-gray-500">Carregando perfil...</span>
+        <span class="text-muted">Carregando perfil...</span>
       </div>
     </div>
   } @else {
     <div class="profile-grid">
-      <div class="card profile-card">
+      <div class="card form-card">
         <div class="profile-avatar-section">
           <div class="avatar-circle">
             {{ getUserInitials() }}
           </div>
-          <h2 class="mb-1 mt-3 text-900 font-bold">{{ user.name }}</h2>
+          <h2 class="mb-1 mt-3 font-bold">{{ user.name }}</h2>
           <p-tag
             [value]="getRoleLabel(user.role)"
             [severity]="getRoleSeverity(user.role)"
@@ -31,128 +31,152 @@
           ></p-tag>
         </div>
 
-        <div class="form-content">
+        <form (ngSubmit)="onSaveProfile()" #profileForm="ngForm">
           <h5 class="section-title">
             <i class="pi pi-id-card"></i> Dados Básicos
           </h5>
-
-          <div class="field mb-4">
-            <label for="name">Nome Completo</label>
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-user"></i>
+          <div class="formgrid grid">
+            <app-form-field
+              label="Nome Completo"
+              inputId="name"
+              icon="pi pi-user"
+              [required]="true"
+              colClass="col-12"
+            >
               <input
                 pInputText
                 id="name"
                 [(ngModel)]="user.name"
-                class="w-full"
+                name="name"
+                required
                 placeholder="Seu nome completo"
               />
-            </span>
-          </div>
+            </app-form-field>
 
-          <div class="field mb-4">
-            <label for="email">Email</label>
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-envelope"></i>
+            <app-form-field
+              label="Email"
+              inputId="email"
+              icon="pi pi-envelope"
+              [required]="true"
+              colClass="col-12"
+            >
               <input
                 pInputText
                 id="email"
                 [(ngModel)]="user.email"
+                name="email"
                 type="email"
-                class="w-full"
+                required
                 placeholder="seu@email.com"
               />
-            </span>
+            </app-form-field>
           </div>
 
-          <div class="form-actions mt-auto pt-2">
+          <div class="form-actions">
             <button
               pButton
+              type="submit"
               label="Salvar Dados"
               icon="pi pi-check"
               class="p-button-primary w-full"
               [loading]="savingProfile()"
-              (click)="onSaveProfile()"
+              [disabled]="!profileForm.valid"
             ></button>
           </div>
-        </div>
+        </form>
       </div>
 
-      <div class="card security-card">
-        <h5 class="section-title mb-4">
-          <i class="pi pi-shield"></i> Alterar Senha
-        </h5>
-        <p class="text-sm text-gray-500 mb-4">
-          Para sua segurança, utilize uma senha forte com caracteres especiais e
-          números.
-        </p>
+      <div class="card form-card">
+        <form (ngSubmit)="onChangePassword()" #passwordForm="ngForm">
+          <h5 class="section-title">
+            <i class="pi pi-shield"></i> Alterar Senha
+          </h5>
+          <p class="text-muted mb-3">
+            Para sua segurança, utilize uma senha forte com caracteres especiais
+            e números.
+          </p>
 
-        <div class="field mb-4">
-          <label for="currentPassword">Senha Atual</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-lock z-2"></i>
-            <p-password
-              id="currentPassword"
-              [(ngModel)]="currentPassword"
-              [toggleMask]="true"
-              [feedback]="false"
-              placeholder="••••••••"
-              styleClass="w-full"
-              inputStyleClass="w-full pl-5"
-            ></p-password>
-          </span>
-        </div>
+          <div class="formgrid grid">
+            <app-form-field
+              label="Senha Atual"
+              inputId="currentPassword"
+              icon="pi pi-lock"
+              [required]="true"
+              colClass="col-12"
+            >
+              <p-password
+                id="currentPassword"
+                [(ngModel)]="currentPassword"
+                name="currentPassword"
+                [toggleMask]="true"
+                [feedback]="false"
+                placeholder="••••••••"
+                styleClass="w-full"
+                required
+              ></p-password>
+            </app-form-field>
+          </div>
 
-        <p-divider align="center">
-          <span class="text-gray-400 text-sm">Nova Senha</span>
-        </p-divider>
+          <p-divider align="center">
+            <span class="text-muted">Nova Senha</span>
+          </p-divider>
 
-        <div class="field mb-4">
-          <label for="newPassword">Nova Senha</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-key z-2"></i>
-            <p-password
-              id="newPassword"
-              [(ngModel)]="newPassword"
-              [toggleMask]="true"
-              [feedback]="true"
-              placeholder="Mínimo 6 caracteres"
-              styleClass="w-full"
-              inputStyleClass="w-full pl-5"
-              weakLabel="Fraca"
-              mediumLabel="Média"
-              strongLabel="Forte"
-            ></p-password>
-          </span>
-        </div>
+          <div class="formgrid grid">
+            <app-form-field
+              label="Nova Senha"
+              inputId="newPassword"
+              icon="pi pi-key"
+              [required]="true"
+              colClass="col-12"
+            >
+              <p-password
+                id="newPassword"
+                [(ngModel)]="newPassword"
+                name="newPassword"
+                [toggleMask]="true"
+                [feedback]="true"
+                placeholder="Mínimo 6 caracteres"
+                styleClass="w-full"
+                weakLabel="Fraca"
+                mediumLabel="Média"
+                strongLabel="Forte"
+                required
+                minlength="6"
+              ></p-password>
+            </app-form-field>
 
-        <div class="field mb-4">
-          <label for="confirmPassword">Confirmar Nova Senha</label>
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-check-circle z-2"></i>
-            <p-password
-              id="confirmPassword"
-              [(ngModel)]="confirmPassword"
-              [toggleMask]="true"
-              [feedback]="false"
-              placeholder="Repita a nova senha"
-              styleClass="w-full"
-              inputStyleClass="w-full pl-5"
-            ></p-password>
-          </span>
-        </div>
+            <app-form-field
+              label="Confirmar Nova Senha"
+              inputId="confirmPassword"
+              icon="pi pi-check-circle"
+              [required]="true"
+              colClass="col-12"
+            >
+              <p-password
+                id="confirmPassword"
+                [(ngModel)]="confirmPassword"
+                name="confirmPassword"
+                [toggleMask]="true"
+                [feedback]="false"
+                placeholder="Repita a nova senha"
+                styleClass="w-full"
+                required
+              ></p-password>
+            </app-form-field>
+          </div>
 
-        <div class="form-actions pt-2">
-          <button
-            pButton
-            label="Atualizar Senha"
-            icon="pi pi-lock"
-            [loading]="savingPassword()"
-            (click)="onChangePassword()"
-            class="p-button-outlined p-button-warning w-full"
-            [disabled]="!currentPassword || !newPassword || !confirmPassword"
-          ></button>
-        </div>
+          <div class="form-actions">
+            <button
+              pButton
+              type="submit"
+              label="Atualizar Senha"
+              icon="pi pi-lock"
+              [loading]="savingPassword()"
+              class="p-button-outlined p-button-warning w-full"
+              [disabled]="!passwordForm.valid"
+            ></button>
+          </div>
+        </form>
       </div>
     </div>
   }

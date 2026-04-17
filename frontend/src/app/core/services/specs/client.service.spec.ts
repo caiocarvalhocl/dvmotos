@@ -3,7 +3,8 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from "@angular/common/http/testing";
-import { ClientService, Client, Page } from "../client.service";
+import { ClientService, Client } from "../client.service";
+import { Page } from "@shared/types/Page";
 import { environment } from "@env/environment";
 
 describe("ClientService", () => {

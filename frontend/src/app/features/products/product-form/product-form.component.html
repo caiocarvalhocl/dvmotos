@@ -20,7 +20,7 @@
   </div>
 
   <div class="card form-card">
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" #productForm="ngForm">
       <h5 class="section-title">
         <i class="pi pi-box"></i> Informações do Produto
       </h5>
@@ -37,6 +37,7 @@
             id="name"
             [(ngModel)]="product.name"
             name="name"
+            required
             placeholder="Nome do produto"
             [disabled]="loading()"
           />
@@ -137,6 +138,8 @@
             id="salePrice"
             [(ngModel)]="product.salePrice"
             name="salePrice"
+            required
+            [min]="0.01"
             mode="currency"
             currency="BRL"
             locale="pt-BR"
@@ -198,7 +201,7 @@
           [label]="isEditing() ? 'Atualizar' : 'Salvar'"
           icon="pi pi-check"
           [loading]="saving()"
-          [disabled]="loading()"
+          [disabled]="loading() || !productForm.valid"
           class="p-button-primary px-4"
         ></button>
       </div>

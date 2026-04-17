@@ -18,6 +18,7 @@ import {
   Page,
 } from "../../../core/services/product.service";
 import { Severity } from "@shared/types/Severity";
+import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
 
 @Component({
   selector: "app-stock-movement",
@@ -36,6 +37,7 @@ import { Severity } from "@shared/types/Severity";
     ToastModule,
     CurrencyPipe,
     DatePipe,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: "./stock-movement.component.html",
@@ -66,10 +68,10 @@ export class StockMovementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params["id"];
+    const id = this.route.snapshot.paramMap.get("id");
     if (id) {
-      this.loadProduct(id);
-      this.loadMovements(id, { first: 0, rows: 10 });
+      this.loadProduct(+id);
+      this.loadMovements(+id, { first: 0, rows: 10 });
     } else {
       this.router.navigate(["/products"]);
     }

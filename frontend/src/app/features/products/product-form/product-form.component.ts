@@ -69,10 +69,10 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
-    const id = this.route.snapshot.params["id"];
+    const id = this.route.snapshot.paramMap.get("id");
     if (id) {
       this.isEditing.set(true);
-      this.loadProduct(id);
+      this.loadProduct(+id);
     }
   }
 
@@ -104,23 +104,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.product.name?.trim()) {
-      this.messageService.add({
-        severity: "warn",
-        summary: "Atenção",
-        detail: "Nome é obrigatório",
-      });
-      return;
-    }
-    if (!this.product.salePrice || this.product.salePrice <= 0) {
-      this.messageService.add({
-        severity: "warn",
-        summary: "Atenção",
-        detail: "Preço de venda é obrigatório",
-      });
-      return;
-    }
-
     this.saving.set(true);
     const operation = this.isEditing()
       ? this.productService.update(this.product.id!, this.product)

@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CategoryListComponent } from './category-list.component';
-import { CategoryService, Category, Page } from '../../../core/services/category.service';
+import { CategoryService, Category } from '../../../core/services/category.service';
+import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -42,13 +43,11 @@ describe('CategoryListComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', () => expect(component).toBeTruthy());
 
-  it('should load categories on init', () => {
+  it('should load categories on init with default filter (empty search, active null)', () => {
     component.ngOnInit();
-    expect(categoryService.findAll).toHaveBeenCalledWith(0, 20, '', true);
+    expect(categoryService.findAll).toHaveBeenCalledWith(0, 20, '', null);
     expect(component.categories().length).toBe(2);
     expect(component.totalRecords()).toBe(2);
   });
@@ -58,41 +57,29 @@ describe('CategoryListComponent', () => {
     expect(component.loading()).toBeFalse();
   });
 
-  it('should handle load error', () => {
+  it('should handle load error and show toast', () => {
     categoryService.findAll.and.returnValue(throwError(() => new Error('err')));
     component.ngOnInit();
     expect(component.loading()).toBeFalse();
     expect(messageService.add).toHaveBeenCalled();
   });
 
-  it('should call loadCategories on status change', () => {
-    spyOn(component, 'loadCategories');
-    component.onStatusChange();
-    expect(component.loadCategories).toHaveBeenCalledWith({ first: 0, rows: 20 });
-  });
-
-  it('should trigger search with debounce', fakeAsync(() => {
+  it('should apply filter and reload from page 1', () => {
     component.ngOnInit();
     categoryService.findAll.calls.reset();
-
-    component.onSearch('pneu');
-    tick(400);
-
-    expect(categoryService.findAll).toHaveBeenCalled();
-  }));
+    component.onFilter({ search: 'pneu', active: true });
+    expect(component.currentFilter).toEqual({ search: 'pneu', active: true });
+    expect(categoryService.findAll).toHaveBeenCalledWith(0, 20, 'pneu', true);
+  });
 
   it('should confirm toggle status', () => {
-    const cat: Category = { id: 1, name: 'Pneus', active: true };
-    component.confirmToggleStatus(cat);
+    component.confirmToggleStatus({ id: 1, name: 'Pneus', active: true });
     expect(confirmationService.confirm).toHaveBeenCalled();
   });
 
   it('should toggle status and reload', () => {
-    const cat: Category = { id: 1, name: 'Pneus', active: true };
     categoryService.findAll.calls.reset();
-
-    component.toggleStatus(cat);
-
+    component.toggleStatus({ id: 1, name: 'Pneus', active: true });
     expect(categoryService.toggleStatus).toHaveBeenCalledWith(1);
     expect(messageService.add).toHaveBeenCalled();
     expect(categoryService.findAll).toHaveBeenCalled();
@@ -100,8 +87,7 @@ describe('CategoryListComponent', () => {
 
   it('should handle toggle status error', () => {
     categoryService.toggleStatus.and.returnValue(throwError(() => new Error('err')));
-    const cat: Category = { id: 1, name: 'Pneus', active: true };
-    component.toggleStatus(cat);
+    component.toggleStatus({ id: 1, name: 'Pneus', active: true });
     expect(messageService.add).toHaveBeenCalled();
   });
 });
