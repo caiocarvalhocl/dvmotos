@@ -1,10 +1,11 @@
-<div class="dashboard">
-  <div class="welcome-section">
-    <div class="welcome-content">
-      <h1 *ngIf="authService.currentUser() as user">
-        Bem-vindo, {{ user.name.split(" ")[0] }}! 👋
-      </h1>
-      <p>Aqui está o resumo do seu sistema.</p>
+<div class="page-container wide">
+  <!-- HEADER / BOAS-VINDAS -->
+  <div class="page-header">
+    <div class="header-content">
+      @if (authService.currentUser(); as user) {
+        <h1>Bem-vindo, {{ user.name.split(" ")[0] }}! 👋</h1>
+        <p class="text-muted">Aqui está o resumo do seu sistema.</p>
+      }
     </div>
     <div class="welcome-badge">
       <i class="pi pi-car"></i>
@@ -12,8 +13,9 @@
     </div>
   </div>
 
-  <div class="quick-actions">
-    <h2>Acesso Rápido</h2>
+  <!-- AÇÕES RÁPIDAS -->
+  <section class="dash-section">
+    <h2 class="dash-section-title">Acesso Rápido</h2>
     <div class="actions-grid">
       <a routerLink="/clients/new" class="action-card action-primary">
         <div class="action-icon">
@@ -37,85 +39,148 @@
         <i class="pi pi-arrow-right action-arrow"></i>
       </a>
 
-      <a routerLink="/clients" class="action-card">
-        <div class="action-icon icon-neutral">
-          <i class="pi pi-users"></i>
-        </div>
-        <div class="action-content">
-          <h3>Clientes</h3>
-          <p>Ver todos os clientes</p>
-        </div>
-        <i class="pi pi-arrow-right action-arrow"></i>
-      </a>
-
-      <a routerLink="/vehicles" class="action-card">
-        <div class="action-icon icon-neutral">
-          <i class="pi pi-list"></i>
-        </div>
-        <div class="action-content">
-          <h3>Veículos</h3>
-          <p>Ver todos os veículos</p>
-        </div>
-        <i class="pi pi-arrow-right action-arrow"></i>
-      </a>
-    </div>
-  </div>
-
-  <div class="stats-section">
-    <h2>Estatísticas</h2>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon stat-icon-primary">
-          <i class="pi pi-users"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value">{{ countClients$ | async }}</span>
-          <span class="stat-label">Clientes Ativos</span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon stat-icon-secondary">
-          <i class="pi pi-car"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value"> {{ countVehicles$ | async }}</span>
-          <span class="stat-label">Veículos Ativos</span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon stat-icon-info">
+      <a routerLink="/service-orders/new" class="action-card action-accent">
+        <div class="action-icon">
           <i class="pi pi-file-edit"></i>
         </div>
-        <div class="stat-content">
-          <span class="stat-value development">Em Desenvolvimento</span>
-          <span class="stat-label">OS Abertas</span>
+        <div class="action-content">
+          <h3>Nova OS</h3>
+          <p>Abrir ordem de serviço</p>
         </div>
+        <i class="pi pi-arrow-right action-arrow"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ESTATÍSTICAS (ADMIN) -->
+  @if (isAdmin()) {
+    <section class="dash-section">
+      <h2 class="dash-section-title">Estatísticas</h2>
+      <div class="stats-grid">
+        <a routerLink="/clients" class="stat-card">
+          <div class="stat-icon stat-icon-primary">
+            <i class="pi pi-users"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value">
+              {{ countClients() ?? "—" }}
+            </span>
+            <span class="stat-label">Clientes Ativos</span>
+          </div>
+        </a>
+
+        <a routerLink="/vehicles" class="stat-card">
+          <div class="stat-icon stat-icon-secondary">
+            <i class="pi pi-car"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value">
+              {{ countVehicles() ?? "—" }}
+            </span>
+            <span class="stat-label">Veículos Ativos</span>
+          </div>
+        </a>
+
+        <a routerLink="/service-orders" class="stat-card">
+          <div class="stat-icon stat-icon-info">
+            <i class="pi pi-file-edit"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value">
+              {{ countPendingOrders() ?? "—" }}
+            </span>
+            <span class="stat-label">OS Pendentes</span>
+          </div>
+        </a>
+
+        <a
+          routerLink="/products"
+          class="stat-card"
+          [class.stat-card-alert]="(countLowStock() ?? 0) > 0"
+        >
+          <div class="stat-icon stat-icon-warning">
+            <i class="pi pi-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-value">
+              {{ countLowStock() ?? "—" }}
+            </span>
+            <span class="stat-label">Estoque Baixo</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PRODUTOS COM ESTOQUE BAIXO (ADMIN) -->
+    <section class="dash-section">
+      <div class="dash-section-header">
+        <h2 class="dash-section-title">Produtos com Estoque Baixo</h2>
+        <a
+          routerLink="/products"
+          pButton
+          label="Ver todos"
+          icon="pi pi-external-link"
+          class="p-button-text p-button-sm"
+        ></a>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon stat-icon-warning">
-          <i class="pi pi-box"></i>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value development">Em Desenvolvimento</span>
-          <span class="stat-label">Itens Estoque</span>
-        </div>
-      </div>
-    </div>
-  </div>
+      <div class="card">
+        <p-table
+          [value]="lowStockProducts()"
+          [loading]="loadingLowStock()"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th class="text-center">Estoque</th>
+              <th class="text-center">Mínimo</th>
+              <th style="width: 80px"></th>
+            </tr>
+          </ng-template>
 
-  <div class="info-section">
-    <div class="info-card">
-      <i class="pi pi-wrench"></i>
-      <div>
-        <h4>MVP em Desenvolvimento</h4>
-        <p>
-          Estamos trabalhando para trazer mais funcionalidades em breve:
-          Estoque, Ordens de Serviço, Relatórios e muito mais!
-        </p>
+          <ng-template pTemplate="body" let-product>
+            <tr>
+              <td>
+                <span class="font-bold">{{ product.name }}</span>
+                @if (product.barcode) {
+                  <br /><small class="text-muted">{{ product.barcode }}</small>
+                }
+              </td>
+              <td>{{ product.categoryName || "-" }}</td>
+              <td class="text-center">
+                <p-tag
+                  [value]="product.stockQuantity + ' ' + (product.unit || '')"
+                  severity="danger"
+                ></p-tag>
+              </td>
+              <td class="text-center">{{ product.minimumStock || "-" }}</td>
+              <td>
+                <a
+                  [routerLink]="['/products', product.id, 'stock']"
+                  pButton
+                  icon="pi pi-box"
+                  class="p-button-text p-button-sm"
+                  pTooltip="Movimentar Estoque"
+                  tooltipPosition="top"
+                ></a>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="text-center">
+                <div class="empty-state">
+                  <i class="pi pi-check-circle"></i>
+                  <p>Nenhum produto com estoque baixo. Tudo em ordem!</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
-    </div>
-  </div>
+    </section>
+  }
 </div>
