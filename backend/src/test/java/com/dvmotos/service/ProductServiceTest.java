@@ -248,7 +248,7 @@ class ProductServiceTest {
       request.setQuantity(10);
       request.setReason("Venda");
 
-      when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+      when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(product));
       when(productRepository.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
       when(stockMovementRepository.save(any(StockMovement.class))).thenAnswer(i -> {
         StockMovement mov = i.getArgument(0);
@@ -270,7 +270,7 @@ class ProductServiceTest {
       request.setType(MovementType.OUT);
       request.setQuantity(100);
 
-      when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+      when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(product));
 
       assertThatThrownBy(() -> productService.addStockMovement(1L, request, user))
           .isInstanceOf(BusinessException.class)
@@ -285,7 +285,7 @@ class ProductServiceTest {
       request.setQuantity(30);
       request.setReason("Ajuste inventário");
 
-      when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+      when(productRepository.findByIdWithLock(1L)).thenReturn(Optional.of(product));
       when(productRepository.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
       when(stockMovementRepository.save(any(StockMovement.class))).thenAnswer(i -> {
         StockMovement mov = i.getArgument(0);

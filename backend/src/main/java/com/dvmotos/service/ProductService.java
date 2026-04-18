@@ -144,8 +144,15 @@ public class ProductService {
 
     @Transactional
     public StockMovementResponse addStockMovement(Long productId, StockMovementRequest request, User currentUser) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", productId));
+        Product product;
+
+        if (request.getType() == MovementType.OUT || request.getType() == MovementType.ADJUSTMENT) {
+            product = productRepository.findByIdWithLock(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", productId));
+        } else {
+            product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", productId));
+        }
 
         int previousQty = product.getStockQuantity();
         int newQty;
