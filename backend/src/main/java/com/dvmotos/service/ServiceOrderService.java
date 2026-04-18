@@ -75,8 +75,16 @@ public class ServiceOrderService {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", request.getClientId()));
 
+        if (!client.getActive()) {
+            throw new BusinessException("Não é possível abrir uma OS para um cliente inativo");
+        }
+
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", request.getVehicleId()));
+
+        if (!vehicle.getActive()) {
+            throw new BusinessException("Não é possível abrir uma OS para um veículo inativo");
+        }
 
         if (!vehicle.getClient().getId().equals(client.getId())) {
             throw new BusinessException("O veículo não pertence ao cliente selecionado");
@@ -116,6 +124,10 @@ public class ServiceOrderService {
 
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", request.getVehicleId()));
+
+        if (!vehicle.getClient().getId().equals(client.getId())) {
+            throw new BusinessException("O veículo não pertence ao cliente selecionado");
+        }
 
         order.setClient(client);
         order.setVehicle(vehicle);
@@ -255,8 +267,15 @@ public class ServiceOrderService {
         order.setServicesAmount(services);
         order.setPartsAmount(parts);
 
+        BigDecimal subtotal = services.add(parts);
         BigDecimal discount = order.getDiscountAmount() != null ? order.getDiscountAmount() : BigDecimal.ZERO;
-        order.setTotalAmount(services.add(parts).subtract(discount));
+
+        if (discount.compareTo(subtotal) > 0) {
+            throw new BusinessException(
+                    "Desconto (R$ " + discount + ") não pode ser maior que o subtotal da OS (R$ " + subtotal + ")");
+        }
+
+        order.setTotalAmount(subtotal.subtract(discount));
     }
 
     // Mapa de transições válidas: status atual → quais status pode ir

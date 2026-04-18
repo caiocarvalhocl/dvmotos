@@ -41,7 +41,7 @@ public class VehicleService {
         return vehicles.map(VehicleResponse::fromEntity);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public VehicleResponse findById(Long id) {
         return VehicleResponse.fromEntity(vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", id)));

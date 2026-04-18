@@ -36,7 +36,7 @@ public class ClientService {
         return clients.map(ClientResponse::fromEntity);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ClientResponse findById(Long id) {
         return ClientResponse.fromEntity(clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client", id)));

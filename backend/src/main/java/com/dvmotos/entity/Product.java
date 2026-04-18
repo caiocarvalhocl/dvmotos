@@ -3,7 +3,6 @@ package com.dvmotos.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Product extends BaseEntity {
     @Column(nullable = false, length = 150)
     private String name;
 
@@ -57,19 +52,6 @@ public class Product {
     @Builder.Default
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<StockMovement> stockMovements = new ArrayList<>();
-
-    @Builder.Default
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Builder.Default
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     public boolean isLowStock() {
         return this.stockQuantity <= this.minimumStock;

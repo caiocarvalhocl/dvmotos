@@ -4,6 +4,7 @@ import com.dvmotos.dto.request.LoginRequest;
 import com.dvmotos.dto.response.AuthResponse;
 import com.dvmotos.dto.response.UserResponse;
 import com.dvmotos.entity.User;
+import com.dvmotos.exception.BusinessException;
 import com.dvmotos.repository.UserRepository;
 import com.dvmotos.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String token = jwtService.generateToken(user);
@@ -32,13 +34,19 @@ public class AuthService {
 
     public AuthResponse refreshToken(String refreshToken) {
         String email = jwtService.extractUsername(refreshToken);
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!user.isEnabled()) {
+            throw new BusinessException("Usuário inativo. Contate o administrador.");
+        }
+
         if (jwtService.isTokenValid(refreshToken, user)) {
             String newToken = jwtService.generateToken(user);
             return AuthResponse.builder()
                     .token(newToken).refreshToken(refreshToken).type("Bearer")
                     .expiresIn(jwtService.getJwtExpiration()).user(UserResponse.fromEntity(user)).build();
         }
-        throw new RuntimeException("Invalid refresh token");
+        throw new BusinessException("Refresh token inválido ou expirado");
     }
 }
