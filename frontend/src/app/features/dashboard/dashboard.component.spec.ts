@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { DashboardComponent } from './dashboard.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -18,31 +19,18 @@ describe('DashboardComponent', () => {
   let serviceOrderService: jasmine.SpyObj<ServiceOrderService>;
 
   const mockAdminUser = {
-    id: 1,
-    name: 'Admin User',
-    email: 'a@a.com',
-    role: 'ADMIN' as const,
-    active: true,
+    id: 1, name: 'Admin User', email: 'a@a.com', role: 'ADMIN' as const, active: true,
   };
 
   const mockOperatorUser = {
-    id: 2,
-    name: 'Operador',
-    email: 'op@a.com',
-    role: 'OPERADOR' as const,
-    active: true,
+    id: 2, name: 'Operador', email: 'op@a.com', role: 'OPERADOR' as const, active: true,
   };
 
   function setupTestBed(currentUser: any) {
-    authService = {
-      currentUser: signal(currentUser),
-    };
+    authService = { currentUser: signal(currentUser) };
     clientService = jasmine.createSpyObj('ClientService', ['getActiveClients']);
     vehicleService = jasmine.createSpyObj('VehicleService', ['getActiveVehicles']);
-    productService = jasmine.createSpyObj('ProductService', [
-      'countLowStock',
-      'findLowStock',
-    ]);
+    productService = jasmine.createSpyObj('ProductService', ['countLowStock', 'findLowStock']);
     serviceOrderService = jasmine.createSpyObj('ServiceOrderService', ['countByStatus']);
 
     clientService.getActiveClients.and.returnValue(of(10 as any));
@@ -51,11 +39,7 @@ describe('DashboardComponent', () => {
     productService.findLowStock.and.returnValue(of([]));
     serviceOrderService.countByStatus.and.callFake((status) => {
       const counts: Record<string, number> = {
-        OPEN: 3,
-        IN_PROGRESS: 4,
-        WAITING_PARTS: 1,
-        COMPLETED: 99,
-        CANCELLED: 0,
+        OPEN: 3, IN_PROGRESS: 4, WAITING_PARTS: 1, COMPLETED: 99, CANCELLED: 0,
       };
       return of({ count: counts[status] ?? 0 });
     });
@@ -63,6 +47,7 @@ describe('DashboardComponent', () => {
     return TestBed.configureTestingModule({
       imports: [DashboardComponent],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useValue: authService },
         { provide: ClientService, useValue: clientService },
         { provide: VehicleService, useValue: vehicleService },
@@ -70,7 +55,9 @@ describe('DashboardComponent', () => {
         { provide: ServiceOrderService, useValue: serviceOrderService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    })
+    .overrideComponent(DashboardComponent, { set: { providers: [] } })
+    .compileComponents();
   }
 
   describe('as ADMIN', () => {
@@ -107,7 +94,6 @@ describe('DashboardComponent', () => {
       expect(serviceOrderService.countByStatus).toHaveBeenCalledWith('OPEN');
       expect(serviceOrderService.countByStatus).toHaveBeenCalledWith('IN_PROGRESS');
       expect(serviceOrderService.countByStatus).toHaveBeenCalledWith('WAITING_PARTS');
-      // OPEN(3) + IN_PROGRESS(4) + WAITING_PARTS(1) = 8
       expect(component.countPendingOrders()).toBe(8);
     });
 

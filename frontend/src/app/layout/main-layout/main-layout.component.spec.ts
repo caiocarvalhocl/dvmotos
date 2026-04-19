@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainLayoutComponent } from './main-layout.component';
 import { AuthService } from '../../core/services/auth.service';
-import { signal } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
@@ -20,6 +20,7 @@ describe('MainLayoutComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MainLayoutComponent],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useValue: authServiceMock }
       ],
       schemas: [NO_ERRORS_SCHEMA]

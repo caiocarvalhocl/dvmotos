@@ -1,29 +1,52 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
-import { environment } from '@env/environment';
+import { Injectable, signal, computed } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { Observable, tap } from "rxjs";
+import { environment } from "@env/environment";
 
-export interface LoginRequest { email: string; password: string; }
-export interface User { id: number; name: string; email: string; role: 'ADMIN' | 'OPERADOR'; active: boolean; }
-export interface AuthResponse { token: string; refreshToken: string; type: string; expiresIn: number; user: User; }
+export type UserRole = "ADMIN" | "OPERADOR";
 
-@Injectable({ providedIn: 'root' })
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  active: boolean;
+}
+export interface AuthResponse {
+  token: string;
+  refreshToken: string;
+  type: string;
+  expiresIn: number;
+  user: User;
+}
+
+@Injectable({ providedIn: "root" })
 export class AuthService {
-  private readonly TOKEN_KEY = 'dvmotos_token';
-  private readonly REFRESH_TOKEN_KEY = 'dvmotos_refresh_token';
-  private readonly USER_KEY = 'dvmotos_user';
+  private readonly TOKEN_KEY = "dvmotos_token";
+  private readonly REFRESH_TOKEN_KEY = "dvmotos_refresh_token";
+  private readonly USER_KEY = "dvmotos_user";
   private currentUserSignal = signal<User | null>(this.getStoredUser());
 
   currentUser = computed(() => this.currentUserSignal());
-  isAuthenticated = computed(() => !!this.currentUserSignal() && !!this.getToken());
-  isAdmin = computed(() => this.currentUserSignal()?.role === 'ADMIN');
+  isAuthenticated = computed(
+    () => !!this.currentUserSignal() && !!this.getToken(),
+  );
+  isAdmin = computed(() => this.currentUserSignal()?.role === "ADMIN");
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
-      .pipe(tap(response => this.handleAuthResponse(response)));
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
+      .pipe(tap((response) => this.handleAuthResponse(response)));
   }
 
   logout(): void {
@@ -31,15 +54,21 @@ export class AuthService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUserSignal.set(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 
-  getToken(): string | null { return localStorage.getItem(this.TOKEN_KEY); }
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
 
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh?refreshToken=${refreshToken}`, {})
-      .pipe(tap(response => this.handleAuthResponse(response)));
+    return this.http
+      .post<AuthResponse>(
+        `${environment.apiUrl}/auth/refresh?refreshToken=${refreshToken}`,
+        {},
+      )
+      .pipe(tap((response) => this.handleAuthResponse(response)));
   }
 
   private handleAuthResponse(response: AuthResponse): void {

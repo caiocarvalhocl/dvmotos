@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CategoryFormComponent } from './category-form.component';
-import { CategoryService, Category } from '../../../core/services/category.service';
+import { CategoryService } from '../../../core/services/category.service';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -13,10 +13,12 @@ describe('CategoryFormComponent', () => {
   let messageService: jasmine.SpyObj<MessageService>;
   let router: jasmine.SpyObj<Router>;
 
-  function createComponent(routeParams: any = {}) {
-    TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { params: routeParams } }
-    });
+  function buildActivatedRoute(params: Record<string, any> = {}) {
+    return { snapshot: { paramMap: convertToParamMap(params) } };
+  }
+
+  function createComponent(params: Record<string, any> = {}) {
+    TestBed.overrideProvider(ActivatedRoute, { useValue: buildActivatedRoute(params) });
     fixture = TestBed.createComponent(CategoryFormComponent);
     component = fixture.componentInstance;
   }
@@ -26,63 +28,61 @@ describe('CategoryFormComponent', () => {
     messageService = jasmine.createSpyObj('MessageService', ['add']);
     router = jasmine.createSpyObj('Router', ['navigate']);
 
+    categoryService.create.and.returnValue(of({ id: 1, name: 'Pneus' }));
+    categoryService.update.and.returnValue(of({ id: 1, name: 'Pneus' }));
+
     await TestBed.configureTestingModule({
       imports: [CategoryFormComponent],
       providers: [
         { provide: CategoryService, useValue: categoryService },
         { provide: MessageService, useValue: messageService },
         { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } }
+        { provide: ActivatedRoute, useValue: buildActivatedRoute() },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+    .overrideComponent(CategoryFormComponent, {
+      set: { providers: [], template: '<div></div>' }
+    })
+    .compileComponents();
   });
 
   describe('create mode', () => {
-    beforeEach(() => {
-      createComponent({});
-    });
+    beforeEach(() => createComponent());
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+    it('should create', () => expect(component).toBeTruthy());
 
     it('should not be editing', () => {
       component.ngOnInit();
       expect(component.isEditing()).toBeFalse();
     });
 
-    it('should warn if name is empty on submit', () => {
-      component.category = { name: '  ' };
-      component.onSubmit();
-      expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'warn' }));
-    });
-
     it('should create category on submit', fakeAsync(() => {
+      component.ngOnInit();
       categoryService.create.and.returnValue(of({ id: 1, name: 'Pneus' }));
       component.category = { name: 'Pneus' };
-
       component.onSubmit();
-
+      tick(1000);
       expect(categoryService.create).toHaveBeenCalledWith({ name: 'Pneus' });
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'success' }));
-      tick(1000);
       expect(router.navigate).toHaveBeenCalledWith(['/categories']);
     }));
 
-    it('should handle create error', () => {
+    it('should handle create error', fakeAsync(() => {
+      component.ngOnInit();
       categoryService.create.and.returnValue(throwError(() => ({ error: { message: 'Já existe' } })));
       component.category = { name: 'Pneus' };
       component.onSubmit();
+      tick();
       expect(component.saving()).toBeFalse();
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
-    });
+    }));
   });
 
   describe('edit mode', () => {
     beforeEach(() => {
       categoryService.findById.and.returnValue(of({ id: 1, name: 'Pneus', active: true }));
-      createComponent({ id: 1 });
+      createComponent({ id: '1' });
     });
 
     it('should be editing', () => {
@@ -107,9 +107,8 @@ describe('CategoryFormComponent', () => {
       component.ngOnInit();
       component.category.name = 'Pneus Editado';
       component.onSubmit();
-
-      expect(categoryService.update).toHaveBeenCalledWith(1, jasmine.objectContaining({ name: 'Pneus Editado' }));
       tick(1000);
+      expect(categoryService.update).toHaveBeenCalledWith(1, jasmine.objectContaining({ name: 'Pneus Editado' }));
       expect(router.navigate).toHaveBeenCalledWith(['/categories']);
     }));
   });

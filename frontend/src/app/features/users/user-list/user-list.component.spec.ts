@@ -3,6 +3,7 @@ import { UserListComponent } from './user-list.component';
 import { UserService, User } from '../../../core/services/user.service';
 import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -24,19 +25,25 @@ describe('UserListComponent', () => {
     messageService = jasmine.createSpyObj('MessageService', ['add']);
 
     userService.findAll.and.returnValue(of(mockPage));
-    userService.toggleStatus.and.returnValue(
-      of({ id: 1, name: 'Admin', email: 'a@a.com', role: 'ADMIN' as const, active: false })
-    );
+    userService.toggleStatus.and.returnValue(of({ id: 1, name: 'Admin', email: 'a@a.com', role: 'ADMIN' as const, active: false }));
 
     await TestBed.configureTestingModule({
       imports: [UserListComponent],
       providers: [
+        provideRouter([]),
         { provide: UserService, useValue: userService },
         { provide: ConfirmationService, useValue: confirmationService },
         { provide: MessageService, useValue: messageService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(UserListComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;

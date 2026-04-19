@@ -3,6 +3,7 @@ import { VehicleListComponent } from './vehicle-list.component';
 import { VehicleService, Vehicle } from '../../../core/services/vehicle.service';
 import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -29,12 +30,20 @@ describe('VehicleListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [VehicleListComponent],
       providers: [
+        provideRouter([]),
         { provide: VehicleService, useValue: vehicleService },
         { provide: ConfirmationService, useValue: confirmationService },
         { provide: MessageService, useValue: messageService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(VehicleListComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(VehicleListComponent);
     component = fixture.componentInstance;

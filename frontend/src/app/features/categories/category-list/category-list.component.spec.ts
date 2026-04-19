@@ -3,6 +3,7 @@ import { CategoryListComponent } from './category-list.component';
 import { CategoryService, Category } from '../../../core/services/category.service';
 import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -16,9 +17,9 @@ describe('CategoryListComponent', () => {
   const mockPage: Page<Category> = {
     content: [
       { id: 1, name: 'Pneus', active: true },
-      { id: 2, name: 'Óleos', active: false }
+      { id: 2, name: 'Óleos', active: false },
     ],
-    totalElements: 2, totalPages: 1, size: 20, number: 0
+    totalElements: 2, totalPages: 1, size: 20, number: 0,
   };
 
   beforeEach(async () => {
@@ -32,12 +33,20 @@ describe('CategoryListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CategoryListComponent],
       providers: [
+        provideRouter([]),
         { provide: CategoryService, useValue: categoryService },
         { provide: ConfirmationService, useValue: confirmationService },
         { provide: MessageService, useValue: messageService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(CategoryListComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(CategoryListComponent);
     component = fixture.componentInstance;
