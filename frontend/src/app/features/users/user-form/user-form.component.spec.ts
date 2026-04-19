@@ -5,8 +5,8 @@ import {
   tick,
 } from "@angular/core/testing";
 import { UserFormComponent } from "./user-form.component";
-import { UserService, User } from "../../../core/services/user.service";
-import { AuthService } from "../../../core/services/auth.service";
+import { UserService } from "../../../core/services/user.service";
+import { AuthService, UserRole } from "../../../core/services/auth.service";
 import { MessageService } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 import { of, throwError } from "rxjs";
@@ -24,7 +24,7 @@ describe("UserFormComponent", () => {
     id: 1,
     name: "Admin",
     email: "admin@test.com",
-    role: "ADMIN" as const,
+    role: "ADMIN" as UserRole,
     active: true,
   };
 
@@ -92,7 +92,7 @@ describe("UserFormComponent", () => {
           id: 2,
           name: "Novo",
           email: "n@n.com",
-          role: "OPERADOR" as const,
+          role: "OPERADOR" as UserRole,
         }),
       );
       component.ngOnInit();
@@ -132,7 +132,7 @@ describe("UserFormComponent", () => {
           id: 2,
           name: "Operador",
           email: "op@test.com",
-          role: "OPERADOR" as const,
+          role: "OPERADOR" as UserRole,
           active: true,
         }),
       );
@@ -165,7 +165,7 @@ describe("UserFormComponent", () => {
       id: 5,
       name: "Op",
       email: "op@test.com",
-      role: "OPERADOR" as const,
+      role: "OPERADOR" as UserRole,
       active: true,
     };
 

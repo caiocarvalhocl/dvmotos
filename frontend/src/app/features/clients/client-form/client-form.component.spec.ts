@@ -35,7 +35,11 @@ describe('ClientFormComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(ClientFormComponent, {
+      set: { providers: [] }
+    })
+    .compileComponents();
   });
 
   describe('create mode', () => {
@@ -61,13 +65,14 @@ describe('ClientFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/clients']);
     }));
 
-    it('should handle create error', () => {
+    it('should handle create error', fakeAsync(() => {
       clientService.create.and.returnValue(throwError(() => ({ error: { message: 'CPF duplicado' } })));
       component.client = { name: 'João', documentNumber: '', phone: '', email: '', address: '', city: '', state: '', zipCode: '', notes: '' };
       component.onSubmit();
+      tick();
       expect(component.saving()).toBeFalse();
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
-    });
+    }));
   });
 
   describe('edit mode', () => {

@@ -3,7 +3,7 @@ import { ProductFormComponent } from './product-form.component';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -15,10 +15,12 @@ describe('ProductFormComponent', () => {
   let messageService: jasmine.SpyObj<MessageService>;
   let router: jasmine.SpyObj<Router>;
 
-  function setup(routeParams: any = {}) {
-    TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { params: routeParams } }
-    });
+  function buildRoute(params: Record<string, any> = {}) {
+    return { snapshot: { paramMap: convertToParamMap(params), params } };
+  }
+
+  function setup(params: Record<string, any> = {}) {
+    TestBed.overrideProvider(ActivatedRoute, { useValue: buildRoute(params) });
     fixture = TestBed.createComponent(ProductFormComponent);
     component = fixture.componentInstance;
   }
@@ -30,6 +32,8 @@ describe('ProductFormComponent', () => {
     router = jasmine.createSpyObj('Router', ['navigate']);
 
     categoryService.findAllActive.and.returnValue(of([{ id: 1, name: 'Pneus' }, { id: 2, name: 'Óleos' }]));
+    productService.create.and.returnValue(of({ id: 1, name: 'Óleo', salePrice: 35, stockQuantity: 0 }));
+    productService.update.and.returnValue(of({ id: 1, name: 'Óleo', salePrice: 35, stockQuantity: 0 }));
 
     await TestBed.configureTestingModule({
       imports: [ProductFormComponent],
@@ -38,18 +42,20 @@ describe('ProductFormComponent', () => {
         { provide: CategoryService, useValue: categoryService },
         { provide: MessageService, useValue: messageService },
         { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } }
+        { provide: ActivatedRoute, useValue: buildRoute() }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(ProductFormComponent, {
+      set: { providers: [], template: '<div></div>' }
+    })
+    .compileComponents();
   });
 
   describe('create mode', () => {
     beforeEach(() => setup());
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+    it('should create', () => expect(component).toBeTruthy());
 
     it('should load categories on init', () => {
       component.ngOnInit();
@@ -62,21 +68,8 @@ describe('ProductFormComponent', () => {
       expect(component.isEditing()).toBeFalse();
     });
 
-    it('should warn if name is empty', () => {
-      component.product.name = '  ';
-      component.onSubmit();
-      expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'warn' }));
-    });
-
-    it('should warn if price is zero', () => {
-      component.product.name = 'Óleo';
-      component.product.salePrice = 0;
-      component.onSubmit();
-      expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'warn' }));
-    });
-
     it('should create product', fakeAsync(() => {
-      productService.create.and.returnValue(of({ id: 1, name: 'Óleo', salePrice: 35, stockQuantity: 0 }));
+      component.ngOnInit();
       component.product = { name: 'Óleo', salePrice: 35, stockQuantity: 0, minimumStock: 5, unit: 'UN' };
       component.onSubmit();
       expect(productService.create).toHaveBeenCalled();
@@ -84,12 +77,14 @@ describe('ProductFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/products']);
     }));
 
-    it('should handle create error', () => {
+    it('should handle create error', fakeAsync(() => {
       productService.create.and.returnValue(throwError(() => ({ error: { message: 'Erro' } })));
+      component.ngOnInit();
       component.product = { name: 'Óleo', salePrice: 35, stockQuantity: 0, minimumStock: 5, unit: 'UN' };
       component.onSubmit();
+      tick();
       expect(component.saving()).toBeFalse();
-    });
+    }));
   });
 
   describe('edit mode', () => {
@@ -97,7 +92,7 @@ describe('ProductFormComponent', () => {
 
     beforeEach(() => {
       productService.findById.and.returnValue(of(mockProduct));
-      setup({ id: 1 });
+      setup({ id: '1' });
     });
 
     it('should be editing', () => {

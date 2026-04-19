@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StockMovementComponent } from './stock-movement.component';
 import { ProductService } from '../../../core/services/product.service';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -19,10 +19,12 @@ describe('StockMovementComponent', () => {
     totalElements: 1, totalPages: 1, size: 10, number: 0
   };
 
-  function setup(routeParams: any = {}) {
-    TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { params: routeParams } }
-    });
+  function buildRoute(params: Record<string, any> = {}) {
+    return { snapshot: { paramMap: convertToParamMap(params), params } };
+  }
+
+  function setup(params: Record<string, any> = {}) {
+    TestBed.overrideProvider(ActivatedRoute, { useValue: buildRoute(params) });
     fixture = TestBed.createComponent(StockMovementComponent);
     component = fixture.componentInstance;
   }
@@ -39,21 +41,27 @@ describe('StockMovementComponent', () => {
     await TestBed.configureTestingModule({
       imports: [StockMovementComponent],
       providers: [
+        provideRouter([]),
         { provide: ProductService, useValue: productService },
         { provide: MessageService, useValue: messageService },
         { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } }
+        { provide: ActivatedRoute, useValue: buildRoute() }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(StockMovementComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
   });
 
   describe('with product id', () => {
-    beforeEach(() => setup({ id: 1 }));
+    beforeEach(() => setup({ id: '1' }));
 
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
+    it('should create', () => expect(component).toBeTruthy());
 
     it('should load product and movements on init', () => {
       component.ngOnInit();
@@ -82,7 +90,6 @@ describe('StockMovementComponent', () => {
       component.quantity = 5;
       component.reason = 'Compra';
       component.onSubmit();
-
       expect(productService.addStockMovement).toHaveBeenCalledWith(1, { type: 'IN', quantity: 5, reason: 'Compra' });
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'success' }));
       expect(component.quantity).toBe(1);
@@ -109,7 +116,7 @@ describe('StockMovementComponent', () => {
   });
 
   describe('helper methods', () => {
-    beforeEach(() => setup({ id: 1 }));
+    beforeEach(() => setup({ id: '1' }));
 
     it('should return correct type severity', () => {
       expect(component.getTypeSeverity('IN')).toBe('success');

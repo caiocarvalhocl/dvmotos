@@ -16,10 +16,7 @@ describe('VehicleFormComponent', () => {
   let router: jasmine.SpyObj<Router>;
 
   const mockClients = {
-    content: [
-      { id: 1, name: 'João' },
-      { id: 2, name: 'Maria' }
-    ],
+    content: [{ id: 1, name: 'João' }, { id: 2, name: 'Maria' }],
     totalElements: 2, totalPages: 1, size: 100, number: 0
   };
 
@@ -49,7 +46,9 @@ describe('VehicleFormComponent', () => {
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(VehicleFormComponent, { set: { providers: [] } })
+    .compileComponents();
   });
 
   describe('create mode', () => {
@@ -86,13 +85,14 @@ describe('VehicleFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/vehicles']);
     }));
 
-    it('should handle create error', () => {
+    it('should handle create error', fakeAsync(() => {
       vehicleService.create.and.returnValue(throwError(() => ({ error: { message: 'Placa duplicada' } })));
       component.vehicle = { clientId: 1, licensePlate: 'ABC-1234', brand: 'Honda', model: 'CG 160', year: '', color: '', chassisNumber: '', notes: '' };
       component.onSubmit();
+      tick();
       expect(component.saving()).toBeFalse();
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
-    });
+    }));
   });
 
   describe('edit mode', () => {

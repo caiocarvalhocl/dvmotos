@@ -3,6 +3,7 @@ import { ProductListComponent } from './product-list.component';
 import { ProductService, Product } from '../../../core/services/product.service';
 import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -30,12 +31,20 @@ describe('ProductListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProductListComponent],
       providers: [
+        provideRouter([]),
         { provide: ProductService, useValue: productService },
         { provide: ConfirmationService, useValue: confirmationService },
         { provide: MessageService, useValue: messageService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(ProductListComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(ProductListComponent);
     component = fixture.componentInstance;
@@ -99,11 +108,9 @@ describe('ProductListComponent', () => {
     it('should return danger for lowStock', () => {
       expect(component.getStockSeverity({ name: 'X', salePrice: 1, stockQuantity: 2, minimumStock: 10, lowStock: true })).toBe('danger');
     });
-
     it('should return warning for near minimum', () => {
       expect(component.getStockSeverity({ name: 'X', salePrice: 1, stockQuantity: 15, minimumStock: 10, lowStock: false })).toBe('warning');
     });
-
     it('should return success for healthy stock', () => {
       expect(component.getStockSeverity({ name: 'X', salePrice: 1, stockQuantity: 100, minimumStock: 10, lowStock: false })).toBe('success');
     });

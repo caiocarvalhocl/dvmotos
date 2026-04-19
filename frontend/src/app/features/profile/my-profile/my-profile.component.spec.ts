@@ -4,8 +4,8 @@ import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { of, throwError, signal } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { of, throwError } from 'rxjs';
+import { signal, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('MyProfileComponent', () => {
   let component: MyProfileComponent;
@@ -14,7 +14,9 @@ describe('MyProfileComponent', () => {
   let messageService: jasmine.SpyObj<MessageService>;
   let authServiceMock: any;
 
-  const mockUser = { id: 1, name: 'João Silva', email: 'joao@test.com', role: 'ADMIN' as const, active: true };
+  const mockUser = {
+    id: 1, name: 'João Silva', email: 'joao@test.com', role: 'ADMIN' as const, active: true,
+  };
 
   beforeEach(async () => {
     userService = jasmine.createSpyObj('UserService', ['getMyProfile', 'updateMyProfile', 'changeMyPassword']);
@@ -22,7 +24,7 @@ describe('MyProfileComponent', () => {
     authServiceMock = {
       currentUser: jasmine.createSpy('currentUser').and.returnValue(mockUser),
       isAdmin: signal(true),
-      isAuthenticated: signal(true)
+      isAuthenticated: signal(true),
     };
 
     userService.getMyProfile.and.returnValue(of(mockUser));
@@ -33,18 +35,23 @@ describe('MyProfileComponent', () => {
         { provide: UserService, useValue: userService },
         { provide: AuthService, useValue: authServiceMock },
         { provide: MessageService, useValue: messageService },
-        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) }
+        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+    .overrideComponent(MyProfileComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(MyProfileComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should create', () => expect(component).toBeTruthy());
 
   it('should load profile on init', () => {
     component.ngOnInit();
@@ -71,6 +78,8 @@ describe('MyProfileComponent', () => {
 
     it('should update profile', () => {
       userService.updateMyProfile.and.returnValue(of(mockUser));
+      // Ensure user data is set (ngOnInit populates it via getMyProfile)
+      component.user = { name: 'João Silva', email: 'joao@test.com', role: 'ADMIN' };
       component.onSaveProfile();
       expect(userService.updateMyProfile).toHaveBeenCalledWith({ name: 'João Silva', email: 'joao@test.com' });
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'success' }));
@@ -79,6 +88,8 @@ describe('MyProfileComponent', () => {
 
     it('should handle update error', () => {
       userService.updateMyProfile.and.returnValue(throwError(() => ({ error: { message: 'Email duplicado' } })));
+      // Ensure user data is set so validation passes
+      component.user = { name: 'João Silva', email: 'joao@test.com', role: 'ADMIN' };
       component.onSaveProfile();
       expect(component.savingProfile()).toBeFalse();
       expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({ severity: 'error' }));
@@ -115,7 +126,6 @@ describe('MyProfileComponent', () => {
       component.newPassword = 'new123';
       component.confirmPassword = 'new123';
       component.onChangePassword();
-
       expect(userService.changeMyPassword).toHaveBeenCalledWith({ currentPassword: 'old123', newPassword: 'new123' });
       expect(component.currentPassword).toBe('');
       expect(component.newPassword).toBe('');

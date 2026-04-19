@@ -3,6 +3,7 @@ import { ClientListComponent } from './client-list.component';
 import { ClientService, Client } from '../../../core/services/client.service';
 import { Page } from '@shared/types/Page';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -29,12 +30,20 @@ describe('ClientListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ClientListComponent],
       providers: [
+        provideRouter([]),
         { provide: ClientService, useValue: clientService },
         { provide: ConfirmationService, useValue: confirmationService },
         { provide: MessageService, useValue: messageService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
+    })
+    .overrideComponent(ClientListComponent, {
+      set: {
+        providers: [],
+        template: '<div></div>'
+      }
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(ClientListComponent);
     component = fixture.componentInstance;
