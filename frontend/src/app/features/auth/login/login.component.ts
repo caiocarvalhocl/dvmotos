@@ -30,6 +30,7 @@ export class LoginComponent {
 
   loading = signal(false);
   error = signal<string | null>(null);
+  year = new Date().getFullYear();
 
   constructor(
     private authService: AuthService,

@@ -67,20 +67,23 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: 1.35rem;
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 12px;
+  border-radius: 16px;
   text-decoration: none;
   color: var(--text-color);
+  box-shadow:
+    0 1px 2px 0 rgb(16 24 40 / 0.04),
+    0 1px 3px 0 rgb(16 24 40 / 0.06);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease,
     border-color 0.15s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(16, 24, 40, 0.1);
     border-color: var(--primary-color);
   }
 
@@ -163,22 +166,27 @@
 }
 
 .stat-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem;
+  padding: 1.35rem;
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 12px;
+  border-radius: 16px;
   text-decoration: none;
   color: var(--text-color);
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px 0 rgb(16 24 40 / 0.04),
+    0 1px 3px 0 rgb(16 24 40 / 0.06);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(16, 24, 40, 0.1);
   }
 
   .stat-icon {

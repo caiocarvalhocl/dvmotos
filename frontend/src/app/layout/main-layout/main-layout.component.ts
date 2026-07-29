@@ -1,10 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
-import { MenubarModule } from "primeng/menubar";
 import { ButtonModule } from "primeng/button";
 import { AvatarModule } from "primeng/avatar";
 import { MenuModule } from "primeng/menu";
+import { TooltipModule } from "primeng/tooltip";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "../../core/services/auth.service";
 import { TagModule } from "primeng/tag";
@@ -18,15 +18,15 @@ import { TagModule } from "primeng/tag";
     RouterLink,
     TagModule,
     RouterLinkActive,
-    MenubarModule,
     ButtonModule,
     AvatarModule,
     MenuModule,
+    TooltipModule,
   ],
   templateUrl: "./main-layout.component.html",
   styleUrls: ["./main-layout.component.scss"],
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit {
   menuItems: MenuItem[] = [
     { label: "Dashboard", icon: "pi pi-home", routerLink: "/dashboard" },
     { label: "Clientes", icon: "pi pi-users", routerLink: "/clients" },
@@ -46,14 +46,35 @@ export class MainLayoutComponent {
     },
   ];
 
-  menuOpen = false;
+  // Desktop: sidebar recolhida (apenas ícones). Mobile: drawer aberto/fechado.
+  collapsed = false;
+  mobileOpen = false;
+  isMobile = false;
 
-  toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
+  constructor(public authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.updateViewport();
   }
 
-  closeMenu(): void {
-    this.menuOpen = false;
+  @HostListener("window:resize")
+  updateViewport(): void {
+    this.isMobile = window.innerWidth <= 992;
+    if (!this.isMobile) {
+      this.mobileOpen = false;
+    }
+  }
+
+  toggleSidebar(): void {
+    if (this.isMobile) {
+      this.mobileOpen = !this.mobileOpen;
+    } else {
+      this.collapsed = !this.collapsed;
+    }
+  }
+
+  closeMobile(): void {
+    this.mobileOpen = false;
   }
 
   userMenuItems: MenuItem[] = [
@@ -65,6 +86,4 @@ export class MainLayoutComponent {
       command: () => this.authService.logout(),
     },
   ];
-
-  constructor(public authService: AuthService) {}
 }

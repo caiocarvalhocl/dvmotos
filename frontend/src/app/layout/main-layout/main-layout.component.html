@@ -1,43 +1,116 @@
-<div class="layout-wrapper">
-  <header class="layout-topbar">
-    <div class="topbar-start">
-      <a routerLink="/dashboard" class="logo">
-        <span class="logo-text">DV Motos</span>
+<div
+  class="layout-wrapper"
+  [class.sidebar-collapsed]="collapsed && !isMobile"
+  [class.sidebar-mobile-open]="mobileOpen"
+>
+  <!-- SIDEBAR -->
+  <aside class="app-sidebar">
+    <div class="sidebar-brand">
+      <a routerLink="/dashboard" class="brand-link" (click)="closeMobile()">
+        <span class="brand-mark"><i class="pi pi-wrench"></i></span>
+        <span class="brand-text">
+          <span class="brand-dv">DV</span><span class="brand-motos">Motos</span>
+        </span>
       </a>
+      <button
+        class="sidebar-collapse-btn"
+        type="button"
+        (click)="toggleSidebar()"
+        aria-label="Recolher menu"
+      >
+        <i class="pi" [ngClass]="isMobile ? 'pi-times' : 'pi-angle-left'"></i>
+      </button>
     </div>
 
-    <nav class="topbar-menu" [class.menu-open]="menuOpen">
-      @for (item of menuItems; track item.label) {
-        @if (item.visible !== false) {
-          <a
-            [routerLink]="item.routerLink"
-            routerLinkActive="active"
-            class="menu-item"
-            (click)="closeMenu()"
-          >
-            <i [class]="item.icon"></i>
-            <span>{{ item.label }}</span>
-          </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Menu</span>
+      <ul>
+        @for (item of menuItems; track item.label) {
+          @if (item.visible !== false) {
+            <li>
+              <a
+                [routerLink]="item.routerLink"
+                routerLinkActive="active"
+                class="nav-item"
+                (click)="closeMobile()"
+                [pTooltip]="collapsed && !isMobile ? item.label : ''"
+                tooltipPosition="right"
+              >
+                <i [class]="item.icon"></i>
+                <span class="nav-label">{{ item.label }}</span>
+              </a>
+            </li>
+          }
         }
-      }
+      </ul>
     </nav>
 
-    @if (menuOpen) {
-      <div class="menu-overlay" (click)="closeMenu()"></div>
-    }
-
-    <div class="topbar-end">
-      <div class="user-info">
-        <span class="user-name">{{ authService.currentUser()?.name }}</span>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" (click)="menu.toggle($event)">
         <p-avatar
           [label]="authService.currentUser()?.name?.charAt(0)"
           shape="circle"
-          (click)="menu.toggle($event)"
-          class="cursor-pointer"
+          styleClass="sidebar-avatar"
         ></p-avatar>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">{{
+            authService.currentUser()?.name
+          }}</span>
+          <span class="sidebar-user-email">{{
+            authService.currentUser()?.email
+          }}</span>
+        </div>
+        <i class="pi pi-ellipsis-v"></i>
+      </div>
 
+      <p-menu
+        #menu
+        [model]="userMenuItems"
+        [popup]="true"
+        styleClass="user-menu"
+      >
+        <ng-template pTemplate="start">
+          <div class="user-menu-header">
+            <span class="user-menu-name">{{
+              authService.currentUser()?.name
+            }}</span>
+            <span class="user-menu-email">{{
+              authService.currentUser()?.email
+            }}</span>
+          </div>
+        </ng-template>
+      </p-menu>
+    </div>
+  </aside>
+
+  <!-- OVERLAY (mobile) -->
+  <div class="sidebar-overlay" (click)="closeMobile()"></div>
+
+  <!-- MAIN COLUMN -->
+  <div class="layout-content">
+    <header class="layout-topbar">
+      <button
+        class="topbar-toggle"
+        type="button"
+        (click)="toggleSidebar()"
+        aria-label="Abrir menu"
+      >
+        <i class="pi pi-bars"></i>
+      </button>
+
+      <div class="topbar-end">
+        <div class="topbar-user" (click)="topMenu.toggle($event)">
+          <span class="topbar-user-name">{{
+            authService.currentUser()?.name
+          }}</span>
+          <p-avatar
+            [label]="authService.currentUser()?.name?.charAt(0)"
+            shape="circle"
+            styleClass="topbar-avatar"
+          ></p-avatar>
+        </div>
         <p-menu
-          #menu
+          #topMenu
           [model]="userMenuItems"
           [popup]="true"
           styleClass="user-menu"
@@ -53,26 +126,11 @@
             </div>
           </ng-template>
         </p-menu>
-
-        <button
-          pButton
-          icon="pi pi-chevron-down"
-          class="p-button-text p-button-sm"
-          (click)="menu.toggle($event)"
-        ></button>
       </div>
+    </header>
 
-      <button
-        class="hamburger"
-        (click)="toggleMenu()"
-        [class.is-active]="menuOpen"
-      >
-        <i class="pi" [ngClass]="menuOpen ? 'pi-times' : 'pi-bars'"></i>
-      </button>
-    </div>
-  </header>
-
-  <main class="layout-main">
-    <router-outlet></router-outlet>
-  </main>
+    <main class="layout-main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
