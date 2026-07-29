@@ -46,7 +46,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <div class="sidebar-user" (click)="menu.toggle($event)">
+      <div class="sidebar-user" (click)="toggleSidebarMenu($event)">
         <p-avatar
           [label]="authService.currentUser()?.name?.charAt(0)"
           shape="circle"
@@ -99,7 +99,7 @@
       </button>
 
       <div class="topbar-end">
-        <div class="topbar-user" (click)="topMenu.toggle($event)">
+        <div class="topbar-user">
           <span class="topbar-user-name">{{
             authService.currentUser()?.name
           }}</span>
@@ -109,23 +109,6 @@
             styleClass="topbar-avatar"
           ></p-avatar>
         </div>
-        <p-menu
-          #topMenu
-          [model]="userMenuItems"
-          [popup]="true"
-          styleClass="user-menu"
-        >
-          <ng-template pTemplate="start">
-            <div class="user-menu-header">
-              <span class="user-menu-name">{{
-                authService.currentUser()?.name
-              }}</span>
-              <span class="user-menu-email">{{
-                authService.currentUser()?.email
-              }}</span>
-            </div>
-          </ng-template>
-        </p-menu>
       </div>
     </header>
 

@@ -1,9 +1,9 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
 import { ButtonModule } from "primeng/button";
 import { AvatarModule } from "primeng/avatar";
-import { MenuModule } from "primeng/menu";
+import { MenuModule, Menu } from "primeng/menu";
 import { TooltipModule } from "primeng/tooltip";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "../../core/services/auth.service";
@@ -27,6 +27,8 @@ import { TagModule } from "primeng/tag";
   styleUrls: ["./main-layout.component.scss"],
 })
 export class MainLayoutComponent implements OnInit {
+  @ViewChild("menu") sidebarMenu!: Menu;
+
   menuItems: MenuItem[] = [
     { label: "Dashboard", icon: "pi pi-home", routerLink: "/dashboard" },
     { label: "Clientes", icon: "pi pi-users", routerLink: "/clients" },
@@ -51,7 +53,10 @@ export class MainLayoutComponent implements OnInit {
   mobileOpen = false;
   isMobile = false;
 
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.updateViewport();
@@ -75,6 +80,14 @@ export class MainLayoutComponent implements OnInit {
 
   closeMobile(): void {
     this.mobileOpen = false;
+  }
+
+  toggleSidebarMenu(event: Event): void {
+    if (this.collapsed && !this.isMobile) {
+      this.collapsed = false;
+      this.changeDetectorRef.detectChanges();
+    }
+    this.sidebarMenu.toggle(event);
   }
 
   userMenuItems: MenuItem[] = [

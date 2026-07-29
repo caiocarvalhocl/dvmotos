@@ -25,7 +25,9 @@ $topbar-height: 64px;
   background: $primary-900;
   color: $sidebar-text;
   z-index: 1100;
-  transition: width 0.22s ease, transform 0.22s ease;
+  transition:
+    width 0.22s ease,
+    transform 0.22s ease;
   overflow: hidden;
 }
 
@@ -135,7 +137,9 @@ $topbar-height: 64px;
     font-size: 0.9rem;
     white-space: nowrap;
     position: relative;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
 
     i {
       font-size: 1.05rem;
@@ -251,6 +255,7 @@ $topbar-height: 64px;
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
+  overflow: visible;
 
   .topbar-toggle {
     background: none;
@@ -283,12 +288,6 @@ $topbar-height: 64px;
     gap: 0.6rem;
     padding: 0.3rem 0.35rem 0.3rem 0.85rem;
     border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.15s;
-
-    &:hover {
-      background: var(--surface-hover);
-    }
 
     .topbar-user-name {
       font-weight: 600;
@@ -397,6 +396,16 @@ $topbar-height: 64px;
 // =============================================
 :host ::ng-deep .user-menu {
   min-width: 230px;
+
+  .p-menuitem-link {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .p-menuitem-icon {
+    margin-right: 0.5rem;
+  }
 }
 
 .user-menu-header {
