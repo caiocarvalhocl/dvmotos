@@ -1,74 +1,100 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="logo">
-        <div class="logo-badge">
-          <i class="pi pi-car"></i>
-        </div>
-      </div>
-      <h1>
-        <span class="text-dv">DV</span>
-        <span class="text-motos">MOTOS</span>
-      </h1>
-      <p>Sistema de Gestão</p>
-    </div>
-
-    <form (ngSubmit)="onSubmit()" class="login-form">
-      @if (error()) {
-        <p-message
-          severity="error"
-          [text]="error()!"
-          styleClass="mb-3 w-full"
-        ></p-message>
-      }
-
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <span class="p-input-icon-left w-full">
-          <i class="pi pi-envelope"></i>
-          <input
-            pInputText
-            id="email"
-            type="email"
-            [(ngModel)]="credentials.email"
-            name="email"
-            placeholder="seu@email.com"
-            class="w-full"
-            required
-          />
+<div class="login-layout">
+  <!-- BRAND PANEL -->
+  <aside class="login-brand">
+    <div class="brand-top">
+      <div class="brand-logo">
+        <span class="brand-mark"><i class="pi pi-wrench"></i></span>
+        <span class="brand-name">
+          <span class="brand-dv">DV</span><span class="brand-motos">Motos</span>
         </span>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <p-password
-          id="password"
-          [(ngModel)]="credentials.password"
-          name="password"
-          [feedback]="false"
-          [toggleMask]="true"
-          placeholder="Sua senha"
-          styleClass="w-full"
-          inputStyleClass="w-full"
-          required
-        >
-        </p-password>
+    <div class="brand-center">
+      <h2>Gestão completa da sua oficina</h2>
+      <p>
+        Clientes, veículos, ordens de serviço e estoque em um só lugar. Rápido,
+        organizado e sob controle.
+      </p>
+
+      <ul class="brand-features">
+        <li><i class="pi pi-check-circle"></i> Controle de ordens de serviço</li>
+        <li><i class="pi pi-check-circle"></i> Gestão de estoque e produtos</li>
+        <li><i class="pi pi-check-circle"></i> Cadastro de clientes e veículos</li>
+      </ul>
+    </div>
+
+    <div class="brand-bottom">
+      <small>&copy; {{ year }} DV Motos &middot; Sistema de Gestão</small>
+    </div>
+  </aside>
+
+  <!-- FORM PANEL -->
+  <main class="login-panel">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-header-mark">
+          <i class="pi pi-wrench"></i>
+        </div>
+        <h1>Bem-vindo de volta</h1>
+        <p>Entre com suas credenciais para acessar o sistema.</p>
       </div>
 
-      <button
-        pButton
-        type="submit"
-        label="Entrar"
-        icon="pi pi-sign-in"
-        class="w-full btn-login"
-        [loading]="loading()"
-      ></button>
-    </form>
+      <form (ngSubmit)="onSubmit()" class="login-form">
+        @if (error()) {
+          <p-message
+            severity="error"
+            [text]="error()!"
+            styleClass="mb-3 w-full"
+          ></p-message>
+        }
 
-    <div class="login-footer">
-      <small>Acesso restrito aos funcionários</small>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              [(ngModel)]="credentials.email"
+              name="email"
+              placeholder="seu@email.com"
+              class="w-full"
+              required
+            />
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <p-password
+            id="password"
+            [(ngModel)]="credentials.password"
+            name="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            placeholder="Sua senha"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            required
+          >
+          </p-password>
+        </div>
+
+        <button
+          pButton
+          type="submit"
+          label="Entrar"
+          icon="pi pi-sign-in"
+          class="w-full btn-login"
+          [loading]="loading()"
+        ></button>
+      </form>
+
+      <div class="login-footer">
+        <small><i class="pi pi-lock"></i> Acesso restrito aos funcionários</small>
+      </div>
     </div>
-  </div>
-
-  <div class="login-bg-decoration"></div>
+  </main>
 </div>
