@@ -316,7 +316,7 @@ INSERT INTO service_order_items (service_order_id, type, product_id, description
 (1, 'SERVICE', NULL, 'Mão de obra troca de óleo', 1, 50.00, 50.00),
 (1, 'SERVICE', NULL, 'Limpeza geral', 1, 30.00, 30.00),
 (1, 'PART', 1, 'Filtro de Óleo Honda', 1, 35.00, 35.00),
-(1, 'PART', 36, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
+(1, 'PART', 38, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
 
 -- OS 2 - Pneu e revisão
 (2, 'SERVICE', NULL, 'Troca de pneu traseiro', 1, 50.00, 50.00),
@@ -328,7 +328,7 @@ INSERT INTO service_order_items (service_order_id, type, product_id, description
 (3, 'SERVICE', NULL, 'Mão de obra troca de óleo', 1, 50.00, 50.00),
 (3, 'SERVICE', NULL, 'Troca de pastilhas', 1, 30.00, 30.00),
 (3, 'PART', 1, 'Filtro de Óleo Honda', 1, 35.00, 35.00),
-(3, 'PART', 36, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
+(3, 'PART', 38, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
 (3, 'PART', 11, 'Pastilha de Freio Dianteira', 1, 48.00, 48.00),
 
 -- OS 4 - Revisão completa + kit relação
@@ -340,7 +340,7 @@ INSERT INTO service_order_items (service_order_id, type, product_id, description
 (5, 'SERVICE', NULL, 'Mão de obra troca de óleo', 1, 50.00, 50.00),
 (5, 'SERVICE', NULL, 'Verificação geral', 1, 30.00, 30.00),
 (5, 'PART', 1, 'Filtro de Óleo Honda', 1, 35.00, 35.00),
-(5, 'PART', 36, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
+(5, 'PART', 38, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
 
 -- OS 6 - Revisão completa motoboy
 (6, 'SERVICE', NULL, 'Revisão completa', 1, 200.00, 200.00),
@@ -363,7 +363,7 @@ INSERT INTO service_order_items (service_order_id, type, product_id, description
 -- OS 9 - Em andamento
 (9, 'SERVICE', NULL, 'Mão de obra troca de óleo', 1, 50.00, 50.00),
 (9, 'SERVICE', NULL, 'Lavagem', 1, 30.00, 30.00),
-(9, 'PART', 36, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
+(9, 'PART', 38, 'Óleo Motor 10W30 1L', 1, 48.00, 48.00),
 
 -- OS 10 - Pneus
 (10, 'SERVICE', NULL, 'Troca de pneus', 1, 100.00, 100.00),
@@ -385,22 +385,59 @@ INSERT INTO stock_movements (product_id, type, quantity, previous_quantity, new_
 (6, 'IN', 15, 0, 15, 'Compra fornecedor - NF 12346', NULL, 1, '2025-12-05 14:00:00'),
 (7, 'IN', 12, 0, 12, 'Compra fornecedor - NF 12346', NULL, 1, '2025-12-05 14:00:00'),
 (21, 'IN', 20, 0, 20, 'Compra fornecedor - NF 12347', NULL, 1, '2025-12-10 09:00:00'),
-(36, 'IN', 100, 0, 100, 'Compra fornecedor - NF 12348', NULL, 1, '2025-12-15 11:00:00'),
+(38, 'IN', 100, 0, 100, 'Compra fornecedor - NF 12348', NULL, 1, '2025-12-15 11:00:00'),
 
 -- Saídas por OS (vendas)
 -- Nota: Os valores anteriores aqui são estimativos para validar o schema, já que é seed data.
 (1, 'OUT', 1, 50, 49, 'Venda - OS #1', 1, 1, '2025-12-20 10:45:00'),
-(36, 'OUT', 1, 100, 99, 'Venda - OS #1', 1, 1, '2025-12-20 10:45:00'),
+(38, 'OUT', 1, 100, 99, 'Venda - OS #1', 1, 1, '2025-12-20 10:45:00'),
 (6, 'OUT', 1, 15, 14, 'Venda - OS #2', 2, 1, '2025-12-22 16:30:00'),
 (1, 'OUT', 1, 49, 48, 'Venda - OS #3', 3, 2, '2025-12-28 09:30:00'),
-(36, 'OUT', 1, 99, 98, 'Venda - OS #3', 3, 2, '2025-12-28 09:30:00'),
+(38, 'OUT', 1, 99, 98, 'Venda - OS #3', 3, 2, '2025-12-28 09:30:00'),
 (11, 'OUT', 1, 60, 59, 'Venda - OS #3', 3, 2, '2025-12-28 09:30:00'),
 (21, 'OUT', 1, 20, 19, 'Venda - OS #4', 4, 1, '2026-01-03 14:00:00'),
 (1, 'OUT', 1, 48, 47, 'Venda - OS #5', 5, 2, '2026-01-05 16:00:00'),
-(36, 'OUT', 1, 98, 97, 'Venda - OS #5', 5, 2, '2026-01-05 16:00:00'),
+(38, 'OUT', 1, 98, 97, 'Venda - OS #5', 5, 2, '2026-01-05 16:00:00'),
 (21, 'OUT', 1, 19, 18, 'Venda - OS #6', 6, 1, '2026-01-08 17:00:00'),
 (6, 'OUT', 1, 14, 13, 'Venda - OS #6', 6, 1, '2026-01-08 17:00:00'),
 (7, 'OUT', 1, 12, 11, 'Venda - OS #6', 6, 1, '2026-01-08 17:00:00'),
 
 -- Ajuste de inventário
-(10, 'ADJUSTMENT', -2, 12, 10, 'Ajuste inventário - câmaras danificadas', NULL, 1, '2026-01-02 08:00:00');
+(10, 'ADJUSTMENT', -2, 12, 10, 'Ajuste inventário - câmaras danificadas', NULL, 1, '2026-01-02 08:00:00'),
+
+-- Saídas por OS em andamento (9, 10 e 11), que já tinham itens mas ainda sem baixa de estoque
+(38, 'OUT', 1, 97, 96, 'Venda - OS #9', 9, 1, '2026-01-14 12:00:00'),
+(8, 'OUT', 1, 8, 7, 'Venda - OS #10', 10, 2, '2026-01-14 16:00:00'),
+(21, 'OUT', 1, 18, 17, 'Venda - OS #11', 11, 1, '2026-01-15 17:00:00');
+
+-- 2.9 Novas Ordens de Serviço (adicional)
+INSERT INTO service_orders (client_id, vehicle_id, user_id, status, entry_mileage, services_amount, parts_amount, discount_amount, total_amount, notes, created_at, completed_at) VALUES
+(15, 19, 2, 'COMPLETED', 11750, 100.00, 66.00, 0.00, 166.00, 'Troca de óleo, filtro de combustível e revisão geral.', '2026-01-18 09:00:00', '2026-01-18 10:30:00'),
+(12, 16, 3, 'COMPLETED', 7550, 70.00, 52.00, 0.00, 122.00, 'Troca de pastilhas dianteiras e sangria do sistema de freio.', '2026-01-19 13:30:00', '2026-01-19 15:00:00');
+
+-- 2.10 Itens adicionais (OS aguardando peça + novas OS)
+INSERT INTO service_order_items (service_order_id, type, product_id, description, quantity, unit_price, total_price) VALUES
+-- OS 12 - Aguardando estator (só mão de obra faturada; peça ainda não baixa estoque)
+(12, 'SERVICE', NULL, 'Diagnóstico elétrico - falha no carregamento', 1, 100.00, 100.00),
+(12, 'SERVICE', NULL, 'Mão de obra - troca de estator (aguardando peça)', 1, 300.00, 300.00),
+
+-- OS 13 - Aguardando kit pistão (só mão de obra faturada; peça ainda não baixa estoque)
+(13, 'SERVICE', NULL, 'Diagnóstico de motor - baixa compressão', 1, 100.00, 100.00),
+(13, 'SERVICE', NULL, 'Mão de obra - troca de kit pistão (aguardando peça)', 1, 200.00, 200.00),
+
+-- OS 18 - Troca de óleo, filtro e revisão (Kawasaki Z400)
+(18, 'SERVICE', NULL, 'Troca de óleo e filtro', 1, 60.00, 60.00),
+(18, 'SERVICE', NULL, 'Revisão geral', 1, 40.00, 40.00),
+(18, 'PART', 38, 'Óleo Motor 10W30 Semissintético 1L', 1, 48.00, 48.00),
+(18, 'PART', 5, 'Filtro de Combustível Universal', 1, 18.00, 18.00),
+
+-- OS 19 - Freios (Yamaha Fazer 250)
+(19, 'SERVICE', NULL, 'Troca de pastilhas dianteiras', 1, 40.00, 40.00),
+(19, 'SERVICE', NULL, 'Sangria do sistema de freio', 1, 30.00, 30.00),
+(19, 'PART', 15, 'Fluido de Freio DOT4 500ml', 1, 52.00, 52.00);
+
+-- 2.11 Movimentações de estoque das novas OS (18 e 19)
+INSERT INTO stock_movements (product_id, type, quantity, previous_quantity, new_quantity, reason, service_order_id, user_id, created_at) VALUES
+(38, 'OUT', 1, 96, 95, 'Venda - OS #18', 18, 2, '2026-01-18 10:30:00'),
+(5, 'OUT', 1, 60, 59, 'Venda - OS #18', 18, 2, '2026-01-18 10:30:00'),
+(15, 'OUT', 1, 25, 24, 'Venda - OS #19', 19, 3, '2026-01-19 15:00:00');
