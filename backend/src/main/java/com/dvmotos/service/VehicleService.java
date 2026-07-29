@@ -53,6 +53,7 @@ public class VehicleService {
                         () -> new ResourceNotFoundException("Veículo não encontrado com a placa: " + licensePlate)));
     }
 
+    @Transactional
     public List<VehicleResponse> findByClient(Long clientId) {
         return vehicleRepository.findByClientIdAndActiveTrue(clientId).stream()
                 .map(VehicleResponse::fromEntity).collect(Collectors.toList());
