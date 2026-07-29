@@ -144,11 +144,11 @@ CREATE INDEX idx_stock_product ON stock_movements(product_id);
 -- 2.1 Usuários (Admin + Operadores)
 INSERT INTO users (name, email, password_hash, role, active) VALUES
 -- Admin (senha: admin123)
-('Administrador', 'admin@dvmotos.com.br', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Zjd.', 'ADMIN', TRUE),
+('Administrador', 'admin@dvmotos.com.br', '$2a$12$l8W4NpNj5IUkfYZCqerE7.0cdLTuDu90Mu9ksWApGSn7mOKcX.MG6', 'ADMIN', TRUE),
 -- Operadores (senha: senha123)
-('Maria Santos', 'maria@dvmotos.com.br', '$2a$10$8K1p/a0dL1LXMIgoEDFrwOfMQkLgWL5lW1sI5XaIJC1L1G0zV9G.m', 'OPERADOR', FALSE),
-('João Pereira', 'joao@dvmotos.com.br', '$2a$10$8K1p/a0dL1LXMIgoEDFrwOfMQkLgWL5lW1sI5XaIJC1L1G0zV9G.m', 'OPERADOR', FALSE),
-('Carlos Mecânico', 'carlos@dvmotos.com.br', '$2a$10$8K1p/a0dL1LXMIgoEDFrwOfMQkLgWL5lW1sI5XaIJC1L1G0zV9G.m', 'OPERADOR', FALSE);
+('Maria Santos', 'maria@dvmotos.com.br', '$2a$12$2fMFgVQTulTvY2I40vyeK.cEr5dvXMBZtg1usCVr3s9WDk3iOqWxG', 'OPERADOR', FALSE),
+('João Pereira', 'joao@dvmotos.com.br', '$2a$12$2fMFgVQTulTvY2I40vyeK.cEr5dvXMBZtg1usCVr3s9WDk3iOqWxG', 'OPERADOR', FALSE),
+('Carlos Mecânico', 'carlos@dvmotos.com.br', '$2a$12$2fMFgVQTulTvY2I40vyeK.cEr5dvXMBZtg1usCVr3s9WDk3iOqWxG', 'OPERADOR', FALSE);
 
 -- 2.2 Categorias
 INSERT INTO categories (name, description) VALUES
