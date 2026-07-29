@@ -9,7 +9,7 @@
       pButton
       label="Voltar"
       icon="pi pi-arrow-left"
-      class="p-button-outlined"
+      class="p-button-outlined p-button-secondary p-button-sm"
     ></a>
   </div>
 
@@ -20,7 +20,7 @@
   } @else if (product) {
     <div class="content-grid">
       <!-- Product Info Card -->
-      <p-card styleClass="product-card">
+      <p-card styleClass="product-card" class="area-product">
         <ng-template pTemplate="header">
           <div class="product-header">
             <h3>{{ product.name }}</h3>
@@ -58,7 +58,7 @@
       </p-card>
 
       <!-- Movement Form Card -->
-      <p-card header="Nova Movimentação">
+      <p-card header="Nova Movimentação" styleClass="movement-form-card" class="area-form">
         <form (ngSubmit)="onSubmit()" #movementForm="ngForm">
           <div class="formgrid grid">
             <app-form-field
@@ -114,13 +114,14 @@
               icon="pi pi-check"
               [loading]="saving()"
               [disabled]="!movementForm.valid"
+              class="p-button-primary px-4"
             ></button>
           </div>
         </form>
       </p-card>
 
       <!-- History Table -->
-      <p-card header="Histórico de Movimentações" styleClass="history-card">
+      <p-card header="Histórico de Movimentações" styleClass="history-card" class="area-history">
         <p-table
           [value]="movements()"
           [paginator]="true"
