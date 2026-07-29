@@ -25,9 +25,12 @@
   --text-muted: #{$text-muted};
   --success-color: #{$success};
   --warning-color: #{$warning};
+  --warning-50: #{$warning-50};
   --danger-color: #{$danger};
   --red-500: #{$danger};
   --info-color: #{$info};
+  --info-dark: #{$info-dark};
+  --text-inverse: #{$text-inverse};
 }
 
 // =============================================

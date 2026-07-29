@@ -1,12 +1,7 @@
-$primary-600: #16a34a;
-$primary-700: #15803d;
-$primary-800: #166534;
-$primary-900: #14532d;
-$primary-950: #052e16;
-
-$secondary-300: #fde047;
-$secondary-400: #facc15;
-$secondary-500: #eab308;
+// Tokens globais do design system (fonte única: src/styles/_variables.scss).
+// Variáveis SCSS são necessárias aqui (em vez de var(--x)) porque o gradiente
+// e o rgba() abaixo usam funções de cor do Sass em tempo de compilação.
+@import "../../../../styles/variables";
 
 .login-container {
   min-height: 100vh;
@@ -111,7 +106,7 @@ $secondary-500: #eab308;
   }
 
   p {
-    color: #64748b;
+    color: var(--text-secondary);
     margin: 0;
     font-size: 0.9rem;
   }
@@ -125,7 +120,7 @@ $secondary-500: #eab308;
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: #374151;
+      color: var(--text-color);
       font-size: 0.875rem;
     }
   }
@@ -157,7 +152,7 @@ $secondary-500: #eab308;
   text-align: center;
 
   small {
-    color: #94a3b8;
+    color: var(--text-muted);
   }
 }
 
@@ -190,7 +185,7 @@ $secondary-500: #eab308;
   }
 
   .p-input-icon-left > i {
-    color: #94a3b8;
+    color: var(--text-muted);
     position: absolute;
     top: 50%;
     transform: translatey(-50%);
