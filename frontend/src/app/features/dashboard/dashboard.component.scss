@@ -95,7 +95,7 @@
 
     i {
       font-size: 1.35rem;
-      color: #fff;
+      color: var(--text-inverse);
     }
   }
 
@@ -144,12 +144,12 @@
     );
 
     i {
-      color: #1f1f1f;
+      color: var(--text-color);
     }
   }
 
   &.action-accent .action-icon {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, var(--info-color) 0%, var(--info-dark) 100%);
   }
 }
 
@@ -192,7 +192,7 @@
 
     i {
       font-size: 1.35rem;
-      color: #fff;
+      color: var(--text-inverse);
     }
 
     &.stat-icon-primary {
@@ -202,7 +202,7 @@
       background: var(--secondary-color);
 
       i {
-        color: #1f1f1f;
+        color: var(--text-color);
       }
     }
     &.stat-icon-info {
@@ -237,6 +237,6 @@
   // Card em destaque quando há alerta (estoque baixo > 0).
   &.stat-card-alert {
     border-color: var(--warning-color);
-    background: #fffbeb;
+    background: var(--warning-50);
   }
 }

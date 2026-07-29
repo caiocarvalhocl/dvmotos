@@ -161,17 +161,17 @@
         </app-form-field>
       </div>
 
-      <div class="field mt-3">
-        <label for="notes">Observações</label>
-        <textarea
-          pInputTextarea
-          id="notes"
-          [(ngModel)]="vehicle.notes"
-          name="notes"
-          rows="3"
-          placeholder="Avarias, detalhes especiais..."
-          class="w-full"
-        ></textarea>
+      <div class="formgrid grid mt-3">
+        <app-form-field label="Observações" inputId="notes" colClass="col-12">
+          <textarea
+            pInputTextarea
+            id="notes"
+            [(ngModel)]="vehicle.notes"
+            name="notes"
+            rows="3"
+            placeholder="Avarias, detalhes especiais..."
+          ></textarea>
+        </app-form-field>
       </div>
 
       <div class="form-actions">
