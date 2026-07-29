@@ -76,20 +76,44 @@ body {
 // =============================================
 .card {
   background: var(--surface-card);
-  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
   padding: 1.5rem;
   box-shadow:
-    0 1px 3px 0 rgb(0 0 0 / 0.1),
-    0 1px 2px -1px rgb(0 0 0 / 0.1);
+    0 1px 2px 0 rgb(16 24 40 / 0.04),
+    0 1px 3px 0 rgb(16 24 40 / 0.06);
 }
 
 // =============================================
 // PRIMENG CUSTOMIZATIONS
 // =============================================
 .p-button {
-  border-radius: 8px;
-  font-weight: 500;
-  padding: 0.2rem;
+  border-radius: 9px;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &.p-button-sm {
+    padding: 0.4rem 0.7rem;
+  }
+
+  &.p-button-text {
+    padding: 0.45rem 0.7rem;
+  }
+
+  &.p-button-icon-only {
+    padding: 0.5rem;
+    width: 2.5rem;
+
+    &.p-button-sm {
+      padding: 0.4rem;
+      width: 2.25rem;
+    }
+  }
 
   &.p-button-primary {
     background: var(--primary-color);
@@ -125,12 +149,21 @@ body {
     padding: 0 0 1rem 0;
   }
   .p-datatable-thead > tr > th {
-    background: #{$primary-50};
-    color: #{$primary-900};
+    background: #{$neutral-50};
+    color: #{$text-secondary};
     font-weight: 600;
-    border-color: #{$primary-100};
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-color: var(--surface-border);
+    padding: 0.85rem 1rem;
   }
   .p-datatable-tbody > tr {
+    transition: background 0.12s;
+    > td {
+      padding: 0.8rem 1rem;
+      border-color: var(--surface-border);
+    }
     &:hover {
       background: #{$primary-50};
     }

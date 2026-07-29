@@ -3,7 +3,7 @@
   <div class="page-header">
     <div class="header-content">
       @if (authService.currentUser(); as user) {
-        <h1>Bem-vindo, {{ user.name.split(" ")[0] }}! 👋</h1>
+        <h1>Olá, {{ user.name.split(" ")[0] }}</h1>
         <p class="text-muted">Aqui está o resumo do seu sistema.</p>
       }
     </div>
