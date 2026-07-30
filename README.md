@@ -2,6 +2,23 @@
 
 Sistema de gestão para oficina mecânica de motocicletas.
 
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/login.png" alt="Tela de login" width="420"/><br/><sub>Login</sub></td>
+    <td><img src="docs/screenshots/dashboard.png" alt="Dashboard" width="420"/><br/><sub>Dashboard</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/service-orders-list.png" alt="Listagem de Ordens de Serviço" width="420"/><br/><sub>Ordens de Serviço</sub></td>
+    <td><img src="docs/screenshots/service-order-form.png" alt="Formulário de nova Ordem de Serviço" width="420"/><br/><sub>Nova OS</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/vehicle-form-validation.png" alt="Validação de placa no cadastro de veículo" width="420"/><br/><sub>Cadastro de veículo (validação de placa)</sub></td>
+    <td></td>
+  </tr>
+</table>
+
 ## 📋 Funcionalidades do MVP
 
 - ✅ Autenticação com JWT
