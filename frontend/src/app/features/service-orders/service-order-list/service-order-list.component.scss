@@ -1,4 +1,4 @@
-@import "../../../shared/components/table-filter/table-filter.component.scss";
+@use "../../../shared/components/table-filter/table-filter.component.scss" as *;
 .os-filter {
   display: flex;
   align-items: flex-start;

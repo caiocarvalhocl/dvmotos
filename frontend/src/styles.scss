@@ -1,6 +1,6 @@
-@import "./styles/variables";
-@import "./styles/lists";
-@import "./styles/forms";
+@use "./styles/variables" as *;
+@use "./styles/lists" as *;
+@use "./styles/forms" as *;
 
 // =============================================
 // CSS VARIABLES (runtime)

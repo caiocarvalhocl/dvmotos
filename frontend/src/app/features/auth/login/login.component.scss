@@ -1,5 +1,5 @@
 // Tokens globais do design system (fonte única: src/styles/_variables.scss).
-@import "../../../../styles/variables";
+@use "../../../../styles/variables" as *;
 
 .login-layout {
   min-height: 100vh;
