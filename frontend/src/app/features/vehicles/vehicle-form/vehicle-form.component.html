@@ -53,13 +53,24 @@
           inputId="licensePlate"
           icon="pi pi-id-card"
           colClass="md:col-3"
+          [errorMessage]="
+            licensePlateModel.invalid &&
+            (licensePlateModel.dirty || licensePlateModel.touched)
+              ? (licensePlateModel.errors?.['required']
+                  ? 'Placa é obrigatória'
+                  : 'Formato de placa inválido. Use ABC-1234 ou ABC1D23')
+              : ''
+          "
         >
           <input
             pInputText
             id="licensePlate"
-            [(ngModel)]="vehicle.licensePlate"
+            [ngModel]="vehicle.licensePlate"
+            (ngModelChange)="onLicensePlateChange($event)"
             name="licensePlate"
+            #licensePlateModel="ngModel"
             required
+            [pattern]="licensePlatePattern"
             placeholder="ABC-1234"
             class="uppercase"
           />

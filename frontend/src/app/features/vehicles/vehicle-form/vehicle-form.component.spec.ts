@@ -149,4 +149,23 @@ describe('VehicleFormComponent', () => {
       expect(component.vehicle.clientId).toBe(2);
     });
   });
+
+  describe('onLicensePlateChange', () => {
+    beforeEach(() => setup());
+
+    it('should normalize to uppercase', () => {
+      component.onLicensePlateChange('abc-1234');
+      expect(component.vehicle.licensePlate).toBe('ABC-1234');
+    });
+
+    it('should accept the Mercosul format', () => {
+      component.onLicensePlateChange('abc1d23');
+      expect(component.vehicle.licensePlate).toBe('ABC1D23');
+    });
+
+    it('should strip whitespace', () => {
+      component.onLicensePlateChange(' abc 1234 ');
+      expect(component.vehicle.licensePlate).toBe('ABC1234');
+    });
+  });
 });

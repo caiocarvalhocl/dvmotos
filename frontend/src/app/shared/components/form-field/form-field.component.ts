@@ -14,6 +14,7 @@ export class FormFieldComponent {
   @Input() icon?: string;
   @Input() required = false;
   @Input() colClass = "md:col-6";
+  @Input() errorMessage?: string | null;
 
   @HostBinding("class") get hostClass() {
     return `field col-12 ${this.colClass}`;

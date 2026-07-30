@@ -17,6 +17,10 @@ import {
 } from "../../../core/services/vehicle.service";
 import { ClientService, Client } from "../../../core/services/client.service";
 import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
+import {
+  LICENSE_PLATE_PATTERN,
+  normalizeLicensePlate,
+} from "@shared/utils/license-plate.util";
 
 @Component({
   selector: "app-vehicle-form",
@@ -39,6 +43,8 @@ import { FormFieldComponent } from "@shared/components/form-field/form-field.com
   templateUrl: "./vehicle-form.component.html",
 })
 export class VehicleFormComponent implements OnInit {
+  readonly licensePlatePattern = LICENSE_PLATE_PATTERN;
+
   vehicle: Vehicle = {
     clientId: 0,
     licensePlate: "",
@@ -113,6 +119,10 @@ export class VehicleFormComponent implements OnInit {
   }
   onClientSelect(event: any): void {
     this.vehicle.clientId = event.value.id;
+  }
+
+  onLicensePlateChange(value: string): void {
+    this.vehicle.licensePlate = normalizeLicensePlate(value);
   }
 
   onSubmit(): void {

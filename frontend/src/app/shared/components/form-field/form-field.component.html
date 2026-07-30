@@ -6,3 +6,4 @@
   <i *ngIf="icon" [class]="icon"></i>
   <ng-content></ng-content>
 </div>
+<small *ngIf="errorMessage" class="text-red-500 block mt-1">{{ errorMessage }}</small>
