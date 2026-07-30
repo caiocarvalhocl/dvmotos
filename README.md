@@ -101,6 +101,56 @@ Email: admin@dvmotos.com.br
 Senha: admin123
 ```
 
+## 🧪 Testes E2E (Cypress)
+
+Cobre o ciclo de vida completo de uma Ordem de Serviço: login, seleção de
+cliente/veículo (incluindo o carregamento do dropdown de veículo após
+selecionar o cliente), adição de itens de serviço e peça, conferência do
+total, transição de status (aberta → em andamento → concluída) e o fluxo de
+cancelamento com diálogo de confirmação.
+
+O teste roda contra um backend real via API/HTTP — **nunca contra o banco de
+desenvolvimento**. Suba um backend isolado com H2 em memória (schema recriado
+do zero a cada início, sem afetar o Postgres de dev) em um terminal:
+
+```bash
+cd backend
+mvn spring-boot:run -Dspring-boot.run.useTestClasspath=true
+```
+
+com estas variáveis de ambiente exportadas antes do comando (`export VAR=valor`
+no bash, ou `$env:VAR="valor"` no PowerShell):
+
+```
+SPRING_DATASOURCE_URL=jdbc:h2:mem:e2edb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+SPRING_DATASOURCE_USERNAME=sa
+SPRING_DATASOURCE_PASSWORD=
+SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.H2Dialect
+SPRING_FLYWAY_ENABLED=false
+JWT_SECRET=qualquer-valor-para-teste-local
+ADMIN_EMAIL=test@test.com
+ADMIN_PASSWORD=test123
+```
+
+`-Dspring-boot.run.useTestClasspath=true` é necessário para o driver do H2
+(dependência `test`-scope) ficar disponível em runtime.
+
+Em outro terminal, suba o frontend normalmente (`npm start` dentro de
+`frontend/`, servindo em `http://localhost:4200`) e então rode a suíte:
+
+```bash
+cd frontend
+npm run e2e        # headless, usado em CI
+npm run e2e:open   # interativo, com o Test Runner do Cypress
+```
+
+Os dados de cliente/veículo usados pelo teste são criados via API com um
+sufixo único (timestamp) a cada execução, então a suíte é repetível contra o
+mesmo banco H2 aquecido sem precisar de limpeza manual — reiniciar o backend
+já reseta tudo, já que o H2 é em memória.
+
 ## 📁 Estrutura do Projeto
 
 ```

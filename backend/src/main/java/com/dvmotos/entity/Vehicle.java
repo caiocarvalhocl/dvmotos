@@ -35,7 +35,9 @@ public class Vehicle extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String model;
 
-    @Column(length = 4)
+    // Backtick-quoted: `year` is a reserved word in H2 (used by the test profile),
+    // which otherwise fails schema creation silently (logged as a WARN, not fatal).
+    @Column(name = "`year`", length = 4)
     private String year;
 
     @Column(length = 30)
