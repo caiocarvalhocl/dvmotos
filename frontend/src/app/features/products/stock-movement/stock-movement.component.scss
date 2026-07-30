@@ -22,14 +22,20 @@
 
 // Posicionamento no grid. A classe fica no elemento <p-card> (item direto do
 // grid); o styleClass do PrimeNG vai para a div interna e não serve para isso.
+// min-width: 0 é necessário para o item do grid poder encolher abaixo da
+// largura mínima da tabela de histórico; sem isso, o overflow-x: auto do
+// wrapper da tabela não tem efeito e a página inteira estoura para o lado.
 .area-product {
   grid-area: product;
+  min-width: 0;
 }
 .area-form {
   grid-area: form;
+  min-width: 0;
 }
 .area-history {
   grid-area: history;
+  min-width: 0;
 }
 
 :host ::ng-deep {
@@ -50,6 +56,13 @@
 
   .p-card .p-card-content {
     padding: 0;
+  }
+
+  // Card de histórico: a tabela rola horizontalmente dentro do próprio card em
+  // telas estreitas em vez de vazar para fora do layout da página; o paginador
+  // fica fora do wrapper com scroll, então continua sempre visível.
+  .history-card .p-datatable-wrapper {
+    overflow-x: auto;
   }
 
   // Card de produto: os números ficam centralizados na altura disponível.
@@ -102,11 +115,22 @@
   gap: 1rem;
   padding: 1rem 0;
 
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+
   .stat {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     text-align: center;
+
+    @media (max-width: 576px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: baseline;
+      text-align: left;
+    }
 
     .stat-label {
       font-size: 0.75rem;
