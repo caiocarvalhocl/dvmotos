@@ -22,7 +22,7 @@ describe('VehicleFormComponent', () => {
 
   function setup(paramId: string | null = null) {
     TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { paramMap: { get: (key: string) => paramId } } }
+      useValue: { snapshot: { paramMap: { get: () => paramId } } }
     });
     fixture = TestBed.createComponent(VehicleFormComponent);
     component = fixture.componentInstance;

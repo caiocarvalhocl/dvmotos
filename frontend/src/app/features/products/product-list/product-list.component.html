@@ -88,7 +88,7 @@
               editRoute="/products"
               [id]="product.id"
               [isActive]="product.active"
-              (onAction)="confirmToggleStatus(product)"
+              (action)="confirmToggleStatus(product)"
             >
               <a
                 [routerLink]="['/products', product.id, 'stock']"
@@ -96,6 +96,7 @@
                 icon="pi pi-box"
                 class="p-button-text p-button-sm btn-stock"
                 pTooltip="Movimentar Estoque"
+                aria-label="Movimentar Estoque"
                 tooltipPosition="top"
                 tooltipStyleClass="tooltip-text"
               ></a>

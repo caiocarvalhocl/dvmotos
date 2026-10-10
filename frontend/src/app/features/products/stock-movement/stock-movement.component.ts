@@ -19,6 +19,8 @@ import {
 } from "../../../core/services/product.service";
 import { Severity } from "@shared/types/Severity";
 import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
+import { TableLazyLoadEvent } from "primeng/table";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-stock-movement",
@@ -94,9 +96,10 @@ export class StockMovementComponent implements OnInit {
     });
   }
 
-  loadMovements(productId: number, event: any): void {
-    const page = event.first / event.rows;
-    this.productService.getStockHistory(productId, page, event.rows).subscribe({
+  loadMovements(productId: number, event: TableLazyLoadEvent): void {
+    const rows = event.rows ?? 10;
+    const page = (event.first ?? 0) / rows;
+    this.productService.getStockHistory(productId, page, rows).subscribe({
       next: (response: Page<StockMovement>) => {
         this.movements.set(response.content);
         this.totalRecords.set(response.totalElements);
@@ -134,7 +137,7 @@ export class StockMovementComponent implements OnInit {
           this.reason = "";
           this.saving.set(false);
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           this.saving.set(false);
           this.messageService.add({
             severity: "error",

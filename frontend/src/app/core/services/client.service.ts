@@ -68,7 +68,7 @@ export class ClientService {
     return this.http.patch<Client>(`${this.apiUrl}/${id}/toggle-status`, {});
   }
 
-  getActiveClients(): Observable<Number> {
-    return this.http.get<Number>(`${this.apiUrl}/count`);
+  getActiveClients(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count`);
   }
 }

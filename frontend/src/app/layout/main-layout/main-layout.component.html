@@ -46,7 +46,13 @@
     </nav>
 
     <div class="sidebar-footer">
-      <div class="sidebar-user" (click)="toggleSidebarMenu($event)">
+      <div
+        class="sidebar-user"
+        role="button"
+        tabindex="0"
+        (click)="toggleSidebarMenu($event)"
+        (keydown.enter)="toggleSidebarMenu($event)"
+      >
         <p-avatar
           [label]="authService.currentUser()?.name?.charAt(0)"
           shape="circle"
@@ -84,7 +90,11 @@
   </aside>
 
   <!-- OVERLAY (mobile) -->
-  <div class="sidebar-overlay" (click)="closeMobile()"></div>
+  <div
+    class="sidebar-overlay"
+    role="presentation"
+    (click)="closeMobile()"
+  ></div>
 
   <!-- MAIN COLUMN -->
   <div class="layout-content">

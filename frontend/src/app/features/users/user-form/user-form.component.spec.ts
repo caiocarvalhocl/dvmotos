@@ -36,7 +36,7 @@ describe("UserFormComponent", () => {
     };
 
     TestBed.overrideProvider(ActivatedRoute, {
-      useValue: { snapshot: { paramMap: { get: (key: string) => paramId } } },
+      useValue: { snapshot: { paramMap: { get: () => paramId } } },
     });
     TestBed.overrideProvider(AuthService, { useValue: authServiceMock });
 

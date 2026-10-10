@@ -71,10 +71,10 @@ describe('TableActionsComponent', () => {
     });
   });
 
-  it('should emit onAction', () => {
-    spyOn(component.onAction, 'emit');
+  it('should emit action', () => {
+    spyOn(component.action, 'emit');
     component.emitAction();
-    expect(component.onAction.emit).toHaveBeenCalled();
+    expect(component.action.emit).toHaveBeenCalled();
   });
 
   it('should have default editTooltip', () => {

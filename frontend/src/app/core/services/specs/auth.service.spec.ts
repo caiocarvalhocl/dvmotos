@@ -300,7 +300,7 @@ describe("AuthService", () => {
 
       // Act: This should not crash when getting stored user
       expect(() => {
-        const newService = new AuthService(
+        new AuthService(
           TestBed.inject(HttpClientTestingModule) as any,
           routerSpy,
         );

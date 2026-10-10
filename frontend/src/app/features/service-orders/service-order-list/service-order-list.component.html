@@ -81,7 +81,7 @@
               [id]="order.id"
               editTooltip="Ver / Editar"
               [isActive]="canCancel(order) ? true : undefined"
-              (onAction)="confirmCancel(order)"
+              (action)="confirmCancel(order)"
             ></app-table-actions>
           </td>
         </tr>
