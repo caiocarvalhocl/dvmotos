@@ -35,10 +35,10 @@ module.exports = function (config) {
       // Quality gate: the run fails when global coverage drops below these values
       check: {
         global: {
-          statements: 50,
-          branches: 40,
-          functions: 50,
-          lines: 50
+          statements: 85,
+          branches: 65,
+          functions: 85,
+          lines: 85
         }
       }
     },
