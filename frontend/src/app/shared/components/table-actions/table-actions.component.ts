@@ -28,7 +28,7 @@ export class TableActionsComponent {
   @Input() editTooltip: string = "Editar";
 
   // Evento emitido ao clicar no botão de ação (Toggle ou Delete)
-  @Output() onAction = new EventEmitter<void>();
+  @Output() action = new EventEmitter<void>();
 
   // Lógica para definir o ícone do botão de ação
   get actionIcon(): string {
@@ -52,6 +52,6 @@ export class TableActionsComponent {
   }
 
   emitAction(): void {
-    this.onAction.emit();
+    this.action.emit();
   }
 }
