@@ -71,7 +71,7 @@ export class VehicleService {
     return this.http.patch<Vehicle>(`${this.apiUrl}/${id}/toggle-status`, {});
   }
 
-  getActiveVehicles(): Observable<Number> {
-    return this.http.get<Number>(`${this.apiUrl}/count`);
+  getActiveVehicles(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count`);
   }
 }
