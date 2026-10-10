@@ -16,6 +16,7 @@ import {
 } from "@shared/components/table-filter/table-filter.component";
 import { TooltipModule } from "primeng/tooltip";
 import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-vehicle-list",
@@ -58,12 +59,13 @@ export class VehicleListComponent implements OnInit {
     this.loadVehicles({ first: 0, rows: 20 });
   }
 
-  loadVehicles(event: any): void {
+  loadVehicles(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
 
     this.vehicleService
-      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
+      .findAll(page, rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response: Page<Vehicle>) => {
           this.vehicles.set(response.content);

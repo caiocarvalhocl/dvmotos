@@ -22,6 +22,7 @@ import {
 } from "../../../core/services/service-order.service";
 import { Page } from "@shared/types/Page";
 import { Severity } from "@shared/types/Severity";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-service-order-list",
@@ -82,11 +83,12 @@ export class ServiceOrderListComponent implements OnInit {
     this.loadOrders({ first: 0, rows: 20 });
   }
 
-  loadOrders(event: any): void {
+  loadOrders(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
     this.serviceOrderService
-      .findAll(page, event.rows, this.currentFilter.search, this.selectedStatus)
+      .findAll(page, rows, this.currentFilter.search, this.selectedStatus)
       .subscribe({
         next: (response: Page<ServiceOrder>) => {
           this.orders.set(response.content);

@@ -16,6 +16,7 @@ import {
   TableFilterComponent,
 } from "@shared/components/table-filter/table-filter.component";
 import { Severity } from "@shared/types/Severity";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-user-list",
@@ -58,11 +59,12 @@ export class UserListComponent implements OnInit {
     this.loadUsers({ first: 0, rows: 20 });
   }
 
-  loadUsers(event: any): void {
+  loadUsers(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
     this.userService
-      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
+      .findAll(page, rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response: Page<User>) => {
           this.users.set(response.content);

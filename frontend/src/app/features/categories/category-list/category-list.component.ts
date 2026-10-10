@@ -21,6 +21,7 @@ import {
   TableFilterComponent,
 } from "@shared/components/table-filter/table-filter.component";
 import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-category-list",
@@ -66,14 +67,15 @@ export class CategoryListComponent implements OnInit {
     this.loadCategories({ first: 0, rows: 20 });
   }
 
-  loadCategories(event: any): void {
+  loadCategories(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
 
     this.categoryService
       .findAll(
         page,
-        event.rows,
+        rows,
         this.currentFilter.search,
         this.currentFilter.active,
       )

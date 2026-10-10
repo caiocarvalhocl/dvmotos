@@ -36,8 +36,8 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/me`, user);
   }
 
-  changeMyPassword(request: ChangePasswordRequest): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/me/password`, request);
+  changeMyPassword(request: ChangePasswordRequest): Observable<unknown> {
+    return this.http.patch<unknown>(`${this.apiUrl}/me/password`, request);
   }
 
   // ============ ADMIN METHODS ============
@@ -75,7 +75,7 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user);
   }
 
-  delete(id: number): Observable<void> {
+  delete(id: number): Observable<unknown> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
@@ -86,7 +86,7 @@ export class UserService {
   toggleStatus(id: number): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/${id}/toggle-status`, {});
   }
-  changePassword(id: number, password: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}/password`, { password });
+  changePassword(id: number, password: string): Observable<unknown> {
+    return this.http.patch<unknown>(`${this.apiUrl}/${id}/password`, { password });
   }
 }

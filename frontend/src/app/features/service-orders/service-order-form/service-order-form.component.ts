@@ -22,7 +22,6 @@ import {
   ServiceOrder,
   ServiceOrderItem,
   ServiceOrderStatus,
-  ServiceOrderItemType,
 } from "../../../core/services/service-order.service";
 import { ClientService, Client } from "../../../core/services/client.service";
 import {
@@ -34,6 +33,10 @@ import {
   Product,
 } from "../../../core/services/product.service";
 import { Severity } from "@shared/types/Severity";
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteSelectEvent,
+} from "primeng/autocomplete";
 
 @Component({
   selector: "app-service-order-form",
@@ -174,13 +177,13 @@ export class ServiceOrderFormComponent implements OnInit {
 
   // ======================== AUTOCOMPLETE ========================
 
-  filterClients(event: any): void {
+  filterClients(event: Pick<AutoCompleteCompleteEvent, "query">): void {
     this.filteredClients = this.clients.filter((c) =>
       c.name.toLowerCase().includes(event.query.toLowerCase()),
     );
   }
 
-  onClientSelect(event: any): void {
+  onClientSelect(event: Pick<AutoCompleteSelectEvent, "value">): void {
     const client = event.value;
     this.order.clientId = client.id;
     this.order.vehicleId = 0;
@@ -194,13 +197,13 @@ export class ServiceOrderFormComponent implements OnInit {
     this.clientVehicles = [];
   }
 
-  filterProducts(event: any): void {
+  filterProducts(event: Pick<AutoCompleteCompleteEvent, "query">): void {
     this.filteredProducts = this.products.filter((p) =>
       p.name.toLowerCase().includes(event.query.toLowerCase()),
     );
   }
 
-  onProductSelect(event: any): void {
+  onProductSelect(event: Pick<AutoCompleteSelectEvent, "value">): void {
     const product = event.value;
     this.newItem.productId = product.id;
     this.newItem.description = product.name;

@@ -22,6 +22,7 @@ import {
   FilterState,
   TableFilterComponent,
 } from "@shared/components/table-filter/table-filter.component";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-product-list",
@@ -69,13 +70,14 @@ export class ProductListComponent implements OnInit {
     this.loadProducts({ first: 0, rows: 20 });
   }
 
-  loadProducts(event: any): void {
+  loadProducts(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
     this.productService
       .findAll(
         page,
-        event.rows,
+        rows,
         this.currentFilter.search,
         this.currentFilter.active,
       )

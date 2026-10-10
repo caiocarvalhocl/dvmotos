@@ -16,6 +16,7 @@ import {
   TableFilterComponent,
 } from "@shared/components/table-filter/table-filter.component";
 import { TableActionsComponent } from "@shared/components/table-actions/table-actions.component";
+import { TableLazyLoadEvent } from "primeng/table";
 
 @Component({
   selector: "app-client-list",
@@ -59,12 +60,13 @@ export class ClientListComponent implements OnInit {
     this.loadClients({ first: 0, rows: 20 });
   }
 
-  loadClients(event: any): void {
+  loadClients(event: TableLazyLoadEvent): void {
     this.loading.set(true);
-    const page = event.first / event.rows;
+    const rows = event.rows ?? 20;
+    const page = (event.first ?? 0) / rows;
 
     this.clientService
-      .findAll(page, event.rows, this.currentFilter.search, this.currentFilter.active)
+      .findAll(page, rows, this.currentFilter.search, this.currentFilter.active)
       .subscribe({
         next: (response) => {
           this.clients.set(response.content);

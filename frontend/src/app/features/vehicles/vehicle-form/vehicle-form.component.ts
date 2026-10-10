@@ -21,6 +21,10 @@ import {
   LICENSE_PLATE_PATTERN,
   normalizeLicensePlate,
 } from "@shared/utils/license-plate.util";
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteSelectEvent,
+} from "primeng/autocomplete";
 
 @Component({
   selector: "app-vehicle-form",
@@ -112,12 +116,12 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
-  filterClients(event: any): void {
+  filterClients(event: Pick<AutoCompleteCompleteEvent, "query">): void {
     this.filteredClients = this.clients.filter((c) =>
       c.name.toLowerCase().includes(event.query.toLowerCase()),
     );
   }
-  onClientSelect(event: any): void {
+  onClientSelect(event: Pick<AutoCompleteSelectEvent, "value">): void {
     this.vehicle.clientId = event.value.id;
   }
 

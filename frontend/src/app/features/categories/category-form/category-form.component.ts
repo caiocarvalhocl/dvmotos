@@ -12,6 +12,7 @@ import {
   Category,
 } from "../../../core/services/category.service";
 import { FormFieldComponent } from "@shared/components/form-field/form-field.component";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-category-form",
@@ -84,7 +85,7 @@ export class CategoryFormComponent implements OnInit {
         });
         setTimeout(() => this.router.navigate(["/categories"]), 1000);
       },
-      error: (err: any) => {
+      error: (err: HttpErrorResponse) => {
         this.saving.set(false);
         this.messageService.add({
           severity: "error",
