@@ -31,7 +31,16 @@ module.exports = function (config) {
         { type: 'html' },
         { type: 'text-summary' },
         { type: 'lcovonly' }
-      ]
+      ],
+      // Quality gate: the run fails when global coverage drops below these values
+      check: {
+        global: {
+          statements: 50,
+          branches: 40,
+          functions: 50,
+          lines: 50
+        }
+      }
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],
