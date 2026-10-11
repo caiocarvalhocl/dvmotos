@@ -40,6 +40,23 @@
         <p>Entre com suas credenciais para acessar o sistema.</p>
       </div>
 
+      @if (isDemo) {
+        <div class="demo-hint" role="note">
+          <p>
+            <strong>Modo demonstração.</strong> Use
+            <code>{{ demoCredentials.email }}</code> /
+            <code>{{ demoCredentials.password }}</code>.
+          </p>
+          <button
+            pButton
+            type="button"
+            label="Preencher credenciais"
+            class="p-button-sm p-button-outlined"
+            (click)="useDemoCredentials()"
+          ></button>
+        </div>
+      }
+
       <form (ngSubmit)="onSubmit()" class="login-form">
         @if (error()) {
           <p-message
