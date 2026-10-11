@@ -22,12 +22,12 @@ describe('MyProfileComponent', () => {
     userService = jasmine.createSpyObj('UserService', ['getMyProfile', 'updateMyProfile', 'changeMyPassword']);
     messageService = jasmine.createSpyObj('MessageService', ['add']);
     authServiceMock = {
-      currentUser: jasmine.createSpy('currentUser').and.returnValue(mockUser),
+      currentUser: jasmine.createSpy('currentUser').and.returnValue({ ...mockUser }),
       isAdmin: signal(true),
       isAuthenticated: signal(true),
     };
 
-    userService.getMyProfile.and.returnValue(of(mockUser));
+    userService.getMyProfile.and.returnValue(of({ ...mockUser }));
 
     await TestBed.configureTestingModule({
       imports: [MyProfileComponent],
@@ -77,7 +77,7 @@ describe('MyProfileComponent', () => {
     });
 
     it('should update profile', () => {
-      userService.updateMyProfile.and.returnValue(of(mockUser));
+      userService.updateMyProfile.and.returnValue(of({ ...mockUser }));
       // Ensure user data is set (ngOnInit populates it via getMyProfile)
       component.user = { name: 'João Silva', email: 'joao@test.com', role: 'ADMIN' };
       component.onSaveProfile();
