@@ -8,6 +8,8 @@ import { TooltipModule } from "primeng/tooltip";
 import { MenuItem } from "primeng/api";
 import { AuthService } from "../../core/services/auth.service";
 import { TagModule } from "primeng/tag";
+import { DemoBannerComponent } from "../../shared/components/demo-banner/demo-banner.component";
+import { AdSlotComponent } from "../../shared/components/ad-slot/ad-slot.component";
 
 @Component({
   selector: "app-main-layout",
@@ -22,6 +24,8 @@ import { TagModule } from "primeng/tag";
     AvatarModule,
     MenuModule,
     TooltipModule,
+    DemoBannerComponent,
+    AdSlotComponent,
   ],
   templateUrl: "./main-layout.component.html",
   styleUrls: ["./main-layout.component.scss"],

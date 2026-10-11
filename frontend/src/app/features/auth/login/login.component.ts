@@ -7,6 +7,8 @@ import { PasswordModule } from "primeng/password";
 import { ButtonModule } from "primeng/button";
 import { MessageModule } from "primeng/message";
 import { AuthService, LoginRequest } from "../../../core/services/auth.service";
+import { environment } from "@env/environment";
+import { DEMO_CREDENTIALS } from "../../../core/demo/demo-data";
 
 @Component({
   selector: "app-login",
@@ -31,11 +33,17 @@ export class LoginComponent {
   loading = signal(false);
   error = signal<string | null>(null);
   year = new Date().getFullYear();
+  readonly isDemo = environment.demo;
+  readonly demoCredentials = DEMO_CREDENTIALS;
 
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
+
+  useDemoCredentials(): void {
+    this.credentials = { ...DEMO_CREDENTIALS };
+  }
 
   onSubmit(): void {
     this.loading.set(true);
