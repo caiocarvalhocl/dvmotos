@@ -1,0 +1,55 @@
+name: Monitor
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  APP_URL: https://caiocarvalhocl.github.io/dvmotos/
+  EXPECTED_TEXT: DV Motos
+
+jobs:
+  health-check:
+    name: Health check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the published app
+        id: check
+        run: |
+          for attempt in 1 2 3; do
+            code=$(curl -s -o page.html -w '%{http_code}' --max-time 20 "$APP_URL" || true)
+            if [ "$code" = "200" ] && grep -q "$EXPECTED_TEXT" page.html; then
+              echo "OK: HTTP $code and expected text found (attempt $attempt)"
+              exit 0
+            fi
+            echo "Attempt $attempt failed: HTTP $code"
+            sleep 15
+          done
+          exit 1
+
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --label outage --state open --json number --jq 'length')
+          if [ "$open" = "0" ]; then
+            gh label create outage --repo "$GITHUB_REPOSITORY" --color B60205 2>/dev/null || true
+            gh issue create --repo "$GITHUB_REPOSITORY" --label outage \
+              --title "Application unavailable" \
+              --body "The health check failed for $APP_URL. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi
+
+      - name: Close the outage issue on recovery
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --repo "$GITHUB_REPOSITORY" --label outage --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --repo "$GITHUB_REPOSITORY" --comment "The application is responding again."
+          done
