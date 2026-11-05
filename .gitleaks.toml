@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fake secrets used only by the H2 test profile"
+paths = ['''backend/src/test/resources/application-test\.yml''']
