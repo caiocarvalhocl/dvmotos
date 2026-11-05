@@ -1,6 +1,119 @@
-# 🏍️ DV Motos - Sistema de Gestão
+# DV Motos
 
-**🇧🇷 [Português](#-dv-motos---sistema-de-gestão) | 🇺🇸 [English](#-dv-motos---management-system)**
+[![CI](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/ci.yml/badge.svg)](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/ci.yml)
+[![Security](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/security.yml/badge.svg)](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/security.yml)
+[![Monitor](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/monitor.yml/badge.svg)](https://github.com/caiocarvalhocl/dvmotos/actions/workflows/monitor.yml)
+
+Aplicação publicada: https://caiocarvalhocl.github.io/dvmotos/ (login de demonstração na própria tela)
+
+Trabalho final de Integração Contínua (UTFPR). A SPA avaliada é o frontend em modo demo; o backend Spring Boot do repositório não faz parte do deploy.
+
+## 1. Sobre o projeto
+
+Sistema de gestão para oficina de motos: clientes, veículos, estoque e ordens de serviço. O frontend é uma SPA Angular 17. O modo demo responde todas as chamadas HTTP com uma API em memória (`frontend/src/app/core/demo`), então a versão publicada funciona sem backend.
+
+## 2. Serviço proposto
+
+Painel para uma oficina controlar atendimentos de ponta a ponta. A versão pública é uma demonstração navegável e reserva um espaço para anúncios (banner do modo demo), como previsto na proposta de monetização.
+
+## 3. Funcionalidades
+
+Login, dashboard, cadastro de clientes e veículos (com validação de placa antiga e Mercosul), produtos e categorias, movimentação de estoque e ciclo de vida da ordem de serviço (aberta, em andamento, concluída, cancelada).
+
+## 4. Tecnologias utilizadas
+
+Angular 17 (standalone components), PrimeNG 17, TypeScript, Karma/Jasmine, Cypress, ESLint, GitHub Actions, GitHub Pages, Docker/nginx e GHCR. O backend (Java 21, Spring Boot 3.2, PostgreSQL) existe no repositório, mas não é publicado.
+
+## 5. Arquitetura da aplicação
+
+```
+Navegador -> SPA Angular -> HttpClient -> demoBackendInterceptor -> dados em memória (demo-data.ts)
+```
+
+No build `demo`, `environment.demo.ts` substitui `environment.ts` (`fileReplacements` em `angular.json`) e liga o interceptor, que responde as requisições em vez de enviá-las. Em desenvolvimento normal, a SPA conversa com a API Spring Boot.
+
+## 6. Estratégia de branches e versionamento
+
+- `main` é protegida pelo fluxo: só recebe código por Pull Request e o pipeline roda em cada PR.
+- Branches curtas por assunto, com prefixo do tipo de mudança: `feat/`, `fix/`, `chore/`, `ci/`.
+- Commits no padrão Conventional Commits (`feat(frontend): ...`, `ci: ...`, `fix: ...`).
+- Cada PR é mesclado com merge commit, o que preserva o histórico da branch.
+- A imagem Docker recebe como tag o SHA do commit (e `latest` na `main`), que identifica a versão publicada.
+
+## 7. Pipeline CI/CD
+
+```
+PR/push -> Lint -> Testes + cobertura -> Audit -> Build -> Docker -> Deploy (só main)
+```
+
+| Workflow | Arquivo | Gatilho | Função |
+|----------|---------|---------|--------|
+| CI | `.github/workflows/ci.yml` | PR e push na `main` | lint, testes, audit, build, imagem Docker e deploy |
+| Security | `.github/workflows/security.yml` | PR, push e semanal | CodeQL, gitleaks e revisão de dependências |
+| Monitor | `.github/workflows/monitor.yml` | a cada 30 min | health check da aplicação publicada |
+
+Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. `docker` depende de `quality`, `test` e `audit`. `deploy` só roda em push na `main` e depende de `build` e `audit`. Qualquer job vermelho impede o deploy.
+
+## 8. Testes automatizados
+
+- Unitários: Karma/Jasmine (`npm run test:coverage`).
+- Cobertura mínima aplicada em `frontend/karma.conf.js` (statements 85, branches 65). Abaixo disso o job `test` falha.
+- E2E: Cypress (`frontend/cypress/e2e`), executado localmente contra um backend H2 isolado (ver anexo).
+- O relatório de cobertura é publicado como artefato `coverage-report` em cada execução.
+
+## 9. Qualidade de código
+
+`npm run lint` (angular-eslint) roda no job `quality`. O CodeQL faz a análise estática de segurança sobre o código TypeScript. Os limites de tamanho de bundle ficam em `angular.json` (budgets).
+
+## 10. Segurança
+
+| Controle | Ferramenta | Por que |
+|----------|-----------|---------|
+| SAST | CodeQL | integrado ao GitHub, sem custo em repositório público, resultados na aba Security |
+| Secret scanning | gitleaks (histórico completo) | varre todos os commits, não só o diff do PR |
+| Análise de dependências | `npm audit` no CI e Dependency Review no PR | o audit olha o lockfile atual; o review bloqueia dependências vulneráveis novas |
+| Atualização de dependências | Dependabot (npm e Actions) | PRs semanais de atualização |
+
+Secrets e variáveis: nenhuma credencial fica no código. O backend lê `POSTGRES_*`, `JWT_SECRET`, `ADMIN_EMAIL` e `ADMIN_PASSWORD` do `.env` (fora do Git, modelo em `.env.example`). Os workflows usam só o `GITHUB_TOKEN` com permissões mínimas por job.
+
+Limitação conhecida: o `npm audit` aponta vulnerabilidades altas no Angular 17 (`@angular/core <= 19.2.25`), corrigíveis apenas com a migração de major. O gate do pipeline falha em severidade crítica; as altas aparecem no relatório informativo do job `audit` e dependem da atualização do framework.
+
+## 11. Build e artefatos
+
+- Comando: `npm run build` (produção) e `npm run build:demo -- --base-href /dvmotos/` (demo, usado no deploy).
+- Artefato: o conteúdo de `frontend/dist/dvmotos-frontend/browser` (`index.html`, `chunk-*.js`, `main-*.js`, estilos e `favicon.svg`).
+- Etapa: job `build` gera o artefato `dvmotos-frontend-dist`; o job `deploy` refaz o build demo, copia `index.html` para `404.html` (fallback de rotas da SPA no Pages) e o envia ao GitHub Pages com `upload-pages-artifact`.
+
+## 12. Deploy
+
+Automático a cada push na `main`, via `actions/deploy-pages`. URL: https://caiocarvalhocl.github.io/dvmotos/.
+
+## 13. Monitoramento e observabilidade
+
+O workflow `monitor.yml` roda a cada 30 minutos (e sob demanda por `workflow_dispatch`). Ele acessa a URL pública com até 3 tentativas, exige HTTP 200 e o texto "DV Motos" no HTML. Se falhar, a execução fica vermelha no histórico do Actions e uma Issue com o rótulo `outage` é aberta (sem duplicar). Quando a aplicação volta, a Issue é fechada.
+
+CI/CD responde se uma nova versão pode ser entregue; o monitor responde se a versão já publicada continua no ar.
+
+## 14. Docker (opcional)
+
+`frontend/Dockerfile` faz o build em Node 20 e serve os arquivos com nginx (`frontend/nginx.conf`). O job `docker` constrói a imagem em todo PR e publica em `ghcr.io/caiocarvalhocl/dvmotos-frontend` nos pushes da `main`.
+
+```bash
+docker run -p 8081:80 ghcr.io/caiocarvalhocl/dvmotos-frontend:latest
+```
+
+Essa imagem usa o build de produção, que espera a API real; para ver a demo sem backend use o link publicado.
+
+## 15. Evidências
+
+- Execuções do pipeline: https://github.com/caiocarvalhocl/dvmotos/actions
+- Pull Requests: https://github.com/caiocarvalhocl/dvmotos/pulls
+- Aplicação: https://caiocarvalhocl.github.io/dvmotos/
+- Vídeo de apresentação: _a preencher_
+
+---
+
+# Anexo: documentação do sistema completo
 
 Sistema de gestão para oficina mecânica de motocicletas.
 
