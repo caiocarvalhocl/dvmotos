@@ -34,7 +34,7 @@ No build `demo`, `environment.demo.ts` substitui `environment.ts` (`fileReplacem
 
 ## 6. Estratégia de branches e versionamento
 
-- `main` é protegida pelo fluxo: só recebe código por Pull Request e o pipeline roda em cada PR.
+- `main` é protegida: só recebe código por Pull Request com os checks do CI aprovados, a regra vale também para o administrador, e force push e exclusão são bloqueados.
 - Branches curtas por assunto, com prefixo do tipo de mudança: `feat/`, `fix/`, `chore/`, `ci/`.
 - Commits no padrão Conventional Commits (`feat(frontend): ...`, `ci: ...`, `fix: ...`).
 - Cada PR é mesclado com merge commit, o que preserva o histórico da branch.
@@ -43,16 +43,16 @@ No build `demo`, `environment.demo.ts` substitui `environment.ts` (`fileReplacem
 ## 7. Pipeline CI/CD
 
 ```
-PR/push -> Lint -> Testes + cobertura -> Audit -> Build -> Docker -> Deploy (só main)
+PR/push -> Lint, Testes + cobertura, Audit, Security -> Build -> Docker -> Deploy (só main)
 ```
 
 | Workflow | Arquivo | Gatilho | Função |
 |----------|---------|---------|--------|
-| CI | `.github/workflows/ci.yml` | PR e push na `main` | lint, testes, audit, build, imagem Docker e deploy |
-| Security | `.github/workflows/security.yml` | PR, push e semanal | CodeQL, gitleaks e revisão de dependências |
+| CI | `.github/workflows/ci.yml` | PR e push na `main` | lint, testes, audit, build, segurança, imagem Docker e deploy |
+| Security | `.github/workflows/security.yml` | chamado pelo CI, semanal e manual | CodeQL, gitleaks e revisão de dependências |
 | Monitor | `.github/workflows/monitor.yml` | a cada 30 min | health check da aplicação publicada |
 
-Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. `docker` depende de `quality`, `test` e `audit`. `deploy` só roda em push na `main` e depende de `build` e `audit`. Qualquer job vermelho impede o deploy.
+Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. O job `security` chama `security.yml`. `docker` depende de `quality`, `test`, `audit` e `security`. `deploy` só roda em push na `main` e depende de `build`, `audit` e `security`. Qualquer job vermelho impede o deploy.
 
 ## 8. Testes automatizados
 
@@ -69,20 +69,23 @@ Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. `
 
 | Controle | Ferramenta | Por que |
 |----------|-----------|---------|
-| SAST | CodeQL | integrado ao GitHub, sem custo em repositório público, resultados na aba Security |
-| Secret scanning | gitleaks (histórico completo) | varre todos os commits, não só o diff do PR |
+| SAST | CodeQL | integrado ao GitHub, sem custo em repositório público; o job falha com alerta aberto alto ou crítico |
+| Secret scanning | gitleaks (histórico completo) | varre todos os commits em cada execução, não só o diff do PR |
 | Análise de dependências | `npm audit` no CI e Dependency Review no PR | o audit olha o lockfile atual; o review bloqueia dependências vulneráveis novas |
 | Atualização de dependências | Dependabot (npm e Actions) | PRs semanais de atualização |
 
 Secrets e variáveis: nenhuma credencial fica no código. O backend lê `POSTGRES_*`, `JWT_SECRET`, `ADMIN_EMAIL` e `ADMIN_PASSWORD` do `.env` (fora do Git, modelo em `.env.example`). Os workflows usam só o `GITHUB_TOKEN` com permissões mínimas por job.
 
+Achado no histórico: o gitleaks encontrou um `JWT_SECRET` de exemplo escrito no `docker-compose.yml` do primeiro commit. Ele foi substituído por `${JWT_SECRET}` em abril de 2026. O valor antigo continua no histórico público, por isso não pode ser usado em nenhum ambiente. A ocorrência, e só ela, está liberada em `.gitleaksignore`.
+
 Limitação conhecida: o `npm audit` aponta vulnerabilidades altas no Angular 17 (`@angular/core <= 19.2.25`), corrigíveis apenas com a migração de major. O gate do pipeline falha em severidade crítica; as altas aparecem no relatório informativo do job `audit` e dependem da atualização do framework.
 
 ## 11. Build e artefatos
 
-- Comando: `npm run build` (produção) e `npm run build:demo -- --base-href /dvmotos/` (demo, usado no deploy).
+- Comando: `npm run build:demo -- --base-href /dvmotos/`. O build de produção (`npm run build`) é validado dentro do job `docker`.
 - Artefato: o conteúdo de `frontend/dist/dvmotos-frontend/browser` (`index.html`, `chunk-*.js`, `main-*.js`, estilos e `favicon.svg`).
-- Etapa: job `build` gera o artefato `dvmotos-frontend-dist`; o job `deploy` refaz o build demo, copia `index.html` para `404.html` (fallback de rotas da SPA no Pages) e o envia ao GitHub Pages com `upload-pages-artifact`.
+- Etapa: o job `build` gera o build demo, copia `index.html` para `404.html` (fallback de rotas da SPA no Pages) e publica o artefato `dvmotos-frontend-dist`, guardado por 90 dias.
+- Publicação: o job `deploy` baixa esse mesmo artefato e o envia ao GitHub Pages, sem refazer o build.
 
 ## 12. Deploy
 

@@ -1,0 +1,3 @@
+# Placeholder JWT secret hardcoded in the first commit, replaced by ${JWT_SECRET}
+# on 2026-04-09. It must never be used by any environment.
+e9e84a45a0f869411c8d5ece7a54af0bbb16030e:docker-compose.yml:generic-api-key:34

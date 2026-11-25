@@ -51,10 +51,10 @@ jobs:
           name: coverage-report
           path: frontend/coverage/dvmotos-frontend
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 90
 
   build:
-    name: Production build
+    name: Build
     runs-on: ubuntu-latest
     needs: [quality, test]
     steps:
@@ -65,15 +65,24 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - name: Build
-        run: npm run build
+      - name: Demo build (no backend, served under /dvmotos/)
+        run: npm run build:demo -- --base-href /dvmotos/
+      - name: SPA fallback for deep links
+        run: cp dist/dvmotos-frontend/browser/index.html dist/dvmotos-frontend/browser/404.html
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: dvmotos-frontend-dist
           path: frontend/dist/dvmotos-frontend/browser
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 90
+
+  security:
+    name: Security
+    uses: ./.github/workflows/security.yml
+    permissions:
+      contents: read
+      security-events: write
 
   audit:
     name: Dependency audit
@@ -92,7 +101,7 @@ jobs:
   docker:
     name: Docker image
     runs-on: ubuntu-latest
-    needs: [quality, test, audit]
+    needs: [quality, test, audit, security]
     permissions:
       contents: read
       packages: write
@@ -120,29 +129,22 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    needs: [build, audit]
+    needs: [build, audit, security]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
-      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Download the artifact produced by the build job
+        uses: actions/download-artifact@v4
         with:
-          node-version-file: frontend/.nvmrc
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-      - run: npm ci
-      - name: Demo build (no backend, served under /dvmotos/)
-        run: npm run build:demo -- --base-href /dvmotos/
-      - name: SPA fallback for deep links
-        run: cp dist/dvmotos-frontend/browser/index.html dist/dvmotos-frontend/browser/404.html
+          name: dvmotos-frontend-dist
+          path: site
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: frontend/dist/dvmotos-frontend/browser
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v5
