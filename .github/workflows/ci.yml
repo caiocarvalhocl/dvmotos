@@ -46,7 +46,7 @@ jobs:
         run: npm run test:coverage
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: frontend/coverage/dvmotos-frontend
@@ -70,7 +70,7 @@ jobs:
       - name: SPA fallback for deep links
         run: cp dist/dvmotos-frontend/browser/index.html dist/dvmotos-frontend/browser/404.html
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dvmotos-frontend-dist
           path: frontend/dist/dvmotos-frontend/browser
