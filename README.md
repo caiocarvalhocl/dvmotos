@@ -43,7 +43,10 @@ No build `demo`, `environment.demo.ts` substitui `environment.ts` (`fileReplacem
 ## 7. Pipeline CI/CD
 
 ```
-PR/push -> Lint, Testes + cobertura, Audit, Security -> Build -> Docker -> Deploy (só main)
+PR/push -> Lint, Testes + cobertura, Audit, Security (em paralelo)
+Lint + Testes -> Build
+Build + Audit + Security -> Deploy (só push na main)
+Lint + Testes + Audit + Security -> Docker (publica no GHCR só em push na main)
 ```
 
 | Workflow | Arquivo | Gatilho | Função |
@@ -52,7 +55,7 @@ PR/push -> Lint, Testes + cobertura, Audit, Security -> Build -> Docker -> Deplo
 | Security | `.github/workflows/security.yml` | chamado pelo CI, semanal e manual | CodeQL, gitleaks e revisão de dependências |
 | Monitor | `.github/workflows/monitor.yml` | a cada 30 min | health check da aplicação publicada |
 
-Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. O job `security` chama `security.yml`. `docker` depende de `quality`, `test`, `audit` e `security`. `deploy` só roda em push na `main` e depende de `build`, `audit` e `security`. Qualquer job vermelho impede o deploy.
+Os jobs `quality` (lint) e `test` rodam em paralelo; `build` depende dos dois. O job `security` chama `security.yml`. `docker` depende de `quality`, `test`, `audit` e `security`. `deploy` só roda em push na `main` e depende de `build`, `audit` e `security`. Uma falha em qualquer um deles, ou em lint e testes (dos quais o `build` depende), impede o deploy. O `docker` não está entre as dependências do `deploy`. Em pull requests, `Docker image` é verificação obrigatória da proteção da `main`, então uma imagem que não constrói impede o merge.
 
 ## 8. Testes automatizados
 
@@ -142,9 +145,10 @@ Sistema de gestão para oficina mecânica de motocicletas.
 - ✅ Autenticação com JWT
 - ✅ Cadastro de Clientes
 - ✅ Cadastro de Veículos
-- 🔄 Controle de Estoque (em desenvolvimento)
-- 🔄 Ordens de Serviço (em desenvolvimento)
-- 🔄 Dashboard com relatórios (em desenvolvimento)
+- ✅ Produtos e categorias
+- ✅ Controle de Estoque
+- ✅ Ordens de Serviço
+- ✅ Dashboard
 
 ## 🛠️ Stack Tecnológica
 
@@ -277,7 +281,7 @@ Em outro terminal, suba o frontend normalmente (`npm start` dentro de
 
 ```bash
 cd frontend
-npm run e2e        # headless, usado em CI
+npm run e2e        # headless (roda localmente; não faz parte do pipeline)
 npm run e2e:open   # interativo, com o Test Runner do Cypress
 ```
 
@@ -389,9 +393,10 @@ Management system for a motorcycle repair shop.
 - ✅ JWT Authentication
 - ✅ Client registration
 - ✅ Vehicle registration
-- 🔄 Stock control (in development)
-- 🔄 Service orders (in development)
-- 🔄 Dashboard with reports (in development)
+- ✅ Products and categories
+- ✅ Stock control
+- ✅ Service orders
+- ✅ Dashboard
 
 ## 🛠️ Tech Stack
 
@@ -524,7 +529,7 @@ In another terminal, start the frontend normally (`npm start` inside
 
 ```bash
 cd frontend
-npm run e2e        # headless, used in CI
+npm run e2e        # headless (runs locally; not part of the pipeline)
 npm run e2e:open   # interactive, with the Cypress Test Runner
 ```
 
